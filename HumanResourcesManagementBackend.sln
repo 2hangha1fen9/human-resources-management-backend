@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumanResourcesManagementBackend.Api", "HumanResourcesManagementBackend.Api\HumanResourcesManagementBackend.Api.csproj", "{CEE6B8F4-0908-4053-82A1-C1F41B890C45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumanResourcesManagementBackend.Models", "HumanResourcesManagementBackend.Models\HumanResourcesManagementBackend.Models.csproj", "{F5F576AB-E98E-450C-ABE4-04A10CA191D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumanResourcesManagementBackend.Services", "HumanResourcesManagementBackend.Services\HumanResourcesManagementBackend.Services.csproj", "{D0C3C542-2A83-4568-A29B-CF62EF8A9936}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumanResourcesManagementBackend.Repository", "HumanResourcesManagementBackend.Repository\HumanResourcesManagementBackend.Repository.csproj", "{2FED4038-88FE-454A-B3A4-FC7A05EE1525}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumanResourcesManagementBackend.Common", "HumanResourcesManagementBackend.Common\HumanResourcesManagementBackend.Common.csproj", "{11455288-9859-44EB-9CCC-A509CDDC4839}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEE6B8F4-0908-4053-82A1-C1F41B890C45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE6B8F4-0908-4053-82A1-C1F41B890C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE6B8F4-0908-4053-82A1-C1F41B890C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE6B8F4-0908-4053-82A1-C1F41B890C45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5F576AB-E98E-450C-ABE4-04A10CA191D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5F576AB-E98E-450C-ABE4-04A10CA191D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5F576AB-E98E-450C-ABE4-04A10CA191D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5F576AB-E98E-450C-ABE4-04A10CA191D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0C3C542-2A83-4568-A29B-CF62EF8A9936}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0C3C542-2A83-4568-A29B-CF62EF8A9936}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0C3C542-2A83-4568-A29B-CF62EF8A9936}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0C3C542-2A83-4568-A29B-CF62EF8A9936}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FED4038-88FE-454A-B3A4-FC7A05EE1525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FED4038-88FE-454A-B3A4-FC7A05EE1525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FED4038-88FE-454A-B3A4-FC7A05EE1525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FED4038-88FE-454A-B3A4-FC7A05EE1525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11455288-9859-44EB-9CCC-A509CDDC4839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11455288-9859-44EB-9CCC-A509CDDC4839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11455288-9859-44EB-9CCC-A509CDDC4839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11455288-9859-44EB-9CCC-A509CDDC4839}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {918D1D26-CADC-4CF2-BA66-1584893A5224}
+	EndGlobalSection
+EndGlobal
