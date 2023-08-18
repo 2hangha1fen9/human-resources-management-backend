@@ -54,7 +54,6 @@
   <ItemGroup>
     <Compile Include="Entity\Role.cs" />
     <Compile Include="HRM.cs" />
-    <Compile Include="HRMTables.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\User.cs" />
     <Compile Include="Migrations\202308181518086_Init.cs" />
