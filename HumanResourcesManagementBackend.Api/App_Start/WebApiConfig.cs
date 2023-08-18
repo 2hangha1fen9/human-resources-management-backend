@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Net.Http.Formatting;
 
 namespace HumanResourcesManagementBackend.Api
 {
@@ -16,14 +17,16 @@ namespace HumanResourcesManagementBackend.Api
             config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
             // 修改默认的 JSON 序列化器为 Newtonsoft.Json，并配置日期格式、循环引用处理和小驼峰式命名
             GlobalConfiguration.Configuration.Formatters.Clear();
-            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                DateFormatString = "yyyy-MM-dd HH:mm:ss",
-                Formatting = Formatting.Indented,
-                NullValueHandling = NullValueHandling.Include,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
+            GlobalConfiguration.Configuration.Formatters.Add(new JsonMediaTypeFormatter { 
+                SerializerSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    DateFormatString = "yyyy-MM-dd HH:mm:ss",
+                    Formatting = Formatting.None,
+                    NullValueHandling = NullValueHandling.Include,
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                }
+            });   
             // Web API 路由
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute(
