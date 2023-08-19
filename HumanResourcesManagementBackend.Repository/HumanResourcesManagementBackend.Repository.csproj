@@ -52,7 +52,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\AbsenceApply.cs" />
+    <Compile Include="Entity\BusinessTripApply.cs" />
+    <Compile Include="Entity\CompensatoryApply.cs" />
+    <Compile Include="Entity\Employee.cs" />
+    <Compile Include="Entity\FieldWorkApply.cs" />
+    <Compile Include="Entity\Permission.cs" />
+    <Compile Include="Entity\PermissionRoleRef.cs" />
     <Compile Include="Entity\Role.cs" />
+    <Compile Include="Entity\UserRoleRef.cs" />
+    <Compile Include="Entity\VacationApply.cs" />
     <Compile Include="HRM.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\User.cs" />

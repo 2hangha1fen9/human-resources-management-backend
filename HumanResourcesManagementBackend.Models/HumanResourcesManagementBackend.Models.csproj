@@ -43,7 +43,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Enumber.cs" />
+    <Compile Include="Enum\AcademicDegree.cs" />
+    <Compile Include="Enum\AuditStatus.cs" />
+    <Compile Include="Enum\AuditType.cs" />
+    <Compile Include="Enum\CheckInType.cs" />
     <Compile Include="Enum\DataStatus.cs" />
+    <Compile Include="Enum\DateRangeUnit.cs" />
+    <Compile Include="Enum\Gender.cs" />
+    <Compile Include="Enum\PermissionType.cs" />
+    <Compile Include="Enum\PositionLevel.cs" />
+    <Compile Include="Enum\VacationType.cs" />
+    <Compile Include="Enum\WorkStatus.cs" />
+    <Compile Include="Enum\YesOrNo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

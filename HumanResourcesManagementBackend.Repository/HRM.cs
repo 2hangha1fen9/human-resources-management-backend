@@ -18,12 +18,9 @@ namespace HumanResourcesManagementBackend.Repository
     public partial class HRM : DbContext
     {
         /// <summary>
-        /// 调用父类的构造方法, 传入数据库连接字符串 的名字作为参数
+        /// 调用父类的构造方法, 传入数据库连接字符串的名字作为参数
         /// </summary>
-        public HRM() : base("DB") //在API项目的Web.config中配置了名为DB的连接字符串
-        {
-
-        }
+        public HRM() : base("DB") { } //在API项目的Web.config中配置了名为DB的连接字符串
 
         #region 数据库表
         /// <summary>
@@ -34,6 +31,30 @@ namespace HumanResourcesManagementBackend.Repository
         /// 角色表
         /// </summary>
         public DbSet<Role> Roles { get; set; }
+        /// <summary>
+        /// 权限表
+        /// </summary>
+        public DbSet<Permission> Permissions { get; set; }
+        /// <summary>
+        /// 权限角色关系表
+        /// </summary>
+        public DbSet<PermissionRoleRef> PermissionRoleRefs { get; set; }
+        /// <summary>
+        /// 用户角色关系表
+        /// </summary>
+        public DbSet<UserRoleRef> UserRoleRefs { get; set; }
+        /// <summary>
+        /// 休假申请表
+        /// </summary>
+        public DbSet<VacationApply> VacationApplies { get; set; }
+        /// <summary>
+        /// 调休申请表
+        /// </summary>
+        public DbSet<CompensatoryApply> CompensatoryApplies { get; set; }
+        /// <summary>
+        /// 外请申请表
+        /// </summary>
+        public DbSet<FieldWorkApply> FieldWorkApplies { get; set; }
         #endregion
     }
 }

@@ -14,10 +14,18 @@ namespace HumanResourcesManagementBackend.Models
         /// Id
         /// </summary>
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
         /// <summary>
         /// 数据状态 1启用 2禁用 99删除
         /// </summary>
-        public int Status { get; set; }
+        public int Status { get; set; } = 1;
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; } = DateTime.Now;
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime UpdateTime { get; set; }
     }
 }

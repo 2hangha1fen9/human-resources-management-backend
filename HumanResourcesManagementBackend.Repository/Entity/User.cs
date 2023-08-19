@@ -21,10 +21,6 @@ namespace HumanResourcesManagementBackend.Models.Entity
         /// </summary>
         public string Password { get; set; }
         /// <summary>
-        /// 角色ID
-        /// </summary>
-        public int RoleId { get; set; }
-        /// <summary>
         /// 密保问题
         /// </summary>
         public string Question { get; set; }
@@ -32,10 +28,9 @@ namespace HumanResourcesManagementBackend.Models.Entity
         /// 密保答案
         /// </summary>
         public string Answer { get; set; }
-
         /// <summary>
-        /// 关联角色表
+        /// 员工ID
         /// </summary>
-        public ICollection<Role> Roles { get; set; }
+        public long EmployeeId { get; set; }
     }
 }

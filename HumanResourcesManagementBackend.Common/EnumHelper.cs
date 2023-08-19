@@ -66,7 +66,7 @@ namespace HumanResourcesManagementBackend.Common
         /// </summary>
         /// <param name="e">枚举成员</param>
         /// <returns></returns>
-        public static string EnumDescription(this Enum e)
+        public static string Description(this Enum e)
         {
             try
             {
@@ -88,13 +88,13 @@ namespace HumanResourcesManagementBackend.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="enumValue"></param>
         /// <returns></returns>
-        public static string EnumDescription<T>(this int enumValue) where T : struct
+        public static string Description<T>(this int enumValue) where T : struct
         {
             var result = string.Empty;
             try
             {
                 var value = Enum.Parse(typeof(T), enumValue.ToString(), true) as Enum;
-                result = EnumDescription(value);
+                result = Description(value);
             }
             catch {}
             return result;
