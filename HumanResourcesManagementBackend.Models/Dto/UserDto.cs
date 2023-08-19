@@ -109,5 +109,38 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public DataStatus Status { get; set; }
         }
+
+        /// <summary>
+        /// 用户修改密码
+        /// </summary>
+        public class ChangePwd
+        {
+            /// <summary>
+            /// ID
+            /// </summary>
+            public long Id { get; set; }
+            /// <summary>
+            /// 登录名
+            /// </summary>
+            public string LoginName { get; set; }
+            /// <summary>
+            /// 密保问题
+            /// </summary>
+            public string Question { get; set; }
+            /// <summary>
+            /// 密保答案
+            /// </summary>
+            public string Answer { get; set;}
+            /// <summary>
+            /// 初始密码
+            /// </summary>
+            public string Password { get; set; }
+            /// <summary>
+            /// 新的密码
+            /// </summary>
+            public string NewPassword { get; set; }
+        }
+
     }
+
 }

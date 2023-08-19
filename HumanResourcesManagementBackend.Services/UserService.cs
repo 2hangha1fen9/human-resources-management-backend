@@ -136,5 +136,77 @@ namespace HumanResourcesManagementBackend.Services
                 db.SaveChanges();
             }
         }
+
+        //修改密码
+        public void ChangePwd(UserDto.ChangePwd changePwd)
+        {
+            using (var db = new HRM())
+            {
+                var user = db.Users.FirstOrDefault(p=>p.Id == changePwd.Id);
+                user.Password=user.Password.Decrypt();
+                if(user.Password!=changePwd.Password)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "初始密码输入错误",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                user.Password = changePwd.NewPassword;
+                if (db.SaveChanges() == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "修改密码失败,正在维护",
+                        Status = ResponseStatus.AddError
+                    };
+                }
+            }
+        }
+    
+        //找回密码
+        public void ForgotPassword(UserDto.ChangePwd changePwd)
+        {
+            using (var db=new HRM())
+            {
+                var user = db.Users.FirstOrDefault(p=>p.LoginName==changePwd.LoginName);
+                if(user==null)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage ="用户不存在",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                else
+                {
+                    if(user.Answer!=changePwd.Answer)
+                    {
+                        throw new BusinessException
+                        {
+                            ErrorMessage = "答案错误",
+                            Status = ResponseStatus.ParameterError
+                        };
+                    }
+                }
+                if (user.Password == changePwd.NewPassword)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "新密码不能与旧密码相同",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                user.Password=changePwd.NewPassword;
+                if (db.SaveChanges() == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "修改密码失败,正在维护",
+                        Status = ResponseStatus.AddError
+                    };
+                }
+            }
+        }
     }
 }

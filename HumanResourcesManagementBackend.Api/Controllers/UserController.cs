@@ -110,5 +110,37 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 Message = ResponseStatus.Success.Description()
             };
         }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="changepwd"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public Response ChangePwd(UserDto.ChangePwd changePwd)
+        {
+            userService.ChangePwd(changePwd);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
+
+        /// <summary>
+        /// 找回密码
+        /// </summary>
+        /// <param name="changepwd"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public Response ForgotPassword(UserDto.ChangePwd changePwd)
+        {
+            userService.ForgotPassword(changePwd);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
     }
 }

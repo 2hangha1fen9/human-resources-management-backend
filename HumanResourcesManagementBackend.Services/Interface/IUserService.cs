@@ -40,5 +40,17 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="userId"></param>
         void DeleteUser(long userId);
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="pwd"></param>
+        void ChangePwd(UserDto.ChangePwd changePwd);
+
+        /// <summary>
+        /// 忘记密码
+        /// </summary>
+        /// <param name="pwd"></param>
+        void ForgotPassword(UserDto.ChangePwd changePwd);
     }
 }
