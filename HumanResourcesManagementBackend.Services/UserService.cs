@@ -140,7 +140,7 @@ namespace HumanResourcesManagementBackend.Services
             }
         }
 
-        //修改密码
+        //修改密码 别再这里加注释
         public void ChangePwd(UserDto.ChangePwd changePwd)
         {
             using (var db = new HRM())
