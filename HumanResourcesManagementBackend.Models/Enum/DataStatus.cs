@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HumanResourcesManagementBackend.Models.Enum
+namespace HumanResourcesManagementBackend.Models
 {
     /// <summary>
     /// 数据状态枚举
     /// </summary>
-    public enum DataStatus
+    public enum DataStatus 
     {
         /// <summary>
         /// 启用

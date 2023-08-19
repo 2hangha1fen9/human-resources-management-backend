@@ -133,7 +133,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Exceptions\ServiceException.cs" />
+    <Compile Include="Extensions\BaseController.cs" />
+    <Compile Include="Filters\GlobalExceptionFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -154,6 +157,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HumanResourcesManagementBackend.Common\HumanResourcesManagementBackend.Common.csproj">
+      <Project>{11455288-9859-44eb-9ccc-a509cddc4839}</Project>
+      <Name>HumanResourcesManagementBackend.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HumanResourcesManagementBackend.Models\HumanResourcesManagementBackend.Models.csproj">
+      <Project>{f5f576ab-e98e-450c-abe4-04a10ca191d8}</Project>
+      <Name>HumanResourcesManagementBackend.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HumanResourcesManagementBackend.Services\HumanResourcesManagementBackend.Services.csproj">
+      <Project>{d0c3c542-2a83-4568-a29b-cf62ef8a9936}</Project>
+      <Name>HumanResourcesManagementBackend.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

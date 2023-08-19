@@ -1,4 +1,4 @@
-﻿using HumanResourcesManagementBackend.Models.Enum;
+﻿using HumanResourcesManagementBackend.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HumanResourcesManagementBackend.Models
+namespace HumanResourcesManagementBackend.Repository
 {
     public class BaseEntity
     {

@@ -1,5 +1,4 @@
 ﻿using HumanResourcesManagementBackend.Models;
-using HumanResourcesManagementBackend.Models.Enum;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HumanResourcesManagementBackend.Repository.Entity
+namespace HumanResourcesManagementBackend.Repository
 {
     /// <summary>
     /// 休假申请

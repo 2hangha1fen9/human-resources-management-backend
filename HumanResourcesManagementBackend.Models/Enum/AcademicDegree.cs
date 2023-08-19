@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HumanResourcesManagementBackend.Models.Enum
+namespace HumanResourcesManagementBackend.Models
 {
     /// <summary>
     /// 学历枚举

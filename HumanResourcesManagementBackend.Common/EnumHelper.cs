@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using HumanResourcesManagementBackend.Models.Data;
+using HumanResourcesManagementBackend.Models;
 namespace HumanResourcesManagementBackend.Common
 {
     /// <summary>
@@ -81,23 +81,6 @@ namespace HumanResourcesManagementBackend.Common
             }
             catch { }
             return null;
-        }
-        /// <summary>
-        /// 获取枚举描述文本
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="enumValue"></param>
-        /// <returns></returns>
-        public static string Description<T>(this int enumValue) where T : struct
-        {
-            var result = string.Empty;
-            try
-            {
-                var value = Enum.Parse(typeof(T), enumValue.ToString(), true) as Enum;
-                result = Description(value);
-            }
-            catch {}
-            return result;
         }
     }
 }

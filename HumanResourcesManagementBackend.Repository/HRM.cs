@@ -1,5 +1,5 @@
-﻿using HumanResourcesManagementBackend.Models.Entity;
-using HumanResourcesManagementBackend.Repository.Entity;
+﻿using HumanResourcesManagementBackend.Models;
+using HumanResourcesManagementBackend.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

@@ -1,12 +1,11 @@
 ﻿using HumanResourcesManagementBackend.Models;
-using HumanResourcesManagementBackend.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HumanResourcesManagementBackend.Repository.Entity
+namespace HumanResourcesManagementBackend.Repository
 {
     /// <summary>
     /// 员工表

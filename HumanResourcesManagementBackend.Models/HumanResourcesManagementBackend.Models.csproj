@@ -42,8 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Enumber.cs" />
-    <Compile Include="Data\Response.cs" />
+    <Compile Include="Public\Enumber.cs" />
+    <Compile Include="Public\Request.cs" />
+    <Compile Include="Public\Response.cs" />
+    <Compile Include="Dto\UserDto.cs" />
     <Compile Include="Enum\AcademicDegree.cs" />
     <Compile Include="Enum\AuditStatus.cs" />
     <Compile Include="Enum\AuditType.cs" />

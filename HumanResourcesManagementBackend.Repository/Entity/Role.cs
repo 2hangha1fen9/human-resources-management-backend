@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HumanResourcesManagementBackend.Repository.Entity
+namespace HumanResourcesManagementBackend.Repository
 {
     /// <summary>
     /// 角色
