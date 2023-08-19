@@ -50,7 +50,10 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public string StatusStr { get; set; } 
         }
-
+        
+        /// <summary>
+        /// 用户编辑
+        /// </summary>
         public class Save
         {
             /// <summary>
