@@ -140,7 +140,6 @@ namespace HumanResourcesManagementBackend.Services
             }
         }
 
-        //修改密码
         public void ChangePwd(UserDto.ChangePwd changePwd)
         {
             using (var db = new HRM())
@@ -166,8 +165,7 @@ namespace HumanResourcesManagementBackend.Services
                 }
             }
         }
-    
-        //找回密码
+
         public void ForgotPassword(UserDto.ChangePwd changePwd)
         {
             using (var db=new HRM())
