@@ -1,4 +1,5 @@
 ﻿using HumanResourcesManagementBackend.Models;
+using HumanResourcesManagementBackend.Models.Enum;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -32,14 +33,14 @@ namespace HumanResourcesManagementBackend.Repository.Entity
         /// <summary>
         /// 休假类型（详见枚举定义）
         /// </summary>
-        public int VacationType { get; set; }
+        public VacationType VacationType { get; set; }
         /// <summary>
         /// 审核状态 1待审核 2同意 3拒绝
         /// </summary>
-        public int AuditStatus { get; set; } = 1;
+        public AuditStatus AuditStatus { get; set; } = AuditStatus.Pending;
         /// <summary>
         /// 审核类型 1 部门主管审批 2校区主任审批
         /// </summary>
-        public int AuditType { get; set; }
+        public AuditType AuditType { get; set; }
     }
 }

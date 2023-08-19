@@ -18,7 +18,7 @@ namespace HumanResourcesManagementBackend.Models
         /// <summary>
         /// 数据状态 1启用 2禁用 99删除
         /// </summary>
-        public int Status { get; set; } = 1;
+        public DataStatus Status { get; set; } = DataStatus.Enable;
         /// <summary>
         /// 创建时间
         /// </summary>

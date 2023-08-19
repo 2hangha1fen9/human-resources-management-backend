@@ -1,4 +1,5 @@
 ﻿using HumanResourcesManagementBackend.Models;
+using HumanResourcesManagementBackend.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,11 +28,11 @@ namespace HumanResourcesManagementBackend.Repository.Entity
         /// <summary>
         /// 性别 0未知 1男 2女
         /// </summary>
-        public int Gender { get; set; } = 0;
+        public Gender Gender { get; set; } = Gender.None;
         /// <summary>
         /// 婚姻状态 0 未知 1已婚 2未婚
         /// </summary>
-        public int MaritalStatus { get; set; } = 0;
+        public MaritalStatus MaritalStatus { get; set; } = MaritalStatus.None;
         /// <summary>
         /// 出生日期
         /// </summary>
@@ -55,7 +56,7 @@ namespace HumanResourcesManagementBackend.Repository.Entity
         /// <summary>
         /// 学历 （详见枚举定义）
         /// </summary>
-        public int AcademicDegree { get; set; } = 0;
+        public AcademicDegree AcademicDegree { get; set; } = AcademicDegree.None;
         /// <summary>
         /// 入职日期
         /// </summary>
@@ -71,6 +72,6 @@ namespace HumanResourcesManagementBackend.Repository.Entity
         /// <summary>
         /// 职位等级 
         /// </summary>
-        public int PositionLevel { get; set; } = 0;
+        public PositionLevel PositionLevel { get; set; }
     }
 }

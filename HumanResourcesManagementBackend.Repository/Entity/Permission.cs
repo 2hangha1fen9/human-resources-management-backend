@@ -1,4 +1,5 @@
 ﻿using HumanResourcesManagementBackend.Models;
+using HumanResourcesManagementBackend.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +20,11 @@ namespace HumanResourcesManagementBackend.Repository.Entity
         /// <summary>
         /// 权限类型 1Api 2菜单 3按钮
         /// </summary>
-        public int Type { get; set; }
+        public PermissionType Type { get; set; }
         /// <summary>
         /// 是否是公共权限 1 Yes 2 No
         /// </summary>
-        public int IsPublic { get; set; }
+        public YesOrNo IsPublic { get; set; }
         /// <summary>
         /// 权限标识 根据权限类型有所区别  *代表所有权限
         /// </summary>

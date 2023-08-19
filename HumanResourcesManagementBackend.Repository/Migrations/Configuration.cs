@@ -32,7 +32,7 @@
                     Password = "admin".Encrypt(),
                     Question = string.Empty,
                     Answer = string.Empty,
-                    Status = (int)DataStatus.Enable
+                    Status = DataStatus.Enable
                 });
             }
         }
