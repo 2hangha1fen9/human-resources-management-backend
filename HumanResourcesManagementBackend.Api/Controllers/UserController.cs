@@ -13,6 +13,9 @@ using System.Web.Http;
 
 namespace HumanResourcesManagementBackend.Api.Controllers
 {
+    /// <summary>
+    /// 用户管理控制器
+    /// </summary>
     public class UserController : BaseApiController
     {
         private readonly IUserService userService;

@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace HumanResourcesManagementBackend.Services
 {
+    /// <summary>
+    /// 用户管理业务类
+    /// </summary>
     public class UserService : IUserService
     {
         public List<UserDto.User> GetUsers(UserDto.Search search)
