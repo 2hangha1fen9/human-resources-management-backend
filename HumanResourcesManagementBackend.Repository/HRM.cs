@@ -48,6 +48,10 @@ namespace HumanResourcesManagementBackend.Repository
         /// </summary>
         public DbSet<VacationApply> VacationApplies { get; set; }
         /// <summary>
+        /// 缺勤申请表
+        /// </summary>
+        public DbSet<AbsenceApply> AbsenceApplies { get; set; }
+        /// <summary>
         /// 调休申请表
         /// </summary>
         public DbSet<CompensatoryApply> CompensatoryApplies { get; set; }
@@ -55,6 +59,10 @@ namespace HumanResourcesManagementBackend.Repository
         /// 外请申请表
         /// </summary>
         public DbSet<FieldWorkApply> FieldWorkApplies { get; set; }
+        /// <summary>
+        /// 出差申请
+        /// </summary>
+        public DbSet<BusinessTripApply> BusinessTripApplies { get; set;}
         #endregion
     }
 }
