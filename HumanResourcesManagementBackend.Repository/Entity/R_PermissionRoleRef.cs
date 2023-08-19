@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace HumanResourcesManagementBackend.Repository
 {
     /// <summary>
-    /// 用户角色关系
+    /// 权限角色关系
     /// </summary>
-    public class UserRoleRef : BaseEntity
+    public class R_PermissionRoleRef : BaseEntity
     {
         /// <summary>
-        /// 用户ID
+        /// 权限ID
         /// </summary>
-        public long UserId { get; set; }
+        public long PermissionId { get; set; }
         /// <summary>
         /// 角色ID
         /// </summary>

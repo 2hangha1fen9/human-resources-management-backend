@@ -8,30 +8,30 @@ using System.Threading.Tasks;
 namespace HumanResourcesManagementBackend.Repository
 {
     /// <summary>
-    /// 外请申请
+    /// 缺勤申请
     /// </summary>
-    public class FieldWorkApply : BaseEntity
+    public class R_AbsenceApply : BaseEntity
     {
         /// <summary>
         /// 员工ID
         /// </summary>
         public long EmployeeId { get; set; }
         /// <summary>
-        /// 开始时间
+        /// 缺勤时间
         /// </summary>
-        public DateTime BeginDate { get; set; }
+        public DateTime AbsenceDateTime { get; set; }
         /// <summary>
-        /// 结束时间
+        /// 打卡类型 1上班卡 2下班卡
         /// </summary>
-        public DateTime EndDate { get; set; }
+        public CheckInType CheckInType { get; set; }
         /// <summary>
-        /// 外勤地点
-        /// </summary>
-        public string Address { get; set; }
-        /// <summary>
-        /// 外勤事由
+        /// 申请理由
         /// </summary>
         public string Reason { get; set; }
+        /// <summary>
+        /// 证明人
+        /// </summary>
+        public string Prover { get; set; }
         /// <summary>
         /// 审核状态 1待审核 2同意 3拒绝
         /// </summary>

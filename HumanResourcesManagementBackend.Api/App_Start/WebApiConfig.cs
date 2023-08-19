@@ -6,6 +6,11 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Net.Http.Formatting;
+using System.Web.Http.WebHost;
+using System.Web.Routing;
+using System.Web.SessionState;
+using System.Web;
+using HumanResourcesManagementBackend.Api.Filters;
 
 namespace HumanResourcesManagementBackend.Api
 {
@@ -26,14 +31,24 @@ namespace HumanResourcesManagementBackend.Api
                     NullValueHandling = NullValueHandling.Include,
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 }
-            });   
-            // Web API 路由
-            config.MapHttpAttributeRoutes();
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{action}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
+            });
+            //全局异常配置
+            GlobalConfiguration.Configuration.Filters.Add(new GlobalExceptionFilter());
+        }
+    }
+
+    /// <summary>
+    /// 开启Session支持
+    /// </summary>
+    public class SessionableControllerHandler : HttpControllerHandler, IRequiresSessionState
+    {
+        public SessionableControllerHandler(RouteData routeData) : base(routeData) { }
+    }
+    public class SessionStateRouteHandler : IRouteHandler
+    {
+        IHttpHandler IRouteHandler.GetHttpHandler(RequestContext requestContext)
+        {
+            return new SessionableControllerHandler(requestContext.RouteData);
         }
     }
 }

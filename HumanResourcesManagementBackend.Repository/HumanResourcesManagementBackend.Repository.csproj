@@ -39,6 +39,7 @@
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -61,20 +62,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity\AbsenceApply.cs" />
-    <Compile Include="Entity\BusinessTripApply.cs" />
-    <Compile Include="Entity\CompensatoryApply.cs" />
-    <Compile Include="Entity\Employee.cs" />
-    <Compile Include="Entity\FieldWorkApply.cs" />
-    <Compile Include="Entity\Permission.cs" />
-    <Compile Include="Entity\PermissionRoleRef.cs" />
-    <Compile Include="Entity\Role.cs" />
-    <Compile Include="Entity\UserRoleRef.cs" />
-    <Compile Include="Entity\VacationApply.cs" />
+    <Compile Include="Entity\R_AbsenceApply.cs" />
+    <Compile Include="Entity\R_BusinessTripApply.cs" />
+    <Compile Include="Entity\R_CompensatoryApply.cs" />
+    <Compile Include="Entity\R_Employee.cs" />
+    <Compile Include="Entity\R_FieldWorkApply.cs" />
+    <Compile Include="Entity\R_Permission.cs" />
+    <Compile Include="Entity\R_PermissionRoleRef.cs" />
+    <Compile Include="Entity\R_Role.cs" />
+    <Compile Include="Entity\R_UserRoleRef.cs" />
+    <Compile Include="Entity\R_VacationApply.cs" />
     <Compile Include="Extensions\QueryExtension.cs" />
     <Compile Include="HRM.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
-    <Compile Include="Entity\User.cs" />
+    <Compile Include="Entity\R_User.cs" />
     <Compile Include="Migrations\202308181518086_Init.cs" />
     <Compile Include="Migrations\202308181518086_Init.designer.cs">
       <DependentUpon>202308181518086_Init.cs</DependentUpon>
@@ -94,6 +95,10 @@
     <Compile Include="Migrations\202308190452042_editEntity.cs" />
     <Compile Include="Migrations\202308190452042_editEntity.designer.cs">
       <DependentUpon>202308190452042_editEntity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308191214468_modify.cs" />
+    <Compile Include="Migrations\202308191214468_modify.designer.cs">
+      <DependentUpon>202308191214468_modify.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -127,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308190452042_editEntity.resx">
       <DependentUpon>202308190452042_editEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308191214468_modify.resx">
+      <DependentUpon>202308191214468_modify.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

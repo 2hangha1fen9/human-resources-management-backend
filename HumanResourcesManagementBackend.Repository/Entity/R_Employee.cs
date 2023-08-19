@@ -10,7 +10,7 @@ namespace HumanResourcesManagementBackend.Repository
     /// <summary>
     /// 员工表
     /// </summary>
-    public class Employee : BaseEntity
+    public class R_Employee : BaseEntity
     {
         /// <summary>
         /// 工号

@@ -10,7 +10,7 @@ namespace HumanResourcesManagementBackend.Repository
     /// <summary>
     /// 调休申请
     /// </summary>
-    public class CompensatoryApply : BaseEntity
+    public class R_CompensatoryApply : BaseEntity
     {
         /// <summary>
         /// 员工ID

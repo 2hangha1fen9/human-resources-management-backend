@@ -51,6 +51,50 @@ namespace HumanResourcesManagementBackend.Models
             public string StatusStr { get; set; } 
         }
 
+        public class Save
+        {
+            /// <summary>
+            /// ID
+            /// </summary>
+            public long Id { get; set; }
+            /// <summary>
+            /// 登录名
+            /// </summary>
+            public string LoginName { get; set; }
+            /// <summary>
+            /// 密码
+            /// </summary>
+            public string Password { get; set; }
+            /// <summary>
+            /// 密保问题
+            /// </summary>
+            public string Question { get; set; }
+            /// <summary>
+            /// 密保答案
+            /// </summary>
+            public string Answer { get; set; }
+            /// <summary>
+            /// 员工ID
+            /// </summary>
+            public long EmployeeId { get; set; }
+
+        }
+
+        /// <summary>
+        /// 用户登录
+        /// </summary>
+        public class Login
+        {
+            /// <summary>
+            /// 登录名
+            /// </summary>
+            public string LoginName { get; set; }
+            /// <summary>
+            /// 密码
+            /// </summary>
+            public string Password { get; set; }
+        }
+
         /// <summary>
         /// 用户搜索请求
         /// </summary>

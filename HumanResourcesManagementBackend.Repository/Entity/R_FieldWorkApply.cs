@@ -1,5 +1,4 @@
 ﻿using HumanResourcesManagementBackend.Models;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,30 +8,30 @@ using System.Threading.Tasks;
 namespace HumanResourcesManagementBackend.Repository
 {
     /// <summary>
-    /// 休假申请
+    /// 外请申请
     /// </summary>
-    public class VacationApply : BaseEntity
+    public class R_FieldWorkApply : BaseEntity
     {
         /// <summary>
         /// 员工ID
         /// </summary>
         public long EmployeeId { get; set; }
         /// <summary>
-        /// 休假开始时间
+        /// 开始时间
         /// </summary>
         public DateTime BeginDate { get; set; }
         /// <summary>
-        /// 休假结束时间
+        /// 结束时间
         /// </summary>
         public DateTime EndDate { get; set; }
         /// <summary>
-        /// 休假原因
+        /// 外勤地点
+        /// </summary>
+        public string Address { get; set; }
+        /// <summary>
+        /// 外勤事由
         /// </summary>
         public string Reason { get; set; }
-        /// <summary>
-        /// 休假类型（详见枚举定义）
-        /// </summary>
-        public VacationType VacationType { get; set; }
         /// <summary>
         /// 审核状态 1待审核 2同意 3拒绝
         /// </summary>

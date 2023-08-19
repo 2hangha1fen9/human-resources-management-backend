@@ -26,43 +26,43 @@ namespace HumanResourcesManagementBackend.Repository
         /// <summary>
         /// 用户表
         /// </summary>
-        public DbSet<User> Users { get; set; }
+        public DbSet<R_User> Users { get; set; }
         /// <summary>
         /// 角色表
         /// </summary>
-        public DbSet<Role> Roles { get; set; }
+        public DbSet<R_Role> Roles { get; set; }
         /// <summary>
         /// 权限表
         /// </summary>
-        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<R_Permission> Permissions { get; set; }
         /// <summary>
         /// 权限角色关系表
         /// </summary>
-        public DbSet<PermissionRoleRef> PermissionRoleRefs { get; set; }
+        public DbSet<R_PermissionRoleRef> PermissionRoleRefs { get; set; }
         /// <summary>
         /// 用户角色关系表
         /// </summary>
-        public DbSet<UserRoleRef> UserRoleRefs { get; set; }
+        public DbSet<R_UserRoleRef> UserRoleRefs { get; set; }
         /// <summary>
         /// 休假申请表
         /// </summary>
-        public DbSet<VacationApply> VacationApplies { get; set; }
+        public DbSet<R_VacationApply> VacationApplies { get; set; }
         /// <summary>
         /// 缺勤申请表
         /// </summary>
-        public DbSet<AbsenceApply> AbsenceApplies { get; set; }
+        public DbSet<R_AbsenceApply> AbsenceApplies { get; set; }
         /// <summary>
         /// 调休申请表
         /// </summary>
-        public DbSet<CompensatoryApply> CompensatoryApplies { get; set; }
+        public DbSet<R_CompensatoryApply> CompensatoryApplies { get; set; }
         /// <summary>
         /// 外请申请表
         /// </summary>
-        public DbSet<FieldWorkApply> FieldWorkApplies { get; set; }
+        public DbSet<R_FieldWorkApply> FieldWorkApplies { get; set; }
         /// <summary>
         /// 出差申请
         /// </summary>
-        public DbSet<BusinessTripApply> BusinessTripApplies { get; set;}
+        public DbSet<R_BusinessTripApply> BusinessTripApplies { get; set;}
         #endregion
     }
 }

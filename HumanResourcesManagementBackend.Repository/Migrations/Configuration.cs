@@ -25,7 +25,7 @@
             var user = context.Users.FirstOrDefault(u => u.LoginName == "admin");
             if(user == null)
             {
-                context.Users.Add(new User
+                context.Users.Add(new R_User
                 {
                     LoginName = "admin",
                     Password = "admin".Encrypt(),

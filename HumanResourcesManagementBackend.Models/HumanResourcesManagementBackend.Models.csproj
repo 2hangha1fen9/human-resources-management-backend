@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\BusinessException.cs" />
     <Compile Include="Public\Enumber.cs" />
     <Compile Include="Public\Request.cs" />
     <Compile Include="Public\Response.cs" />

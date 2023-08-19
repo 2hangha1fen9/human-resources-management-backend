@@ -2,36 +2,42 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HumanResourcesManagementBackend.Repository
 {
-    /// <summary>
-    /// 缺勤申请
-    /// </summary>
-    public class AbsenceApply : BaseEntity
+    public class R_BusinessTripApply : BaseEntity
     {
         /// <summary>
         /// 员工ID
         /// </summary>
         public long EmployeeId { get; set; }
         /// <summary>
-        /// 缺勤时间
+        /// 出差目的地
         /// </summary>
-        public DateTime AbsenceDateTime { get; set; }
+        public string Address { get; set; }
         /// <summary>
-        /// 打卡类型 1上班卡 2下班卡
-        /// </summary>
-        public CheckInType CheckInType { get; set; }
-        /// <summary>
-        /// 申请理由
+        /// 出差事由
         /// </summary>
         public string Reason { get; set; }
         /// <summary>
-        /// 证明人
+        /// 出差归来结果
         /// </summary>
-        public string Prover { get; set; }
+        public string Result { get; set; }
+        /// <summary>
+        /// 出差支持
+        /// </summary>
+        public string Support { get; set; }
+        // <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime BeginDate { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime EndDate { get; set; }
         /// <summary>
         /// 审核状态 1待审核 2同意 3拒绝
         /// </summary>

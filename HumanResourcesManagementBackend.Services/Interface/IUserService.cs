@@ -15,5 +15,30 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="search"></param>
         /// <returns></returns>
         List<UserDto.User> GetUsers(UserDto.Search search);
+
+        /// <summary>
+        /// 用户登录
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns>用户ID</returns>
+        long Login(UserDto.Login login);
+
+        /// <summary>
+        /// 添加用户
+        /// </summary>
+        /// <param name="user"></param>
+        void AddUser(UserDto.Save user);
+
+        /// <summary>
+        /// 编辑用户
+        /// </summary>
+        /// <param name="user"></param>
+        void EditUser(UserDto.Save user);
+
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="userId"></param>
+        void DeleteUser(long userId);
     }
 }

@@ -10,7 +10,7 @@ namespace HumanResourcesManagementBackend.Repository
     /// <summary>
     /// 权限
     /// </summary>
-    public class Permission : BaseEntity
+    public class R_Permission : BaseEntity
     {
         /// <summary>
         /// 权限名称
