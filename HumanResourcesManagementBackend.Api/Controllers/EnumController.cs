@@ -34,6 +34,16 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             if(enumType != null)
             {
                 result.Data = EnumHelper.ToList(enumType);
+                result.Status = ResponseStatus.Success;
+                result.Message = ResponseStatus.Success.Description();
+            }
+            else
+            {
+                throw new BusinessException
+                {
+                    Status = ResponseStatus.NoData,
+                    ErrorMessage = ResponseStatus.NoData.Description()
+                };
             }
 
             return result;
