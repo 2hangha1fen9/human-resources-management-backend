@@ -65,11 +65,5 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="question"></param>
         void ChangeQuestion(UserDto.ChangePwd changeQuestion);
-
-        /// <summary>
-        /// 休假申请
-        /// </summary>
-        /// <param name="vacationapply"></param>
-        void VacationApply(UserDto.VacationApply vacationApply,int id);
     }
 }

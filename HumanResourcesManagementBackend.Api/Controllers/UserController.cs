@@ -165,22 +165,5 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 Message = ResponseStatus.Success.Description()
             };
         }
-
-        /// <summary>
-        /// 休假申请
-        /// </summary>
-        /// <param name="VacationApply"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public Response VacationApply(UserDto.VacationApply vacationApply)
-        {
-            vacationApply.EmployeeId = CurrentUserId;
-            userService.VacationApply(vacationApply);
-            return new Response
-            {
-                Status = ResponseStatus.Success,
-                Message = ResponseStatus.Success.Description()
-            };
-        }
     }
 }

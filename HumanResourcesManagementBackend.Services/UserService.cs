@@ -180,7 +180,7 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
-                user.Password = changePwd.NewPassword;
+                user.Password = changePwd.NewPassword.Encrypt();
                 if (db.SaveChanges() == 0)
                 {
                     throw new BusinessException
@@ -197,7 +197,8 @@ namespace HumanResourcesManagementBackend.Services
             using (var db=new HRM())
             {
                 var user = db.Users.FirstOrDefault(p=>p.LoginName==changePwd.LoginName);
-                if(user==null)
+                user.Password = user.Password.Decrypt();
+                if (user==null)
                 {
                     throw new BusinessException
                     {
@@ -224,7 +225,7 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
-                user.Password=changePwd.NewPassword;
+                user.Password=changePwd.NewPassword.Encrypt();
                 if (db.SaveChanges() == 0)
                 {
                     throw new BusinessException
@@ -256,32 +257,6 @@ namespace HumanResourcesManagementBackend.Services
                     throw new BusinessException
                     {
                         ErrorMessage = "修改密保失败,正在维护",
-                        Status = ResponseStatus.AddError
-                    };
-                }
-            }
-        }
-
-        public void VacationApply(UserDto.VacationApply vacationApply, int id)
-        {
-            using(var db=new HRM())
-            {
-                if(vacationApply.Reason == ""|| vacationApply.Reason.Length<20)
-                {
-                    throw new BusinessException
-                    {
-                        ErrorMessage = "请假原因不能为空且字数要在10字以上",
-                        Status = ResponseStatus.ParameterError
-                    };
-                }
-                var vacationapplyR = vacationApply.MapTo<R_VacationApply>();
-                vacationapplyR.Id = id;
-
-                if (db.SaveChanges() == 0)
-                {
-                    throw new BusinessException
-                    {
-                        ErrorMessage = "休假申请失败，正在维护",
                         Status = ResponseStatus.AddError
                     };
                 }
