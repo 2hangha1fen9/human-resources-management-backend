@@ -60,7 +60,7 @@ namespace HumanResourcesManagementBackend.Repository
         /// </summary>
         public DbSet<R_FieldWorkApply> FieldWorkApplies { get; set; }
         /// <summary>
-        /// 出差申请
+        /// 出差申请表
         /// </summary>
         public DbSet<R_BusinessTripApply> BusinessTripApplies { get; set;}
         #endregion

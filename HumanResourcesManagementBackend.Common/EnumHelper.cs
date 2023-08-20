@@ -41,11 +41,41 @@ namespace HumanResourcesManagementBackend.Common
             return name;
         }
 
-        public static List<Enumber> EnumToList<T>()
+        /// <summary>
+        /// 获取枚举成员列表
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static List<Enumber> ToList<T>()
         {
             List<Enumber> list = new List<Enumber>();
 
             foreach (var e in Enum.GetValues(typeof(T)))
+            {
+                Enumber m = new Enumber();
+                object[] objArr = e.GetType().GetField(e.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), true);
+                if (objArr != null && objArr.Length > 0)
+                {
+                    DescriptionAttribute da = objArr[0] as DescriptionAttribute;
+                    m.Desction = da.Description;
+                }
+                m.EnumValue = Convert.ToInt32(e);
+                m.EnumName = e.ToString();
+                list.Add(m);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 获取枚举成员列表
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        public static List<Enumber> ToList(Type enumType)
+        {
+            List<Enumber> list = new List<Enumber>();
+
+            foreach (var e in Enum.GetValues(enumType))
             {
                 Enumber m = new Enumber();
                 object[] objArr = e.GetType().GetField(e.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), true);
