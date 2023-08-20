@@ -209,5 +209,31 @@ namespace HumanResourcesManagementBackend.Services
                 }
             }
         }
+
+        public void ChangeQuestion(UserDto.ChangePwd changeQuestion)
+        {
+            using (var db=new HRM())
+            {
+                var user = db.Users.FirstOrDefault(p=>p.LoginName== changeQuestion.LoginName && p.Password== changeQuestion.Password);
+                if(user==null)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "密码输入错误",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                user.Question= changeQuestion.Question;
+                user.Answer= changeQuestion.Answer;
+                if (db.SaveChanges() == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "修改密保失败,正在维护",
+                        Status = ResponseStatus.AddError
+                    };
+                }
+            }
+        }
     }
 }

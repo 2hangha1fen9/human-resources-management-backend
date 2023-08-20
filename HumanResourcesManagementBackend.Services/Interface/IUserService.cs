@@ -52,5 +52,11 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="pwd"></param>
         void ForgotPassword(UserDto.ChangePwd changePwd);
+
+        /// <summary>
+        /// 修改密保问题
+        /// </summary>
+        /// <param name="question"></param>
+        void ChangeQuestion(UserDto.ChangePwd changeQuestion);
     }
 }

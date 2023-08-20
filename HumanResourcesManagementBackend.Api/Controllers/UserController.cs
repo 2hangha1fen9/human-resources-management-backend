@@ -145,5 +145,21 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 Message = ResponseStatus.Success.Description()
             };
         }
+
+        /// <summary>
+        /// 修改密保
+        /// </summary>
+        /// <param name="changeQuestion"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public Response ChangeQuestion(UserDto.ChangePwd changeQuestion)
+        {
+            userService.ChangeQuestion(changeQuestion);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
     }
 }
