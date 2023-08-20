@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using static HumanResourcesManagementBackend.Models.UserDto;
 
 namespace HumanResourcesManagementBackend.Api.Controllers
 {
@@ -155,6 +156,23 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public Response ChangeQuestion(UserDto.ChangePwd changeQuestion)
         {
             userService.ChangeQuestion(changeQuestion);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
+
+        /// <summary>
+        /// 休假申请
+        /// </summary>
+        /// <param name="VacationApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Response VacationApply(UserDto.VacationApply vacationApply)
+        {
+            vacationApply.EmployeeId = CurrentUserId;
+            userService.VacationApply(vacationApply);
             return new Response
             {
                 Status = ResponseStatus.Success,
