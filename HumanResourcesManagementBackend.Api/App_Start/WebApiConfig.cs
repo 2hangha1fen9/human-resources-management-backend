@@ -11,6 +11,7 @@ using System.Web.Routing;
 using System.Web.SessionState;
 using System.Web;
 using HumanResourcesManagementBackend.Api.Filters;
+using System.Text;
 
 namespace HumanResourcesManagementBackend.Api
 {
@@ -32,6 +33,8 @@ namespace HumanResourcesManagementBackend.Api
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 }
             });
+            //全局鉴权
+            GlobalConfiguration.Configuration.Filters.Add(new GlobalAuthenticationFilter());
             //全局异常配置
             GlobalConfiguration.Configuration.Filters.Add(new GlobalExceptionFilter());
         }

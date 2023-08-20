@@ -41,21 +41,46 @@ namespace HumanResourcesManagementBackend.Services
             }
         }
 
-        public long Login(UserDto.Login login)
+        public UserDto.User GetUserById(long id)
+        {
+            using(var db = new HRM())
+            {
+                var userR = db.Users.FirstOrDefault(u => u.Id == id && u.Status != DataStatus.Deleted);
+                if (userR == null)
+                {
+                    throw new BusinessException
+                    {
+                        Status = ResponseStatus.NoData,
+                        ErrorMessage = ResponseStatus.NoData.Description()
+                    };
+                }
+                var user = userR.MapTo<UserDto.User>();
+                user.StatusStr = user.Status.Description();
+                return user;
+            }
+        }
+
+        public UserDto.User Login(UserDto.Login login)
         {
             using(var db = new HRM())
             {
                 //密码加密后比较
                 login.Password = login.Password.Encrypt();
-                var user = (from u in db.Users
+                var userR = (from u in db.Users
                             where u.LoginName == login.LoginName && u.Password == login.Password
                             select u).FirstOrDefault();
                 //空判断简写  ==  if(user == null) {throw new BusinessException} else {return user.Id}
-                return user?.Id ?? throw new BusinessException
+                if(userR == null)
                 {
-                    ErrorMessage = "用户名或密码错误",
-                    Status = ResponseStatus.NoPermission
-                };
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "用户名或密码错误",
+                        Status = ResponseStatus.NoPermission
+                    };
+                }
+                var user = userR.MapTo<UserDto.User>();
+                user.StatusStr = user.Status.Description();
+                return user;
             }
         }
 
