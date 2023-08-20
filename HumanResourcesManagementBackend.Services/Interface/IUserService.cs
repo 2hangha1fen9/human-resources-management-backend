@@ -17,11 +17,18 @@ namespace HumanResourcesManagementBackend.Services.Interface
         List<UserDto.User> GetUsers(UserDto.Search search);
 
         /// <summary>
+        /// 根据ID获取用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        UserDto.User GetUserById(long id);
+
+        /// <summary>
         /// 用户登录
         /// </summary>
         /// <param name="login"></param>
-        /// <returns>用户ID</returns>
-        long Login(UserDto.Login login);
+        /// <returns>用户对象</returns>
+        UserDto.User Login(UserDto.Login login);
 
         /// <summary>
         /// 添加用户

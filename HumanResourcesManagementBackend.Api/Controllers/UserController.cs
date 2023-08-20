@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using System.Web.UI;
 
 namespace HumanResourcesManagementBackend.Api.Controllers
 {
@@ -35,7 +36,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public PageResponse<UserDto.User> QueryUserByPage(UserDto.Search search)
         {
             var users = userService.GetUsers(search);
-
+            
             //返回响应结果
             return new PageResponse<UserDto.User>()
             {
@@ -54,13 +55,16 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        [HttpPost]
-        public Response Login(UserDto.Login login)
+        [HttpPost,AllowAnonymous]
+        public DataResponse<string> Login(UserDto.Login login)
         {
-            var userId = userService.Login(login);
-            HttpContext.Current.Session["userId"] = userId;
-            return new Response
+            var user = userService.Login(login);
+            //返回Token
+            var token = JwtHelper.Publish(user.ToJson());
+
+            return new DataResponse<string>
             {
+                Data = token,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -135,7 +139,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="changepwd"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut,AllowAnonymous]
         public Response ForgotPassword(UserDto.ChangePwd changePwd)
         {
             userService.ForgotPassword(changePwd);

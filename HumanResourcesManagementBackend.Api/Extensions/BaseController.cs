@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HumanResourcesManagementBackend.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,6 +15,6 @@ namespace HumanResourcesManagementBackend.Api.Extensions
         /// <summary>
         /// 当前请求用户ID
         /// </summary>
-        public long CurrentUserId { get; set; }
+        public UserDto.User CurrentUser { get; set; }
     }
 }

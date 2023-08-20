@@ -38,13 +38,9 @@ namespace HumanResourcesManagementBackend.Api.Filters
                     response.Message = string.IsNullOrEmpty(ex.Message) ? ResponseStatus.Error.Description() : ex.Message;
                 }
                 HttpResponseMessage httpResponse = new HttpResponseMessage();
-
                 HttpContent httpContent = new StringContent(response.ToJson());
-
                 httpResponse.Content = httpContent;
-
                 actionExecutedContext.Response = httpResponse;
-
             });
         }
     }
