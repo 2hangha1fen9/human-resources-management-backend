@@ -1,4 +1,5 @@
-﻿using HumanResourcesManagementBackend.Models;
+﻿using HumanResourcesManagementBackend.Common;
+using HumanResourcesManagementBackend.Models;
 using HumanResourcesManagementBackend.Repository;
 using HumanResourcesManagementBackend.Services.Interface;
 using System;

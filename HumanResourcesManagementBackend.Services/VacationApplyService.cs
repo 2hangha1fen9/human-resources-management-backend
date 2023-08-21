@@ -7,12 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HumanResourcesManagementBackend.Models.UserDto;
 
 namespace HumanResourcesManagementBackend.Services
 {
     public class VacationApplyService : IVacationApplyService
     {
-        public void VacationApply(VacationApplyDto vacationApply, long id)
+        public void VacationApply(VacationApplyDto.VacationApply vacationApply, long id)
         {
             using (var db = new HRM())
             {
@@ -43,6 +44,26 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.AddError
                     };
                 }
+            }
+        }
+
+        public List<VacationApplyDto.VacationApply> QueryMyVacationListByPage(VacationApplyDto.VacationApplySearch search)
+        {
+            using(var db = new HRM())
+            {
+                var query = from vacationapply in db.VacationApplies
+                            where vacationapply.Status != DataStatus.Deleted
+                            select vacationapply;
+
+                query = query.Where(u => u.EmployeeId==search.EmployeeId);
+                //分页并将数据库实体映射为dto对象(OrderBy必须调用)
+                var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<VacationApplyDto.VacationApply>();
+                //状态处理
+                list.ForEach(u =>
+                {
+                    u.StatusStr = u.Status.Description();
+                });
+                return list;
             }
         }
     }
