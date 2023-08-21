@@ -169,7 +169,11 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ApplyController.cs" />
+    <Compile Include="Controllers\AbsenceApplyController.cs" />
+    <Compile Include="Controllers\BusinessTripApplyController.cs" />
+    <Compile Include="Controllers\CompensatoryApplyController.cs" />
+    <Compile Include="Controllers\FieldWorkApplyController.cs" />
+    <Compile Include="Controllers\VacationApplyController.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Extensions\BaseController.cs" />
