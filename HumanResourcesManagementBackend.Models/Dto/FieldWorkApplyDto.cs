@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HumanResourcesManagementBackend.Models
 {
-    public class CompensatoryApplyDto
+    public class FieldWorkApplyDto
     {
         /// <summary>
         /// Id
@@ -24,23 +24,27 @@ namespace HumanResourcesManagementBackend.Models
         /// <summary>
         /// 更新时间
         /// </summary>
-        public DateTime UpdateTime { get; set; }=DateTime.Now;
+        public DateTime UpdateTime { get; set; } =DateTime.Now;
         /// <summary>
         /// 员工ID
         /// </summary>
         public long EmployeeId { get; set; }
         /// <summary>
-        /// 上班日期
+        /// 开始时间
         /// </summary>
-        public DateTime WorkDate { get; set; }
+        public DateTime BeginDate { get; set; }
         /// <summary>
-        /// 倒休日期
+        /// 结束时间
         /// </summary>
-        public DateTime RestDate { get; set; }
+        public DateTime EndDate { get; set; }
         /// <summary>
-        /// 工作计划
+        /// 外勤地点
         /// </summary>
-        public string WorkPlan { get; set; }
+        public string Address { get; set; }
+        /// <summary>
+        /// 外勤事由
+        /// </summary>
+        public string Reason { get; set; }
         /// <summary>
         /// 审核状态 1待审核 2同意 3拒绝
         /// </summary>

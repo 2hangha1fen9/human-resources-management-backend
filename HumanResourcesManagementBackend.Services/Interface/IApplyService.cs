@@ -27,5 +27,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="CompensatoryApply"></param>
         /// <returns></returns>
         void CompensatoryApply(CompensatoryApplyDto compensatoryApply, long id);
+
+        /// <summary>
+        /// 外勤申请
+        /// </summary>
+        /// <param name="FieldWorkApply"></param>
+        /// <returns></returns>
+        void FieldWorkApply(FieldWorkApplyDto fieldWorkApply, long id);
     }
 }

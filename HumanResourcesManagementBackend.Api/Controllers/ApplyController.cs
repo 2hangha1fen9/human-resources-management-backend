@@ -85,5 +85,22 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 Message = ResponseStatus.Success.Description()
             };
         }
+
+        /// <summary>
+        /// 外勤申请
+        /// </summary>
+        /// <param name="FieldWorkApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Response FieldWorkApply(FieldWorkApplyDto fieldWorkApply)
+        {
+            UserPermissions();
+            _applyService.FieldWorkApply(fieldWorkApply,uid);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
     }
 }

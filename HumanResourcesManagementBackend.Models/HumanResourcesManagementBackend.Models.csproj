@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Dto\AbsenceApplyDto.cs" />
     <Compile Include="Dto\CompensatoryApplyDto.cs" />
+    <Compile Include="Dto\FieldWorkApplyDto.cs" />
     <Compile Include="Dto\VacationApplyDto.cs" />
     <Compile Include="Exceptions\BusinessException.cs" />
     <Compile Include="Public\Enumber.cs" />
