@@ -1,20 +1,30 @@
-﻿using HumanResourcesManagementBackend.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HumanResourcesManagementBackend.Repository
+namespace HumanResourcesManagementBackend.Models
 {
-    /// <summary>
-    /// 出差申请
-    /// </summary>
-    /// <param name="BusinessTripApply"></param>
-    /// <returns></returns>
-    public class R_BusinessTripApply : BaseEntity
+    public class BusinessTripApplyDto
     {
+        /// <summary>
+        /// Id
+        /// </summary>
+        public long Id { get; set; }
+        /// <summary>
+        /// 数据状态 1启用 2禁用 99删除
+        /// </summary>
+        public DataStatus Status { get; set; } = DataStatus.Enable;
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; } = DateTime.Now;
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime UpdateTime { get; set; }=DateTime.Now;
         /// <summary>
         /// 员工ID
         /// </summary>
@@ -50,6 +60,6 @@ namespace HumanResourcesManagementBackend.Repository
         /// <summary>
         /// 审核类型 1 部门主管审批 2校区主任审批
         /// </summary>
-        public AuditType AuditType { get; set; }
+        public AuditType AuditType { get; set; } = AuditType.DepartmentManager;
     }
 }

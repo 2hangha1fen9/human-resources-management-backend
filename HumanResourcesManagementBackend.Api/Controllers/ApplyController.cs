@@ -85,7 +85,6 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 Message = ResponseStatus.Success.Description()
             };
         }
-
         /// <summary>
         /// 外勤申请
         /// </summary>
@@ -96,6 +95,22 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         {
             UserPermissions();
             _applyService.FieldWorkApply(fieldWorkApply,uid);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
+        /// <summary>
+        /// 出差申请
+        /// </summary>
+        /// <param name="BusinessTripApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Response BusinessTripApply(BusinessTripApplyDto businessTripApply)
+        {
+            //UserPermissions();
+            _applyService.BusinessTripApply(businessTripApply, 1);
             return new Response
             {
                 Status = ResponseStatus.Success,

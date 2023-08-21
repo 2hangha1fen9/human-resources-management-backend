@@ -34,5 +34,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="FieldWorkApply"></param>
         /// <returns></returns>
         void FieldWorkApply(FieldWorkApplyDto fieldWorkApply, long id);
+
+        /// <summary>
+        /// 出差申请
+        /// </summary>
+        /// <param name="BusinessTripApply"></param>
+        /// <returns></returns>
+        void BusinessTripApply(BusinessTripApplyDto businessTripApply,long id);
     }
 }
