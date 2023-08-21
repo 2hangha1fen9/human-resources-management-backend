@@ -69,5 +69,21 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             };
 
         }
+        /// <summary>
+        /// 调休申请
+        /// </summary>
+        /// <param name="CompensatoryApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Response CompensatoryApply(CompensatoryApplyDto compensatoryApply)
+        {
+            UserPermissions();
+            _applyService.CompensatoryApply(compensatoryApply,uid);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
     }
 }

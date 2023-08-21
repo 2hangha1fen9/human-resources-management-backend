@@ -14,10 +14,18 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="vacationapply"></param>
         void VacationApply(VacationApplyDto vacationApply, long id);
+
         /// <summary>
         /// 缺勤申请
         /// </summary>
         /// <param name="vacationapply"></param>
         void AbsenceApply(AbsenceApplyDto absenceApply, long id);
+
+        /// <summary>
+        /// 调休申请
+        /// </summary>
+        /// <param name="CompensatoryApply"></param>
+        /// <returns></returns>
+        void CompensatoryApply(CompensatoryApplyDto compensatoryApply, long id);
     }
 }

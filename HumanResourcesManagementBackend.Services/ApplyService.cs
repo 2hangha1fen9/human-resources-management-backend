@@ -54,7 +54,7 @@ namespace HumanResourcesManagementBackend.Services
                 {
                     throw new BusinessException
                     {
-                        ErrorMessage = "参数不能有空值存在",
+                        ErrorMessage = "请填入具体的参数",
                         Status = ResponseStatus.ParameterError
                     };
                 }
@@ -71,5 +71,31 @@ namespace HumanResourcesManagementBackend.Services
                 }
             }
         }
+
+       public void CompensatoryApply(CompensatoryApplyDto compensatoryApply, long id)
+       {
+            using(var db = new HRM())
+            {
+                if(compensatoryApply.WorkDate==null||compensatoryApply.RestDate==null||compensatoryApply.WorkPlan=="")
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "请填入具体的参数",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                var compensatoryapplyR = compensatoryApply.MapTo<R_CompensatoryApply>();
+                compensatoryapplyR.EmployeeId = id;
+                db.CompensatoryApplies.Add(compensatoryapplyR);
+                if(db.SaveChanges()==0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "调休申请失败，正在维护",
+                        Status = ResponseStatus.AddError
+                    };
+                }
+            }
+       }
     }
 }
