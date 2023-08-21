@@ -12,10 +12,19 @@ namespace HumanResourcesManagementBackend.Services
 {
     public class FieldWorkApplyService:IFieldWorkApplyService
     {
-        public void FieldWorkApply(FieldWorkApplyDto fieldWorkApply, long id)
+        public void FieldWorkApply(FieldWorkApplyDto fieldWorkApply)
         {
             using (var db = new HRM())
             {
+                if (fieldWorkApply.EmployeeId == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "当前无法申请",
+                        Status = ResponseStatus.NoPermission
+                    };
+                }
+
                 if (fieldWorkApply.BeginDate == null || fieldWorkApply.EndDate == null ||
                     fieldWorkApply.Address == "" || fieldWorkApply.Reason == "")
                 {
@@ -26,7 +35,6 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var fieldworkapplyR = fieldWorkApply.MapTo<R_FieldWorkApply>();
-                fieldworkapplyR.EmployeeId = id;
                 db.FieldWorkApplies.Add(fieldworkapplyR);
                 if (db.SaveChanges() == 0)
                 {

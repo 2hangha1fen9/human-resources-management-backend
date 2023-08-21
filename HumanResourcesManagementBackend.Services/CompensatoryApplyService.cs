@@ -12,10 +12,19 @@ namespace HumanResourcesManagementBackend.Services
 {
     public class CompensatoryApplyService:ICompensatoryApplyService
     {
-        public void CompensatoryApply(CompensatoryApplyDto compensatoryApply, long id)
+        public void CompensatoryApply(CompensatoryApplyDto compensatoryApply)
         {
             using (var db = new HRM())
             {
+                if (compensatoryApply.EmployeeId == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "当前无法申请",
+                        Status = ResponseStatus.NoPermission
+                    };
+                }
+
                 if (compensatoryApply.WorkDate == null || compensatoryApply.RestDate == null || compensatoryApply.WorkPlan == "")
                 {
                     throw new BusinessException
@@ -25,7 +34,6 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var compensatoryapplyR = compensatoryApply.MapTo<R_CompensatoryApply>();
-                compensatoryapplyR.EmployeeId = id;
                 db.CompensatoryApplies.Add(compensatoryapplyR);
                 if (db.SaveChanges() == 0)
                 {

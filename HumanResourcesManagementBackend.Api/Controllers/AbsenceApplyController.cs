@@ -28,22 +28,13 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public Response AbsenceApply(AbsenceApplyDto absenceApply)
         {
-            long uid = CurrentUser.EmployeeId;
-            if (uid == 0)
-            {
-                throw new BusinessException
-                {
-                    ErrorMessage = "没有权限",
-                    Status = ResponseStatus.ParameterError
-                };
-            }
-            _iabsenceapplyService.AbsenceApply(absenceApply, uid);
+            absenceApply.EmployeeId = CurrentUser.EmployeeId;
+            _iabsenceapplyService.AbsenceApply(absenceApply);
             return new Response
             {
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
-
         }
     }
 }

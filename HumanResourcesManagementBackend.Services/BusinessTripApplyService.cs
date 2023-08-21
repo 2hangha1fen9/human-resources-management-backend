@@ -12,10 +12,19 @@ namespace HumanResourcesManagementBackend.Services
 {
     public class BusinessTripApplyService:IBusinessTripApplyService
     {
-        public void BusinessTripApply(BusinessTripApplyDto businessTripApply, long id)
+        public void BusinessTripApply(BusinessTripApplyDto businessTripApply)
         {
             using (var db = new HRM())
             {
+                if (businessTripApply.EmployeeId == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "当前无法申请",
+                        Status = ResponseStatus.NoPermission
+                    };
+                }
+
                 if (businessTripApply.Address == "" || businessTripApply.Reason == "" || businessTripApply.Result == "" ||
                     businessTripApply.BeginDate == null || businessTripApply.EndDate == null || businessTripApply.Support == "")
                 {
@@ -26,7 +35,6 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var businesstripapplyR = businessTripApply.MapTo<R_BusinessTripApply>();
-                businesstripapplyR.EmployeeId = id;
                 db.BusinessTripApplies.Add(businesstripapplyR);
                 if (db.SaveChanges() == 0)
                 {

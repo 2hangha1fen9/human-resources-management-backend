@@ -14,6 +14,6 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="CompensatoryApply"></param>
         /// <returns></returns>
-        void CompensatoryApply(CompensatoryApplyDto compensatoryApply, long id);
+        void CompensatoryApply(CompensatoryApplyDto compensatoryApply);
     }
 }

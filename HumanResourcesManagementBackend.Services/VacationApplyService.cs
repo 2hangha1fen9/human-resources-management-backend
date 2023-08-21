@@ -13,10 +13,20 @@ namespace HumanResourcesManagementBackend.Services
 {
     public class VacationApplyService : IVacationApplyService
     {
-        public void VacationApply(VacationApplyDto.VacationApply vacationApply, long id)
+        public void VacationApply(VacationApplyDto.VacationApply vacationApply)
         {
             using (var db = new HRM())
             {
+                if (vacationApply.EmployeeId == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "当前无法申请",
+                        Status = ResponseStatus.NoPermission
+                    };
+                }
+
+
                 if (vacationApply.Reason == "" || vacationApply.Reason.Length < 10)
                 {
                     throw new BusinessException
@@ -34,7 +44,6 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var vacationapplyR = vacationApply.MapTo<R_VacationApply>();
-                vacationapplyR.EmployeeId = id;
                 db.VacationApplies.Add(vacationapplyR);
                 if (db.SaveChanges() == 0)
                 {
@@ -47,7 +56,7 @@ namespace HumanResourcesManagementBackend.Services
             }
         }
 
-        public List<VacationApplyDto.VacationApply> QueryMyVacationListByPage(VacationApplyDto.VacationApplySearch search)
+        public List<VacationApplyDto.VacationApply> GetVacationApplyList(VacationApplyDto.Search search)
         {
             using(var db = new HRM())
             {
@@ -55,13 +64,32 @@ namespace HumanResourcesManagementBackend.Services
                             where vacationapply.Status != DataStatus.Deleted
                             select vacationapply;
 
-                query = query.Where(u => u.EmployeeId==search.EmployeeId);
+                if(search.EmployeeId > 0)
+                {
+                    query = query.Where(u => u.EmployeeId == search.EmployeeId);
+                }
+                if (search.VacationType > 0)
+                {
+                    query = query.Where(u => u.VacationType == search.VacationType);
+                }
+                if (search.AuditType > 0)
+                {
+                    query = query.Where(u => u.AuditType == search.AuditType);
+                }
+                if (search.AuditStatus > 0)
+                {
+                    query = query.Where(u => u.AuditStatus == search.AuditStatus);
+                }
+
                 //分页并将数据库实体映射为dto对象(OrderBy必须调用)
                 var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<VacationApplyDto.VacationApply>();
                 //状态处理
                 list.ForEach(u =>
                 {
                     u.StatusStr = u.Status.Description();
+                    u.AuditStatusStr = u.AuditStatus.Description();
+                    u.AuditTypeStr = u.AuditType.Description();
+                    u.VacationTypeStr = u.VacationType.Description();
                 });
                 return list;
             }

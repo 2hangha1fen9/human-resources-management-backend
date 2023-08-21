@@ -28,16 +28,8 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public Response FieldWorkApply(FieldWorkApplyDto fieldWorkApply)
         {
-            long uid = CurrentUser.EmployeeId;
-            if (uid == 0)
-            {
-                throw new BusinessException
-                {
-                    ErrorMessage = "没有权限",
-                    Status = ResponseStatus.ParameterError
-                };
-            }
-            _fieldWorkApplyService.FieldWorkApply(fieldWorkApply, uid);
+            fieldWorkApply.EmployeeId = CurrentUser.EmployeeId;
+            _fieldWorkApplyService.FieldWorkApply(fieldWorkApply);
             return new Response
             {
                 Status = ResponseStatus.Success,

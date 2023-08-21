@@ -12,10 +12,19 @@ namespace HumanResourcesManagementBackend.Services
 {
     public class AbsenceApplyService:IAbsenceApplyService
     {
-        public void AbsenceApply(AbsenceApplyDto absenceApply, long id)
+        public void AbsenceApply(AbsenceApplyDto absenceApply)
         {
             using (var db = new HRM())
             {
+                if(absenceApply.EmployeeId == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "当前无法申请",
+                        Status = ResponseStatus.NoPermission
+                    };
+                }
+
                 if (absenceApply.AbsenceDateTime == null || absenceApply.CheckInType == 0 ||
                     absenceApply.Reason == "" || absenceApply.Prover == "")
                 {
@@ -26,7 +35,6 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var absenceapplyR = absenceApply.MapTo<R_AbsenceApply>();
-                absenceapplyR.EmployeeId = id;
                 db.AbsenceApplies.Add(absenceapplyR);
                 if (db.SaveChanges() == 0)
                 {

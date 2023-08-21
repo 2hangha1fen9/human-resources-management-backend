@@ -13,13 +13,13 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// 休假申请
         /// </summary>
         /// <param name="vacationapply"></param>
-        void VacationApply(VacationApplyDto.VacationApply vacationApply, long id);
+        void VacationApply(VacationApplyDto.VacationApply vacationApply);
 
         /// <summary>
-        /// 查询当前员工的休假申请记录
+        /// 获取休假申请
         /// </summary>
-        /// <param name="SeleVacationApply"></param>
+        /// <param name="search"></param>
         /// <returns></returns>
-        List<VacationApplyDto.VacationApply> QueryMyVacationListByPage(VacationApplyDto.VacationApplySearch search);
+        List<VacationApplyDto.VacationApply> GetVacationApplyList(VacationApplyDto.Search search);
     }
 }

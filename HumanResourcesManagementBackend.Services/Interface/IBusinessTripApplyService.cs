@@ -14,6 +14,6 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="BusinessTripApply"></param>
         /// <returns></returns>
-        void BusinessTripApply(BusinessTripApplyDto businessTripApply, long id);
+        void BusinessTripApply(BusinessTripApplyDto businessTripApply);
     }
 }

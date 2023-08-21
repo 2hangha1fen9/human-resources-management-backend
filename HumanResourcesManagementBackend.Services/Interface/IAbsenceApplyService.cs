@@ -13,6 +13,6 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// 缺勤申请
         /// </summary>
         /// <param name="vacationapply"></param>
-        void AbsenceApply(AbsenceApplyDto absenceApply, long id);
+        void AbsenceApply(AbsenceApplyDto absenceApply);
     }
 }

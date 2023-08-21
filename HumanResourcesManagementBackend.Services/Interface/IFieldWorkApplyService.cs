@@ -14,6 +14,6 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="FieldWorkApply"></param>
         /// <returns></returns>
-        void FieldWorkApply(FieldWorkApplyDto fieldWorkApply, long id);
+        void FieldWorkApply(FieldWorkApplyDto fieldWorkApply);
     }
 }

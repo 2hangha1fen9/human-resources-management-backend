@@ -27,16 +27,8 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public Response CompensatoryApply(CompensatoryApplyDto compensatoryApply)
         {
-            long uid = CurrentUser.EmployeeId;
-            if (uid == 0)
-            {
-                throw new BusinessException
-                {
-                    ErrorMessage = "没有权限",
-                    Status = ResponseStatus.ParameterError
-                };
-            }
-            _compensatoryApplyService.CompensatoryApply(compensatoryApply, uid);
+            compensatoryApply.EmployeeId = CurrentUser.EmployeeId;
+            _compensatoryApplyService.CompensatoryApply(compensatoryApply);
             return new Response
             {
                 Status = ResponseStatus.Success,

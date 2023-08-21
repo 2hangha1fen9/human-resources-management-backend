@@ -21,19 +21,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         {
             _vacationapplyService = new VacationApplyService();
         }
-        long uid;
-        public void PermissionDenied()
-        {
-            uid= CurrentUser.EmployeeId;
-            if (uid == 0)
-            {
-                throw new BusinessException
-                {
-                    ErrorMessage = "没有权限",
-                    Status = ResponseStatus.ParameterError
-                };
-            }
-        }
+
         /// <summary>
         /// 休假申请
         /// </summary>
@@ -42,8 +30,8 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public Response VacationApply(VacationApplyDto.VacationApply vacationApply)
         {
-            PermissionDenied();
-            _vacationapplyService.VacationApply(vacationApply,uid);
+            vacationApply.EmployeeId = CurrentUser.EmployeeId;
+            _vacationapplyService.VacationApply(vacationApply);
             return new Response
             {
                 Status = ResponseStatus.Success,
@@ -56,11 +44,10 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="SeleVacationApply"></param>
         /// <returns></returns>
         [HttpPost]
-        public PageResponse<VacationApplyDto.VacationApply> QueryMyVacationListByPage(VacationApplyDto.VacationApplySearch search)
+        public PageResponse<VacationApplyDto.VacationApply> QueryMyVacationListByPage(VacationApplyDto.Search search)
         {
-            PermissionDenied();
-            search.EmployeeId = uid;
-            var vacationapply = _vacationapplyService.QueryMyVacationListByPage(search);
+            search.EmployeeId = CurrentUser.EmployeeId;
+            var vacationapply = _vacationapplyService.GetVacationApplyList(search);
             return new PageResponse<VacationApplyDto.VacationApply>()
             {
                 RecordCount = search.RecordCount,
@@ -68,7 +55,30 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 Message = ResponseStatus.Success.Description(),
                 Data = vacationapply ?? throw new BusinessException
                 {
-                    Status = ResponseStatus.NoData
+                    Status = ResponseStatus.NoData,
+                    ErrorMessage = ResponseStatus.NoData.Description()
+                }
+            };
+        }
+
+        /// <summary>
+        /// 查询休假申请记录
+        /// </summary>
+        /// <param name="SeleVacationApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public PageResponse<VacationApplyDto.VacationApply> QueryVacationListByPage(VacationApplyDto.Search search)
+        {
+            var vacationapply = _vacationapplyService.GetVacationApplyList(search);
+            return new PageResponse<VacationApplyDto.VacationApply>()
+            {
+                RecordCount = search.RecordCount,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+                Data = vacationapply ?? throw new BusinessException
+                {
+                    Status = ResponseStatus.NoData,
+                    ErrorMessage = ResponseStatus.NoData.Description()
                 }
             };
         }
