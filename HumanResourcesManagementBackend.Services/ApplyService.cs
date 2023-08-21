@@ -24,6 +24,14 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
+                if(vacationApply.BeginDate==null||vacationApply.EndDate==null)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "请选择具体的请假时间",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
                 var vacationapplyR = vacationApply.MapTo<R_VacationApply>();
                 vacationapplyR.EmployeeId = id;
                 db.VacationApplies.Add(vacationapplyR);
@@ -32,6 +40,32 @@ namespace HumanResourcesManagementBackend.Services
                     throw new BusinessException
                     {
                         ErrorMessage = "休假申请失败，正在维护",
+                        Status = ResponseStatus.AddError
+                    };
+                }
+            }
+        }
+        public void AbsenceApply(AbsenceApplyDto absenceApply, long id)
+        {
+            using (var db = new HRM())
+            {
+                if(absenceApply.AbsenceDateTime==null||absenceApply.CheckInType==0||
+                    absenceApply.Reason==""||absenceApply.Prover=="")
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "参数不能有空值存在",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                var absenceapplyR = absenceApply.MapTo<R_AbsenceApply>();
+                absenceapplyR.EmployeeId = id;
+                db.AbsenceApplies.Add(absenceapplyR);
+                if (db.SaveChanges() == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "缺勤申请失败，正在维护",
                         Status = ResponseStatus.AddError
                     };
                 }

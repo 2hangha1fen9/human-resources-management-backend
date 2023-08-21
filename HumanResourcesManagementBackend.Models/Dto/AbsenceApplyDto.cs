@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HumanResourcesManagementBackend.Models
 {
-    /// <summary>
-    /// 用户休假申请
-    /// </summary>
-
-    public class VacationApplyDto
+    public class AbsenceApplyDto
     {
-        /// <summary>
-        /// Id
-        /// </summary>
         public long Id { get; set; }
         /// <summary>
         /// 数据状态 1启用 2禁用 99删除
@@ -28,27 +20,27 @@ namespace HumanResourcesManagementBackend.Models
         /// <summary>
         /// 更新时间
         /// </summary>
-        public DateTime UpdateTime { get; set; } = DateTime.Now;
+        public DateTime UpdateTime { get; set; }=DateTime.Now;
         /// <summary>
         /// 员工ID
         /// </summary>
         public long EmployeeId { get; set; }
         /// <summary>
-        /// 休假开始时间
+        /// 缺勤时间
         /// </summary>
-        public DateTime BeginDate { get; set; }
+        public DateTime AbsenceDateTime { get; set; }
         /// <summary>
-        /// 休假结束时间
+        /// 打卡类型 1上班卡 2下班卡
         /// </summary>
-        public DateTime EndDate { get; set; }
+        public CheckInType CheckInType { get; set; }
         /// <summary>
-        /// 休假原因
+        /// 申请理由
         /// </summary>
         public string Reason { get; set; }
         /// <summary>
-        /// 休假类型（详见枚举定义）
+        /// 证明人
         /// </summary>
-        public VacationType VacationType { get; set; }
+        public string Prover { get; set; }
         /// <summary>
         /// 审核状态 1待审核 2同意 3拒绝
         /// </summary>

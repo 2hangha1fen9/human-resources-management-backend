@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dto\AbsenceApplyDto.cs" />
     <Compile Include="Dto\VacationApplyDto.cs" />
     <Compile Include="Exceptions\BusinessException.cs" />
     <Compile Include="Public\Enumber.cs" />

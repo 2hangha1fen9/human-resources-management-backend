@@ -20,15 +20,13 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             _applyService = new ApplyService();
         }
         /// <summary>
-        /// 休假申请
+        /// 判断是否有分配账号
         /// </summary>
-        /// <param name="VacationApply"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public Response VacationApply(VacationApplyDto vacationApply)
+        long uid;
+        public void UserPermissions()
         {
-            long id = CurrentUser.EmployeeId;
-            if (id == 0)
+            uid = CurrentUser.EmployeeId;
+            if (uid == 0)
             {
                 throw new BusinessException
                 {
@@ -36,12 +34,40 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                     Status = ResponseStatus.ParameterError
                 };
             }
-            _applyService.VacationApply(vacationApply,1);
+        }
+
+        /// <summary>
+        /// 休假申请
+        /// </summary>
+        /// <param name="VacationApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Response VacationApply(VacationApplyDto vacationApply)
+        {
+            UserPermissions();
+            _applyService.VacationApply(vacationApply,uid);
             return new Response
             {
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };  
+        }
+        /// <summary>
+        /// 缺勤申请
+        /// </summary>
+        /// <param name="absenceApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Response AbsenceApply(AbsenceApplyDto absenceApply)
+        {
+            UserPermissions();
+            _applyService.AbsenceApply(absenceApply,uid);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+
         }
     }
 }
