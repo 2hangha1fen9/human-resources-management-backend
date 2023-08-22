@@ -7,13 +7,13 @@ namespace HumanResourcesManagementBackend.Repository.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class addRealtion : IMigrationMetadata
+    public sealed partial class init : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(addRealtion));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(init));
         
         string IMigrationMetadata.Id
         {
-            get { return "202308181546263_addRealtion"; }
+            get { return "202308221349539_init"; }
         }
         
         string IMigrationMetadata.Source

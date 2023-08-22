@@ -33,25 +33,16 @@ namespace HumanResourcesManagementBackend.Api
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 }
             });
+            //路由配置
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{action}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
             //全局鉴权
             GlobalConfiguration.Configuration.Filters.Add(new GlobalAuthenticationFilter());
             //全局异常配置
             GlobalConfiguration.Configuration.Filters.Add(new GlobalExceptionFilter());
-        }
-    }
-
-    /// <summary>
-    /// 开启Session支持
-    /// </summary>
-    public class SessionableControllerHandler : HttpControllerHandler, IRequiresSessionState
-    {
-        public SessionableControllerHandler(RouteData routeData) : base(routeData) { }
-    }
-    public class SessionStateRouteHandler : IRouteHandler
-    {
-        IHttpHandler IRouteHandler.GetHttpHandler(RequestContext requestContext)
-        {
-            return new SessionableControllerHandler(requestContext.RouteData);
         }
     }
 }

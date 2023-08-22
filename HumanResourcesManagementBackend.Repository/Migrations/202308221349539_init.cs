@@ -3,16 +3,12 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class addEntity : DbMigration
+    public partial class init : DbMigration
     {
         public override void Up()
         {
-            DropForeignKey("dbo.Roles", "User_Id", "dbo.Users");
-            DropIndex("dbo.Roles", new[] { "User_Id" });
-            DropPrimaryKey("dbo.Roles");
-            DropPrimaryKey("dbo.Users");
             CreateTable(
-                "dbo.AbsenceApplies",
+                "dbo.R_AbsenceApply",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -30,7 +26,7 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.BusinessTripApplies",
+                "dbo.R_BusinessTripApply",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -50,7 +46,7 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.CompensatoryApplies",
+                "dbo.R_CompensatoryApply",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -67,7 +63,33 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.FieldWorkApplies",
+                "dbo.R_Employee",
+                c => new
+                    {
+                        Id = c.Long(nullable: false, identity: true),
+                        WorkNum = c.String(),
+                        WorkStatus = c.Int(nullable: false),
+                        Name = c.String(),
+                        Gender = c.Int(nullable: false),
+                        MaritalStatus = c.Int(nullable: false),
+                        BirthDay = c.DateTime(nullable: false),
+                        IdCard = c.String(),
+                        Native = c.String(),
+                        Phone = c.String(),
+                        Email = c.String(),
+                        AcademicDegree = c.Int(nullable: false),
+                        HireDate = c.DateTime(nullable: false),
+                        PositionId = c.Long(nullable: false),
+                        DepartmentId = c.Long(nullable: false),
+                        PositionLevel = c.Int(nullable: false),
+                        Status = c.Int(nullable: false),
+                        CreateTime = c.DateTime(nullable: false),
+                        UpdateTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.R_FieldWorkApply",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -85,7 +107,7 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.PermissionRoleRefs",
+                "dbo.R_PermissionRoleRef",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -98,7 +120,7 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.Permissions",
+                "dbo.R_Permission",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -113,7 +135,19 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.UserRoleRefs",
+                "dbo.R_Role",
+                c => new
+                    {
+                        Id = c.Long(nullable: false, identity: true),
+                        Name = c.String(),
+                        Status = c.Int(nullable: false),
+                        CreateTime = c.DateTime(nullable: false),
+                        UpdateTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.R_UserRoleRef",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -126,7 +160,23 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.VacationApplies",
+                "dbo.R_User",
+                c => new
+                    {
+                        Id = c.Long(nullable: false, identity: true),
+                        LoginName = c.String(),
+                        Password = c.String(),
+                        Question = c.String(),
+                        Answer = c.String(),
+                        EmployeeId = c.Long(nullable: false),
+                        Status = c.Int(nullable: false),
+                        CreateTime = c.DateTime(nullable: false),
+                        UpdateTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.R_VacationApply",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -143,44 +193,21 @@
                     })
                 .PrimaryKey(t => t.Id);
             
-            AddColumn("dbo.Roles", "CreateTime", c => c.DateTime(nullable: false));
-            AddColumn("dbo.Roles", "UpdateTime", c => c.DateTime(nullable: false));
-            AddColumn("dbo.Users", "EmployeeId", c => c.Long(nullable: false));
-            AddColumn("dbo.Users", "CreateTime", c => c.DateTime(nullable: false));
-            AddColumn("dbo.Users", "UpdateTime", c => c.DateTime(nullable: false));
-            AlterColumn("dbo.Roles", "Id", c => c.Long(nullable: false, identity: true));
-            AlterColumn("dbo.Users", "Id", c => c.Long(nullable: false, identity: true));
-            AddPrimaryKey("dbo.Roles", "Id");
-            AddPrimaryKey("dbo.Users", "Id");
-            DropColumn("dbo.Roles", "User_Id");
-            DropColumn("dbo.Users", "RoleId");
         }
         
         public override void Down()
         {
-            AddColumn("dbo.Users", "RoleId", c => c.Int(nullable: false));
-            AddColumn("dbo.Roles", "User_Id", c => c.Int());
-            DropPrimaryKey("dbo.Users");
-            DropPrimaryKey("dbo.Roles");
-            AlterColumn("dbo.Users", "Id", c => c.Int(nullable: false, identity: true));
-            AlterColumn("dbo.Roles", "Id", c => c.Int(nullable: false, identity: true));
-            DropColumn("dbo.Users", "UpdateTime");
-            DropColumn("dbo.Users", "CreateTime");
-            DropColumn("dbo.Users", "EmployeeId");
-            DropColumn("dbo.Roles", "UpdateTime");
-            DropColumn("dbo.Roles", "CreateTime");
-            DropTable("dbo.VacationApplies");
-            DropTable("dbo.UserRoleRefs");
-            DropTable("dbo.Permissions");
-            DropTable("dbo.PermissionRoleRefs");
-            DropTable("dbo.FieldWorkApplies");
-            DropTable("dbo.CompensatoryApplies");
-            DropTable("dbo.BusinessTripApplies");
-            DropTable("dbo.AbsenceApplies");
-            AddPrimaryKey("dbo.Users", "Id");
-            AddPrimaryKey("dbo.Roles", "Id");
-            CreateIndex("dbo.Roles", "User_Id");
-            AddForeignKey("dbo.Roles", "User_Id", "dbo.Users", "Id");
+            DropTable("dbo.R_VacationApply");
+            DropTable("dbo.R_User");
+            DropTable("dbo.R_UserRoleRef");
+            DropTable("dbo.R_Role");
+            DropTable("dbo.R_Permission");
+            DropTable("dbo.R_PermissionRoleRef");
+            DropTable("dbo.R_FieldWorkApply");
+            DropTable("dbo.R_Employee");
+            DropTable("dbo.R_CompensatoryApply");
+            DropTable("dbo.R_BusinessTripApply");
+            DropTable("dbo.R_AbsenceApply");
         }
     }
 }
