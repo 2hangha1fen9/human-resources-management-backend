@@ -25,7 +25,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="BusinessTripApply"></param>
         /// <returns></returns>
         [HttpPost]
-        public Response BusinessTripApply(BusinessTripApplyDto businessTripApply)
+        public Response BusinessTripApply(BusinessTripApplyDto.BusinessTripApply businessTripApply)
         {
             businessTripApply.EmployeeId = CurrentUser.EmployeeId;
             _businessTripApplyService.BusinessTripApply(businessTripApply);
@@ -33,6 +33,49 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             {
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
+            };
+        }
+        /// <summary>
+        /// 查询当前员工出差申请记录
+        /// </summary>
+        /// <param name="SeleBusinessTripApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public PageResponse<BusinessTripApplyDto.BusinessTripApply> QueryMyBusinessTripListByPage(BusinessTripApplyDto.Search search)
+        {
+            search.EmployeeId = 2;
+            var vacationapply = _businessTripApplyService.QueryMyBusinessTripListByPage(search);
+            return new PageResponse<BusinessTripApplyDto.BusinessTripApply>()
+            {
+                RecordCount = search.RecordCount,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+                Data = vacationapply ?? throw new BusinessException
+                {
+                    Status = ResponseStatus.NoData,
+                    ErrorMessage = ResponseStatus.NoData.Description()
+                }
+            };
+        }
+        /// <summary>
+        /// 查询出差申请记录
+        /// </summary>
+        /// <param name="SeleBusinessTripApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public PageResponse<BusinessTripApplyDto.BusinessTripApply> QueryBusinessTripListByPage(BusinessTripApplyDto.Search search)
+        {
+            var vacationapply = _businessTripApplyService.QueryMyBusinessTripListByPage(search);
+            return new PageResponse<BusinessTripApplyDto.BusinessTripApply>()
+            {
+                RecordCount = search.RecordCount,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+                Data = vacationapply ?? throw new BusinessException
+                {
+                    Status = ResponseStatus.NoData,
+                    ErrorMessage = ResponseStatus.NoData.Description()
+                }
             };
         }
     }
