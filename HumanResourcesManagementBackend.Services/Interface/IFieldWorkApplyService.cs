@@ -14,6 +14,13 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="FieldWorkApply"></param>
         /// <returns></returns>
-        void FieldWorkApply(FieldWorkApplyDto fieldWorkApply);
+        void FieldWorkApply(FieldWorkApplyDto.FieldWorkApply fieldWorkApply);
+
+        /// <summary>
+        /// 查询当前员工的外勤申请记录
+        /// </summary>
+        /// <param name="SeleFieldWorkApply"></param>
+        /// <returns></returns>
+        List<FieldWorkApplyDto.FieldWorkApply> QueryMyFieldWorkListByPage(FieldWorkApplyDto.Search search);
     }
 }
