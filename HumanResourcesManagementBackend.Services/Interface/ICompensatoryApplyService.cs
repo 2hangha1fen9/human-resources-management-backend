@@ -14,6 +14,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="CompensatoryApply"></param>
         /// <returns></returns>
-        void CompensatoryApply(CompensatoryApplyDto compensatoryApply);
+        void CompensatoryApply(CompensatoryApplyDto.CompensatoryApply compensatoryApply);
+        /// <summary>
+        /// 获取调休申请记录
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        List<CompensatoryApplyDto.CompensatoryApply> QueryMyCompensatoryListByPage(CompensatoryApplyDto.Search search);
     }
 }

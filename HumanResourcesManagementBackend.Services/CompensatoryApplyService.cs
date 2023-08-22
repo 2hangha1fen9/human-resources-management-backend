@@ -12,7 +12,7 @@ namespace HumanResourcesManagementBackend.Services
 {
     public class CompensatoryApplyService:ICompensatoryApplyService
     {
-        public void CompensatoryApply(CompensatoryApplyDto compensatoryApply)
+        public void CompensatoryApply(CompensatoryApplyDto.CompensatoryApply compensatoryApply)
         {
             using (var db = new HRM())
             {
@@ -43,6 +43,38 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.AddError
                     };
                 }
+            }
+        }
+        public List<CompensatoryApplyDto.CompensatoryApply> QueryMyCompensatoryListByPage(CompensatoryApplyDto.Search search)
+        {
+            using(var db = new HRM())
+            {
+                var query = from compnesatoryapply in db.CompensatoryApplies
+                            where compnesatoryapply.Status != DataStatus.Deleted
+                            select compnesatoryapply;
+                if (search.EmployeeId > 0)
+                {
+                    query = query.Where(u => u.EmployeeId == search.EmployeeId);
+                }
+                if (search.AuditType > 0)
+                {
+                    query = query.Where(u => u.AuditType == search.AuditType);
+                }
+                if (search.AuditStatus > 0)
+                {
+                    query = query.Where(u => u.AuditStatus == search.AuditStatus);
+                }
+
+                //分页并将数据库实体映射为dto对象(OrderBy必须调用)
+                var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<CompensatoryApplyDto.CompensatoryApply>();
+                //状态处理
+                list.ForEach(u =>
+                {
+                    u.StatusStr = u.Status.Description();
+                    u.AuditStatusStr = u.AuditStatus.Description();
+                    u.AuditTypeStr = u.AuditType.Description();
+                });
+                return list;
             }
         }
     }
