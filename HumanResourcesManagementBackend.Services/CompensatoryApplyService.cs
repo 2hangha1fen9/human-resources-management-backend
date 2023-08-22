@@ -34,6 +34,11 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var compensatoryapplyR = compensatoryApply.MapTo<R_CompensatoryApply>();
+                compensatoryapplyR.CreateTime = DateTime.Now;
+                compensatoryapplyR.UpdateTime = DateTime.Now;
+                compensatoryapplyR.Status = DataStatus.Enable;
+                compensatoryapplyR.AuditStatus = AuditStatus.Pending;
+                compensatoryapplyR.AuditType = AuditType.DepartmentManager;
                 db.CompensatoryApplies.Add(compensatoryapplyR);
                 if (db.SaveChanges() == 0)
                 {

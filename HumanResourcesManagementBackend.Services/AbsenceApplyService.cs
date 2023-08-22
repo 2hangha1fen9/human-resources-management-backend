@@ -35,6 +35,11 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var absenceapplyR = absenceApply.MapTo<R_AbsenceApply>();
+                absenceapplyR.CreateTime = DateTime.Now;
+                absenceapplyR.UpdateTime = DateTime.Now;
+                absenceapplyR.Status = DataStatus.Enable;
+                absenceapplyR.AuditStatus = AuditStatus.Pending;
+                absenceapplyR.AuditType = AuditType.DepartmentManager;
                 db.AbsenceApplies.Add(absenceapplyR);
                 if (db.SaveChanges() == 0)
                 {

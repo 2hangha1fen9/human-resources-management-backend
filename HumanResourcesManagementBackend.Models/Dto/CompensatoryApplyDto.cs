@@ -26,11 +26,11 @@ namespace HumanResourcesManagementBackend.Models
             /// <summary>
             /// 创建时间
             /// </summary>
-            public DateTime CreateTime { get; set; }=DateTime.Now;
+            public DateTime CreateTime { get; set; }
             /// <summary>
             /// 更新时间
             /// </summary>
-            public DateTime UpdateTime { get; set; } = DateTime.Now;
+            public DateTime UpdateTime { get; set; }
             /// <summary>
             /// 员工ID
             /// </summary>

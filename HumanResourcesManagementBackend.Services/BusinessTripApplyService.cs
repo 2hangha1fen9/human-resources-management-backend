@@ -35,6 +35,11 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var businesstripapplyR = businessTripApply.MapTo<R_BusinessTripApply>();
+                businesstripapplyR.CreateTime = DateTime.Now;
+                businesstripapplyR.UpdateTime = DateTime.Now;
+                businesstripapplyR.Status = DataStatus.Enable;
+                businesstripapplyR.AuditStatus = AuditStatus.Pending;
+                businesstripapplyR.AuditType = AuditType.DepartmentManager;
                 db.BusinessTripApplies.Add(businesstripapplyR);
                 if (db.SaveChanges() == 0)
                 {

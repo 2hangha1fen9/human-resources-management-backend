@@ -35,6 +35,11 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var fieldworkapplyR = fieldWorkApply.MapTo<R_FieldWorkApply>();
+                fieldworkapplyR.CreateTime = DateTime.Now;
+                fieldworkapplyR.UpdateTime = DateTime.Now;
+                fieldworkapplyR.Status = DataStatus.Enable;
+                fieldworkapplyR.AuditStatus = AuditStatus.Pending;
+                fieldworkapplyR.AuditType = AuditType.DepartmentManager;
                 db.FieldWorkApplies.Add(fieldworkapplyR);
                 if (db.SaveChanges() == 0)
                 {

@@ -18,7 +18,7 @@ namespace HumanResourcesManagementBackend.Models
             /// <summary>
             /// 数据状态 1启用 2禁用 99删除
             /// </summary>
-            public DataStatus Status { get; set; } = DataStatus.Enable;
+            public DataStatus Status { get; set; }
             /// <summary>
             /// 数据状态 1启用 2禁用 99删除
             /// </summary>
@@ -26,11 +26,11 @@ namespace HumanResourcesManagementBackend.Models
             /// <summary>
             /// 创建时间
             /// </summary>
-            public DateTime CreateTime { get; set; } = DateTime.Now;
+            public DateTime CreateTime { get; set; }
             /// <summary>
             /// 更新时间
             /// </summary>
-            public DateTime UpdateTime { get; set; } = DateTime.Now;
+            public DateTime UpdateTime { get; set; }
             /// <summary>
             /// 员工ID
             /// </summary>
@@ -62,7 +62,7 @@ namespace HumanResourcesManagementBackend.Models
             /// <summary>
             /// 审核状态 1待审核 2同意 3拒绝
             /// </summary>
-            public AuditStatus AuditStatus { get; set; } = AuditStatus.Pending;
+            public AuditStatus AuditStatus { get; set; }
             /// <summary>
             /// 审核状态 1待审核 2同意 3拒绝
             /// </summary>
@@ -70,7 +70,7 @@ namespace HumanResourcesManagementBackend.Models
             /// <summary>
             /// 审核类型 1 部门主管审批 2校区主任审批
             /// </summary>
-            public AuditType AuditType { get; set; } = AuditType.DepartmentManager;
+            public AuditType AuditType { get; set; }
             /// <summary>
             /// 审核类型 1 部门主管审批 2校区主任审批
             /// </summary>

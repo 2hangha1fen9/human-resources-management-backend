@@ -42,6 +42,11 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var vacationapplyR = vacationApply.MapTo<R_VacationApply>();
+                vacationapplyR.CreateTime = DateTime.Now;
+                vacationApply.UpdateTime = DateTime.Now;
+                vacationapplyR.Status = DataStatus.Enable;
+                vacationapplyR.AuditStatus=AuditStatus.Pending;
+                vacationapplyR.AuditType = AuditType.DepartmentManager;
                 db.VacationApplies.Add(vacationapplyR);
                 if (db.SaveChanges() == 0)
                 {
