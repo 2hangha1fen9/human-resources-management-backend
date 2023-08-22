@@ -36,10 +36,6 @@ namespace HumanResourcesManagementBackend.Repository
         /// </summary>
         public DbSet<R_Role> Roles { get; set; }
         /// <summary>
-        /// 员工表
-        /// </summary>
-        public DbSet<R_Employee> Employees { get; set; }
-        /// <summary>
         /// 权限表
         /// </summary>
         public DbSet<R_Permission> Permissions { get; set; }
