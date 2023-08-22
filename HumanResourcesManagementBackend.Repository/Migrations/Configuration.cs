@@ -11,7 +11,7 @@
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
 
         }
 
@@ -31,7 +31,9 @@
                     Password = "admin".Encrypt(),
                     Question = string.Empty,
                     Answer = string.Empty,
-                    Status = DataStatus.Enable
+                    Status = DataStatus.Enable,
+                    CreateTime = DateTime.Now,
+                    UpdateTime = DateTime.Now,
                 });
             }
         }

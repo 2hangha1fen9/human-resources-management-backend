@@ -76,6 +76,10 @@
     <Compile Include="HRM.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\R_User.cs" />
+    <Compile Include="Migrations\202308221349539_init.cs" />
+    <Compile Include="Migrations\202308221349539_init.designer.cs">
+      <DependentUpon>202308221349539_init.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -92,6 +96,11 @@
       <Project>{f5f576ab-e98e-450c-abe4-04a10ca191d8}</Project>
       <Name>HumanResourcesManagementBackend.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202308221349539_init.resx">
+      <DependentUpon>202308221349539_init.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
