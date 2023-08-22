@@ -28,6 +28,10 @@ namespace HumanResourcesManagementBackend.Repository
         /// </summary>
         public DbSet<R_User> Users { get; set; }
         /// <summary>
+        /// 员工表
+        /// </summary>
+        public DbSet<R_Employee> Employees { get; set; }
+        /// <summary>
         /// 角色表
         /// </summary>
         public DbSet<R_Role> Roles { get; set; }

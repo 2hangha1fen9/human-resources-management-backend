@@ -41,12 +41,13 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
-                var vacationapplyR = vacationApply.MapTo<R_VacationApply>();
+                var vacationapplyR = new R_VacationApply();
                 vacationapplyR.CreateTime = DateTime.Now;
                 vacationApply.UpdateTime = DateTime.Now;
                 vacationapplyR.Status = DataStatus.Enable;
                 vacationapplyR.AuditStatus=AuditStatus.Pending;
                 vacationapplyR.AuditType = AuditType.DepartmentManager;
+                vacationapplyR= vacationApply.MapTo<R_VacationApply>();
                 db.VacationApplies.Add(vacationapplyR);
                 if (db.SaveChanges() == 0)
                 {

@@ -172,6 +172,7 @@
     <Compile Include="Controllers\AbsenceApplyController.cs" />
     <Compile Include="Controllers\BusinessTripApplyController.cs" />
     <Compile Include="Controllers\CompensatoryApplyController.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\FieldWorkApplyController.cs" />
     <Compile Include="Controllers\VacationApplyController.cs" />
     <Compile Include="Controllers\EnumController.cs" />

@@ -100,6 +100,10 @@
     <Compile Include="Migrations\202308191214468_modify.designer.cs">
       <DependentUpon>202308191214468_modify.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308220817054_addEmp.cs" />
+    <Compile Include="Migrations\202308220817054_addEmp.designer.cs">
+      <DependentUpon>202308220817054_addEmp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -135,6 +139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308191214468_modify.resx">
       <DependentUpon>202308191214468_modify.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308220817054_addEmp.resx">
+      <DependentUpon>202308220817054_addEmp.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

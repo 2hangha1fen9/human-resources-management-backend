@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbsenceApplyService.cs" />
+    <Compile Include="EmployeeService.cs" />
+    <Compile Include="Interface\IEmployeeService.cs" />
     <Compile Include="VacationApplyService.cs" />
     <Compile Include="BusinessTripApplyService.cs" />
     <Compile Include="CompensatoryApplyService.cs" />

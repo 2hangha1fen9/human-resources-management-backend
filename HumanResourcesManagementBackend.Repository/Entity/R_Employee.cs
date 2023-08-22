@@ -19,7 +19,7 @@ namespace HumanResourcesManagementBackend.Repository
         /// <summary>
         /// 工作状态 (详见枚举定义)
         /// </summary>
-        public int WorkStatus { get; set; }
+        public WorkStatus WorkStatus { get; set; }
         /// <summary>
         /// 员工名称
         /// </summary>
