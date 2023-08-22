@@ -76,34 +76,6 @@
     <Compile Include="HRM.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\R_User.cs" />
-    <Compile Include="Migrations\202308181518086_Init.cs" />
-    <Compile Include="Migrations\202308181518086_Init.designer.cs">
-      <DependentUpon>202308181518086_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202308181527000_addRole.cs" />
-    <Compile Include="Migrations\202308181527000_addRole.designer.cs">
-      <DependentUpon>202308181527000_addRole.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202308181546263_addRealtion.cs" />
-    <Compile Include="Migrations\202308181546263_addRealtion.designer.cs">
-      <DependentUpon>202308181546263_addRealtion.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202308190423004_addEntity.cs" />
-    <Compile Include="Migrations\202308190423004_addEntity.designer.cs">
-      <DependentUpon>202308190423004_addEntity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202308190452042_editEntity.cs" />
-    <Compile Include="Migrations\202308190452042_editEntity.designer.cs">
-      <DependentUpon>202308190452042_editEntity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202308191214468_modify.cs" />
-    <Compile Include="Migrations\202308191214468_modify.designer.cs">
-      <DependentUpon>202308191214468_modify.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202308220817054_addEmp.cs" />
-    <Compile Include="Migrations\202308220817054_addEmp.designer.cs">
-      <DependentUpon>202308220817054_addEmp.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -120,29 +92,6 @@
       <Project>{f5f576ab-e98e-450c-abe4-04a10ca191d8}</Project>
       <Name>HumanResourcesManagementBackend.Models</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202308181518086_Init.resx">
-      <DependentUpon>202308181518086_Init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202308181527000_addRole.resx">
-      <DependentUpon>202308181527000_addRole.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202308181546263_addRealtion.resx">
-      <DependentUpon>202308181546263_addRealtion.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202308190423004_addEntity.resx">
-      <DependentUpon>202308190423004_addEntity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202308190452042_editEntity.resx">
-      <DependentUpon>202308190452042_editEntity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202308191214468_modify.resx">
-      <DependentUpon>202308191214468_modify.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202308220817054_addEmp.resx">
-      <DependentUpon>202308220817054_addEmp.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
