@@ -25,8 +25,6 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.NoPermission
                     };
                 }
-
-
                 if (vacationApply.Reason == "" || vacationApply.Reason.Length < 10)
                 {
                     throw new BusinessException

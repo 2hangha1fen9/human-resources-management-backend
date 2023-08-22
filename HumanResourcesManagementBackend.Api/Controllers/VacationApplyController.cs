@@ -30,7 +30,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public Response VacationApply(VacationApplyDto.VacationApply vacationApply)
         {
-            vacationApply.EmployeeId = CurrentUser.EmployeeId;
+            vacationApply.EmployeeId = 1;
             _vacationapplyService.VacationApply(vacationApply);
             return new Response
             {

@@ -24,9 +24,9 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// 缺勤申请
         /// </summary>
         /// <param name="absenceApply"></param>
-        /// <returns></returns>
+        /// <returns></returns> 
         [HttpPost]
-        public Response AbsenceApply(AbsenceApplyDto absenceApply)
+        public Response AbsenceApply(AbsenceApplyDto.AbsenceApply absenceApply)
         {
             absenceApply.EmployeeId = CurrentUser.EmployeeId;
             _iabsenceapplyService.AbsenceApply(absenceApply);
@@ -34,6 +34,51 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             {
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
+            };
+        }
+
+        /// <summary>
+        /// 查询当前员工的缺勤申请记录
+        /// </summary>
+        /// <param name="SeleAbsenceApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public PageResponse<AbsenceApplyDto.AbsenceApply> QueryMyAbsenceListByPage(AbsenceApplyDto.Search search)
+        {
+            search.EmployeeId = CurrentUser.EmployeeId;
+            var vacationapply = _iabsenceapplyService.GetAbsenceApplyList(search);
+            return new PageResponse<AbsenceApplyDto.AbsenceApply>()
+            {
+                RecordCount = search.RecordCount,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+                Data = vacationapply ?? throw new BusinessException
+                {
+                    Status = ResponseStatus.NoData,
+                    ErrorMessage = ResponseStatus.NoData.Description()
+                }
+            };
+        }
+
+        /// <summary>
+        /// 查询缺勤申请记录
+        /// </summary>
+        /// <param name="SeleAbsenceApply"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public PageResponse<AbsenceApplyDto.AbsenceApply> QueryAbsenceListByPage(AbsenceApplyDto.Search search)
+        {
+            var vacationapply = _iabsenceapplyService.GetAbsenceApplyList(search);
+            return new PageResponse<AbsenceApplyDto.AbsenceApply>()
+            {
+                RecordCount = search.RecordCount,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+                Data = vacationapply ?? throw new BusinessException
+                {
+                    Status = ResponseStatus.NoData,
+                    ErrorMessage = ResponseStatus.NoData.Description()
+                }
             };
         }
     }
