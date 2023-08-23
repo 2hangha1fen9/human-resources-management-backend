@@ -80,6 +80,10 @@
     <Compile Include="Migrations\202308221349539_init.designer.cs">
       <DependentUpon>202308221349539_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308231255252_AddAudit.cs" />
+    <Compile Include="Migrations\202308231255252_AddAudit.designer.cs">
+      <DependentUpon>202308231255252_AddAudit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -100,6 +104,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202308221349539_init.resx">
       <DependentUpon>202308221349539_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308231255252_AddAudit.resx">
+      <DependentUpon>202308231255252_AddAudit.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

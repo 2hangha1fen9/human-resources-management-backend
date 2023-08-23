@@ -36,5 +36,9 @@ namespace HumanResourcesManagementBackend.Repository
         /// 审核类型 1 部门主管审批 2校区主任审批
         /// </summary>
         public AuditType AuditType { get; set; } = AuditType.GeneralManager;
+        /// <summary>
+        /// 审核意见
+        /// </summary>
+        public string AuditResult { get; set; }
     }
 }
