@@ -21,5 +21,11 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="SeleBusinessTripApply"></param>
         /// <returns></returns>
         List<BusinessTripApplyDto.BusinessTripApply> QueryMyBusinessTripListByPage(BusinessTripApplyDto.Search search);
+        /// <summary>
+        /// 审核员工的出差申请记录
+        /// </summary>
+        /// <param name="ExamineBusinessTripApply"></param>
+        /// <returns></returns>
+        void ExamineBusinessTripApply(BusinessTripApplyDto.Examine examine);
     }
 }

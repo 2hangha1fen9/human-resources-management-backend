@@ -83,5 +83,39 @@ namespace HumanResourcesManagementBackend.Services
                 return list;
             }
         }
+        public void ExamineBusinessTripApply(BusinessTripApplyDto.Examine examine)
+        {
+            using (var db = new HRM())
+            {
+                //查询是否存在
+                var businesstripEx = db.BusinessTripApplies.FirstOrDefault(u => u.Id == examine.Id);
+                if (businesstripEx == null)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "记录存取有误,请重新选择",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                if (examine.AuditResult == "")
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "请填写意见",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                businesstripEx.AuditStatus = examine.AuditStatus;
+                businesstripEx.AuditResult = examine.AuditResult;
+                if (db.SaveChanges() == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "审核出现错误,请联系管理员",
+                        Status = ResponseStatus.AddError
+                    };
+                }
+            }
+        }
     }
 }

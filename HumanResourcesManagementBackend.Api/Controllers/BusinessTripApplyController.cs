@@ -78,5 +78,20 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 }
             };
         }
+        /// <summary>
+        /// 审核员工的出差申请记录
+        /// </summary>
+        /// <param name="ExamineBusinessTripApply"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public Response ExamineBusinessTripApply(BusinessTripApplyDto.Examine examine)
+        {
+            _businessTripApplyService.ExamineBusinessTripApply(examine);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
     }
 }

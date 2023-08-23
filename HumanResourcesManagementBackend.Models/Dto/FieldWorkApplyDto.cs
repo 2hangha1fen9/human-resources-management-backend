@@ -9,6 +9,9 @@ namespace HumanResourcesManagementBackend.Models
 {
     public class FieldWorkApplyDto
     {
+        /// <summary>
+        /// 外勤对象
+        /// </summary>
         public class FieldWorkApply
         {
             /// <summary>
@@ -67,7 +70,14 @@ namespace HumanResourcesManagementBackend.Models
             /// 审核类型 1 部门主管审批 2校区主任审批
             /// </summary>
             public string AuditTypeStr { get; set; }
+            /// <summary>
+            /// 审核意见
+            /// </summary>
+            public string AuditResult { get; set; }
         }
+        /// <summary>
+        /// 查询
+        /// </summary>
         public class Search : PageRequest
         {
             /// <summary>
@@ -86,6 +96,24 @@ namespace HumanResourcesManagementBackend.Models
             /// 审核类型 1 部门主管审批 2校区主任审批
             /// </summary>
             public AuditType AuditType { get; set; }
+        }
+        /// <summary>
+        /// 审核
+        /// </summary>
+        public class Examine
+        {
+            /// <summary>
+            /// Id
+            /// </summary>
+            public long Id { get; set; }
+            /// <summary>
+            /// 审核状态 1待审核 2同意 3拒绝
+            /// </summary>
+            public AuditStatus AuditStatus { get; set; }
+            /// <summary>
+            /// 审核意见
+            /// </summary>
+            public string AuditResult { get; set; }
         }
     }
 }

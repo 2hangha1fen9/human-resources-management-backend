@@ -79,5 +79,20 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 }
             };
         }
+        /// <summary>
+        /// 审核员工的外勤申请记录
+        /// </summary>
+        /// <param name="ExamineFieldWorkApply"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public Response ExamineFieldWorkApply(FieldWorkApplyDto.Examine examine)
+        {
+            _fieldWorkApplyService.ExamineFieldWorkApply(examine);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
     }
 }
