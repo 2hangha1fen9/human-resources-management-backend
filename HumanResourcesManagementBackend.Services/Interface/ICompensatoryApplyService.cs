@@ -21,5 +21,11 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="search"></param>
         /// <returns></returns>
         List<CompensatoryApplyDto.CompensatoryApply> QueryMyCompensatoryListByPage(CompensatoryApplyDto.Search search);
+        /// <summary>
+        /// 审核员工的调休申请记录
+        /// </summary>
+        /// <param name="ExamineCompensatoryApply"></param>
+        /// <returns></returns>
+        void ExamineCompensatoryApply(CompensatoryApplyDto.Examine examine);
     }
 }

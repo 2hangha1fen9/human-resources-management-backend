@@ -81,5 +81,20 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 }
             };
         }
+        /// <summary>
+        /// 审核员工的缺勤申请记录
+        /// </summary>
+        /// <param name="ExamineAbsenceApply"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public Response ExamineAbsenceApply(AbsenceApplyDto.Examine examine)
+        {
+            _iabsenceapplyService.ExamineAbsenceApply(examine);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
     }
 }

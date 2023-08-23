@@ -27,7 +27,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public Response CompensatoryApply(CompensatoryApplyDto.CompensatoryApply compensatoryApply)
         {
-            compensatoryApply.EmployeeId = 1;
+            compensatoryApply.EmployeeId = CurrentUser.EmployeeId;
             _compensatoryApplyService.CompensatoryApply(compensatoryApply);
             return new Response
             {
@@ -76,6 +76,21 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                     Status = ResponseStatus.NoData,
                     ErrorMessage = ResponseStatus.NoData.Description()
                 }
+            };
+        }
+        /// <summary>
+        /// 审核员工的调休申请记录
+        /// </summary>
+        /// <param name="ExamineCompensatoryApply"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public Response ExamineCompensatoryApply(CompensatoryApplyDto.Examine examine)
+        {
+            _compensatoryApplyService.ExamineCompensatoryApply(examine);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
             };
         }
     }

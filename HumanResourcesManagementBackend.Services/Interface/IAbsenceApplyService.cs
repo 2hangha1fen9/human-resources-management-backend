@@ -21,5 +21,11 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="SeleAbsenceApply"></param>
         /// <returns></returns>
         List<AbsenceApplyDto.AbsenceApply> GetAbsenceApplyList(AbsenceApplyDto.Search search);
+        /// <summary>
+        /// 审核员工的缺勤申请记录
+        /// </summary>
+        /// <param name="ExamineAbsenceApply"></param>
+        /// <returns></returns>
+        void ExamineAbsenceApply(AbsenceApplyDto.Examine examine);
     }
 }

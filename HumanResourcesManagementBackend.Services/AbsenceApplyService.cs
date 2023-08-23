@@ -88,5 +88,40 @@ namespace HumanResourcesManagementBackend.Services
                 return list;
             }
         }
+
+        public void ExamineAbsenceApply(AbsenceApplyDto.Examine examine)
+        {
+            using (var db = new HRM())
+            {
+                //查询是否存在
+                var absenceEx = db.AbsenceApplies.FirstOrDefault(u => u.Id == examine.Id);
+                if (absenceEx == null)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "记录存取有误,请重新选择",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                if (examine.AuditResult == "")
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "请填写意见",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                absenceEx.AuditStatus = examine.AuditStatus;
+                absenceEx.AuditResult = examine.AuditResult;
+                if (db.SaveChanges() == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "审核出现错误,请联系管理员",
+                        Status = ResponseStatus.AddError
+                    };
+                }
+            }
+        }
     }
 }
