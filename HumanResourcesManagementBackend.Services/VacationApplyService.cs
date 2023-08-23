@@ -41,13 +41,12 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
-                var vacationapplyR = new R_VacationApply();
+                var vacationapplyR = vacationApply.MapTo<R_VacationApply>();
                 vacationapplyR.CreateTime = DateTime.Now;
-                vacationApply.UpdateTime = DateTime.Now;
+                vacationapplyR.UpdateTime = DateTime.Now;
                 vacationapplyR.Status = DataStatus.Enable;
                 vacationapplyR.AuditStatus=AuditStatus.Pending;
                 vacationapplyR.AuditType = AuditType.DepartmentManager;
-                vacationapplyR= vacationApply.MapTo<R_VacationApply>();
                 db.VacationApplies.Add(vacationapplyR);
                 if (db.SaveChanges() == 0)
                 {
@@ -96,6 +95,41 @@ namespace HumanResourcesManagementBackend.Services
                     u.VacationTypeStr = u.VacationType.Description();
                 });
                 return list;
+            }
+        }
+
+        public void ExamineVacationApply(VacationApplyDto.Examine examine)
+        {
+            using(var db = new HRM())
+            {
+                //查询是否存在
+                var vacationEx = db.VacationApplies.FirstOrDefault(u => u.Id == examine.Id);
+                if (vacationEx == null)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "记录存取有误,请重新选择",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                if (examine.AuditResult=="")
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "请填写意见",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+                vacationEx.AuditStatus=examine.AuditStatus;
+                vacationEx.AuditResult = examine.AuditResult;
+                if (db.SaveChanges() == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "审核出现错误,请联系管理员",
+                        Status = ResponseStatus.AddError
+                    };
+                }
             }
         }
     }

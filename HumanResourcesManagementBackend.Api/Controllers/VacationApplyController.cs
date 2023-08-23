@@ -82,5 +82,20 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 }
             };
         }
+        /// <summary>
+        /// 审核员工的休假申请记录
+        /// </summary>
+        /// <param name="ExamineVacationApply"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public Response ExamineVacationApply(VacationApplyDto.Examine examine)
+        {
+            _vacationapplyService.ExamineVacationApply(examine);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
     }
 }
