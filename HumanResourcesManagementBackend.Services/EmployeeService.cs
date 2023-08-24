@@ -326,6 +326,101 @@ namespace HumanResourcesManagementBackend.Services
                 return gradelist;
             }
         }
-
+        public List<SummaryDto> GetAgeSummary()
+        {
+            using (var db = new HRM())
+            {
+                var agelist = new List<SummaryDto>();
+                var age = new SummaryDto();
+                var query = from employ in db.Employees
+                            where employ.Status != DataStatus.Deleted
+                            select employ;
+                //总人数
+                long number = query.Count();
+                double percent;
+                for (int i = 0; i < 8; i++)
+                {
+                    age.Proportion = "0.00%";
+                    switch (i)
+                    {
+                        case 0: { age.Category = "18周岁以下"; agelist.Add(age); break; };
+                        case 1: { age.Category = "18-25周岁"; agelist.Add(age); break; };
+                        case 2: { age.Category = "26-35周岁"; agelist.Add(age); break; };
+                        case 3: { age.Category = "36-45周岁"; agelist.Add(age); break; };
+                        case 4: { age.Category = "46-50周岁"; agelist.Add(age); break; };
+                        case 5: { age.Category = "51-55周岁"; agelist.Add(age); break; };
+                        case 6: { age.Category = "56-60周岁"; agelist.Add(age); break; };
+                        case 7: { age.Category = "60周岁以上"; agelist.Add(age); break; };
+                        default: break;
+                    }
+                    age = new SummaryDto();
+                }
+                foreach(var item in query)
+                {
+                    int years = DateTime.Now.Year - item.BirthDay.Year;
+                    foreach (var ag in agelist)
+                    {
+                        if (ag.Category == "18周岁以下" && years < 18)
+                        {
+                            ag.Number++;
+                            percent = Convert.ToDouble(ag.Number) / Convert.ToDouble(number);
+                            ag.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else if (ag.Category == "18-25周岁" && years < 26)
+                        {
+                            ag.Number++;
+                            percent = Convert.ToDouble(ag.Number) / Convert.ToDouble(number);
+                            ag.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else if (ag.Category == "26-35周岁" && years < 36)
+                        {
+                            ag.Number++;
+                            percent = Convert.ToDouble(ag.Number) / Convert.ToDouble(number);
+                            ag.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else if (ag.Category == "36-45周岁" && years < 46)
+                        {
+                            ag.Number++;
+                            percent = Convert.ToDouble(ag.Number) / Convert.ToDouble(number);
+                            ag.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else if (ag.Category == "46-50周岁" && years < 51)
+                        {
+                            ag.Number++;
+                            percent = Convert.ToDouble(ag.Number) / Convert.ToDouble(number);
+                            ag.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else if (ag.Category == "51-55周岁" && years < 56)
+                        {
+                            ag.Number++;
+                            percent = Convert.ToDouble(ag.Number) / Convert.ToDouble(number);
+                            ag.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else if (ag.Category == "56-60周岁" && years < 61)
+                        {
+                            ag.Number++;
+                            percent = Convert.ToDouble(ag.Number) / Convert.ToDouble(number);
+                            ag.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else if (ag.Category == "60周岁以上")
+                        {
+                            ag.Number++;
+                            percent = Convert.ToDouble(ag.Number) / Convert.ToDouble(number);
+                            ag.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else { continue; }
+                    }
+                }
+                return agelist;
+            }
+        }
     }
 }

@@ -143,5 +143,23 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 }
             };
         }
+        /// <summary>
+        /// 查询年龄汇总信息
+        /// </summary>
+        /// <param name="GetAgeSummary"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public PageResponse<SummaryDto> GetAgeSummary()
+        {
+            var getage = _employeeService.GetAgeSummary();
+            return new PageResponse<SummaryDto>()
+            {
+                RecordCount = _employeeService.TotalPeople(),
+                Data = getage ?? throw new BusinessException
+                {
+                    Status = ResponseStatus.NoData
+                }
+            };
+        }
     }
 }
