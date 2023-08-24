@@ -1,4 +1,5 @@
 ﻿using HumanResourcesManagementBackend.Models;
+using HumanResourcesManagementBackend.Models.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,5 +38,17 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="deleemploysee"></param>
         /// <returns></returns>
         void DeleEmploysee(long eid);
+        /// <summary>
+        /// 查询总在职人数
+        /// </summary>
+        /// <param name="TotalPeople"></param>
+        /// <returns></returns>
+        int TotalPeople();
+        /// <summary>
+        /// 查询工龄汇总
+        /// </summary>
+        /// <param name="GetSenioritySummary"></param>
+        /// <returns></returns>
+        List<SummaryDto> GetSenioritySummary();
     }
 }

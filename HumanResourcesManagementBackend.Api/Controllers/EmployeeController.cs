@@ -9,6 +9,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using HumanResourcesManagementBackend.Common;
+using HumanResourcesManagementBackend.Models.Dto;
+using static HumanResourcesManagementBackend.Models.EmployeeDto;
 
 namespace HumanResourcesManagementBackend.Api.Controllers
 {
@@ -101,6 +103,25 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             {
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
+            };
+        }
+
+        /// <summary>
+        /// 查询工龄汇总
+        /// </summary>
+        /// <param name="GetSenioritySummary"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public PageResponse<SummaryDto> GetSenioritySummary()
+        {
+            var  getseniority= _employeeService.GetSenioritySummary();
+            return new PageResponse<SummaryDto>()
+            {
+                RecordCount = _employeeService.TotalPeople(),
+                Data = getseniority ?? throw new BusinessException
+                {
+                    Status = ResponseStatus.NoData
+                }
             };
         }
     }
