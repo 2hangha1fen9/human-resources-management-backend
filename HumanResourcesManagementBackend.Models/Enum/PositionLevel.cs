@@ -22,7 +22,7 @@ namespace HumanResourcesManagementBackend.Models
         /// <summary>
         /// 中层管理
         /// </summary>
-        [Description("基层职员")]
+        [Description("中层管理")]
         MiddleManager,
         /// <summary>
         /// 储备干部

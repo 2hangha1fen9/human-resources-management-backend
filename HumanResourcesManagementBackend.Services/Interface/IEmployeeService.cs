@@ -50,5 +50,11 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="GetSenioritySummary"></param>
         /// <returns></returns>
         List<SummaryDto> GetSenioritySummary();
+        /// <summary>
+        /// 查询职别汇总
+        /// </summary>
+        /// <param name="GetSenioritySummary"></param>
+        /// <returns></returns>
+        List<SummaryDto> GetGradeSummary();
     }
 }

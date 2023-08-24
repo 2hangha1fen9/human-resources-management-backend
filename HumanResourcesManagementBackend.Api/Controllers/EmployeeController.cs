@@ -107,7 +107,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         }
 
         /// <summary>
-        /// 查询工龄汇总
+        /// 查询工龄汇总信息
         /// </summary>
         /// <param name="GetSenioritySummary"></param>
         /// <returns></returns>
@@ -119,6 +119,25 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             {
                 RecordCount = _employeeService.TotalPeople(),
                 Data = getseniority ?? throw new BusinessException
+                {
+                    Status = ResponseStatus.NoData
+                }
+            };
+        }
+
+        /// <summary>
+        /// 查询职别汇总信息
+        /// </summary>
+        /// <param name="GetGradeSummary"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public PageResponse<SummaryDto> GetGradeSummary()
+        {
+            var getgrade= _employeeService.GetGradeSummary();
+            return new PageResponse<SummaryDto>()
+            {
+                RecordCount = _employeeService.TotalPeople(),
+                Data = getgrade ?? throw new BusinessException
                 {
                     Status = ResponseStatus.NoData
                 }

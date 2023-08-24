@@ -14,7 +14,7 @@ namespace HumanResourcesManagementBackend.Models.Dto
         /// <summary>
         /// 类别
         /// </summary>
-        public string Category { get; set; }
+        public string Category { get; set; } = "0.00%";
         /// <summary>
         /// 人数
         /// </summary>

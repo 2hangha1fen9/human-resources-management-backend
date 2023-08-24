@@ -5,6 +5,7 @@ using HumanResourcesManagementBackend.Repository;
 using HumanResourcesManagementBackend.Services.Interface;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
@@ -170,7 +171,6 @@ namespace HumanResourcesManagementBackend.Services
             {
                 var senioritylist = new List<SummaryDto>();
                 var seniority = new SummaryDto();
-                
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -179,6 +179,7 @@ namespace HumanResourcesManagementBackend.Services
                 double percent;
                 for (int i = 0; i < 8;i++)
                 {
+                    seniority.Proportion = "0.00%";
                     switch (i)
                     {
                         case 0: { seniority.Category = "1-3月"; senioritylist.Add(seniority);break; };
@@ -199,7 +200,6 @@ namespace HumanResourcesManagementBackend.Services
                     int month = ((DateTime.Now.Year - item.HireDate.Year) * 12) + DateTime.Now.Month - item.HireDate.Month;
                     foreach (var se in senioritylist)
                     {
-                        se.Proportion = "0.00%";
                         if (se.Category == "1-3月"&&month < 3)
                         {
                             se.Number++;
@@ -260,9 +260,72 @@ namespace HumanResourcesManagementBackend.Services
                     }
 
                 }
-
                 return senioritylist;
             }
         }
+        public List<SummaryDto> GetGradeSummary()
+        {
+            using (var db = new HRM())
+            {
+                var gradelist = new List<SummaryDto>();
+                var grade = new SummaryDto();
+                var query = from employ in db.Employees
+                            where employ.Status != DataStatus.Deleted
+                            select employ;
+                //总人数
+                long number = query.Count();
+                double percent;
+                for (int i = 0; i < 4; i++)
+                {
+                    grade.Proportion = "0.00%";
+                    switch (i)
+                    {
+                        case 0: { grade.Category = "基层员工"; gradelist.Add(grade); break; };
+                        case 1: { grade.Category = "基层职员"; gradelist.Add(grade); break; };
+                        case 2: { grade.Category = "中层管理"; gradelist.Add(grade); break; };
+                        case 3: { grade.Category = "储备干部"; gradelist.Add(grade); break; };
+                        default: break;
+                    }
+                    grade = new SummaryDto();
+                }
+                foreach(var item in query)
+                {
+                    foreach(var ga in gradelist)
+                    {
+                        if (item.PositionLevel== PositionLevel.GrassrootsStaff && ga.Category== "基层员工")
+                        {
+                            ga.Number++;
+                            percent = Convert.ToDouble(ga.Number) / Convert.ToDouble(number);
+                            ga.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else if(item.PositionLevel == PositionLevel.JuniorStaff && ga.Category == "基层职员")
+                        {
+                            ga.Number++;
+                            percent = Convert.ToDouble(ga.Number) / Convert.ToDouble(number);
+                            ga.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else if (item.PositionLevel == PositionLevel.MiddleManager && ga.Category == "中层管理")
+                        {
+                            ga.Number++;
+                            percent = Convert.ToDouble(ga.Number) / Convert.ToDouble(number);
+                            ga.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else if (item.PositionLevel == PositionLevel.ManagementTrainee && ga.Category == "储备干部")
+                        {
+                            ga.Number++;
+                            percent = Convert.ToDouble(ga.Number) / Convert.ToDouble(number);
+                            ga.Proportion = percent.ToString("0.00%");
+                            break;
+                        }
+                        else{continue;}
+                    }
+                }
+                return gradelist;
+            }
+        }
+
     }
 }
