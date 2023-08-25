@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HumanResourcesManagementBackend.Models.Dto
+namespace HumanResourcesManagementBackend.Models
 {
     /// <summary>
     /// 汇总Dto
     /// </summary>
-    public class SummaryDto:PageRequest
+    public class SummaryDto:DataResponse<dynamic>
     {
         /// <summary>
         /// 类别
         /// </summary>
-        public string Category { get; set; } = "0.00%";
+        public string Category { get; set; }
         /// <summary>
         /// 人数
         /// </summary>

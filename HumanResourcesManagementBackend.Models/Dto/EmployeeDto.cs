@@ -180,5 +180,45 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public string Name { get; set; }
         }
+        /// <summary>
+        /// 汇总
+        /// </summary>
+        public class SummaryDto : DataResponse<dynamic>
+        {
+            /// <summary>
+            /// 类别
+            /// </summary>
+            public string Category { get; set; }
+            /// <summary>
+            /// 人数
+            /// </summary>
+            public long Number { get; set; }
+            /// <summary>
+            /// 占比
+            /// </summary>
+            public string Proportion { get; set; }
+        }
+        /// <summary>
+        /// 生日汇总
+        /// </summary>
+        public class BirthdaySummaryDto : DataResponse<dynamic>
+        {
+            /// <summary>
+            /// 类别
+            /// </summary>
+            public string Category { get; set; }
+            /// <summary>
+            /// 人数
+            /// </summary>
+            public long Number { get; set; }
+            /// <summary>
+            /// 占比
+            /// </summary>
+            public string Proportion { get; set; }
+            /// <summary>
+            /// 生日月份
+            /// </summary>
+            public int BirthdayMonth { get; set; }
+        }
     }
 }
