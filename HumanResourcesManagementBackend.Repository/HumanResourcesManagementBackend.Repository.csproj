@@ -65,10 +65,12 @@
     <Compile Include="Entity\R_AbsenceApply.cs" />
     <Compile Include="Entity\R_BusinessTripApply.cs" />
     <Compile Include="Entity\R_CompensatoryApply.cs" />
+    <Compile Include="Entity\R_Department.cs" />
     <Compile Include="Entity\R_Employee.cs" />
     <Compile Include="Entity\R_FieldWorkApply.cs" />
     <Compile Include="Entity\R_Permission.cs" />
     <Compile Include="Entity\R_PermissionRoleRef.cs" />
+    <Compile Include="Entity\R_Position.cs" />
     <Compile Include="Entity\R_Role.cs" />
     <Compile Include="Entity\R_UserRoleRef.cs" />
     <Compile Include="Entity\R_VacationApply.cs" />
@@ -83,6 +85,14 @@
     <Compile Include="Migrations\202308231255252_AddAudit.cs" />
     <Compile Include="Migrations\202308231255252_AddAudit.designer.cs">
       <DependentUpon>202308231255252_AddAudit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308250516202_r_positionr_department.cs" />
+    <Compile Include="Migrations\202308250516202_r_positionr_department.designer.cs">
+      <DependentUpon>202308250516202_r_positionr_department.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308250533308_departmentname.cs" />
+    <Compile Include="Migrations\202308250533308_departmentname.designer.cs">
+      <DependentUpon>202308250533308_departmentname.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +117,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308231255252_AddAudit.resx">
       <DependentUpon>202308231255252_AddAudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308250516202_r_positionr_department.resx">
+      <DependentUpon>202308250516202_r_positionr_department.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308250533308_departmentname.resx">
+      <DependentUpon>202308250533308_departmentname.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

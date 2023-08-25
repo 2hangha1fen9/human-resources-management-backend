@@ -1,5 +1,4 @@
 ﻿using HumanResourcesManagementBackend.Models;
-using HumanResourcesManagementBackend.Models.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,18 +48,48 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="GetSenioritySummary"></param>
         /// <returns></returns>
-        List<SummaryDto> GetSenioritySummary();
+        List<EmployeeDto.SummaryDto> GetSenioritySummary();
         /// <summary>
         /// 查询职别汇总
         /// </summary>
         /// <param name="GetSenioritySummary"></param>
         /// <returns></returns>
-        List<SummaryDto> GetGradeSummary();
+        List<EmployeeDto.SummaryDto> GetGradeSummary();
         /// <summary>
         /// 查询年龄汇总
         /// </summary>
         /// <param name="GetAgeSummary"></param>
         /// <returns></returns>
-        List<SummaryDto> GetAgeSummary();
+        List<EmployeeDto.SummaryDto> GetAgeSummary();
+        /// <summary>
+        /// 查询学历汇总信息
+        /// </summary>
+        /// <param name="GetEducationSummary"></param>
+        /// <returns></returns>
+        List<EmployeeDto.SummaryDto> GetEducationSummary();
+        /// <summary>
+        /// 查询部门汇总信息
+        /// </summary>
+        /// <param name="GetDepartmentSummary"></param>
+        /// <returns></returns>
+        List<EmployeeDto.SummaryDto> GetDepartmentSummary();
+        /// <summary>
+        /// 查询性别汇总信息
+        /// </summary>
+        /// <param name="GetGenderSummary"></param>
+        /// <returns></returns>
+        List<EmployeeDto.SummaryDto> GetGenderSummary();
+        /// <summary>
+        /// 查询婚姻汇总信息
+        /// </summary>
+        /// <param name="GetMaritalSummary"></param>
+        /// <returns></returns>
+        List<EmployeeDto.SummaryDto> GetMaritalSummary();
+        /// <summary>
+        /// 查询生日汇总信息
+        /// </summary>
+        /// <param name="GetBirthdaySummary"></param>
+        /// <returns></returns>
+        List<EmployeeDto.BirthdaySummaryDto> GetBirthdaySummary();
     }
 }

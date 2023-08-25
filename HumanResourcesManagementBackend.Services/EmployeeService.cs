@@ -1,7 +1,7 @@
 ﻿using HumanResourcesManagementBackend.Common;
 using HumanResourcesManagementBackend.Models;
-using HumanResourcesManagementBackend.Models.Dto;
 using HumanResourcesManagementBackend.Repository;
+using HumanResourcesManagementBackend.Repository.Migrations;
 using HumanResourcesManagementBackend.Services.Interface;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
 using static HumanResourcesManagementBackend.Models.UserDto;
+using static System.Data.Entity.Migrations.Model.UpdateDatabaseOperation;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -165,12 +166,12 @@ namespace HumanResourcesManagementBackend.Services
                 return number;
             }
         }
-        public List<SummaryDto> GetSenioritySummary()
+        public List<EmployeeDto.SummaryDto> GetSenioritySummary()
         {
             using (var db = new HRM())
             {
-                var senioritylist = new List<SummaryDto>();
-                var seniority = new SummaryDto();
+                var senioritylist = new List<EmployeeDto.SummaryDto>();
+                var seniority = new EmployeeDto.SummaryDto();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -192,8 +193,7 @@ namespace HumanResourcesManagementBackend.Services
                         case 7: { seniority.Category = "8年以上"; senioritylist.Add(seniority); break; };
                         default:break;
                     }
-                    seniority = new SummaryDto();
-                    
+                    seniority = new EmployeeDto.SummaryDto();                 
                 }
                 foreach (var item in query)
                 {
@@ -263,75 +263,39 @@ namespace HumanResourcesManagementBackend.Services
                 return senioritylist;
             }
         }
-        public List<SummaryDto> GetGradeSummary()
+        public List<EmployeeDto.SummaryDto> GetGradeSummary()
         {
             using (var db = new HRM())
             {
-                var gradelist = new List<SummaryDto>();
-                var grade = new SummaryDto();
+                var gradelist = new List<EmployeeDto.SummaryDto>();
+                var grade = new EmployeeDto.SummaryDto();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
                 //总人数
                 long number = query.Count();
                 double percent;
-                for (int i = 0; i < 4; i++)
+                var enums = EnumHelper.ToList<PositionLevel>();
+                foreach (var item in enums)
                 {
+                    var count = query.Count(p => p.PositionLevel.ToString() == item.EnumName);
                     grade.Proportion = "0.00%";
-                    switch (i)
-                    {
-                        case 0: { grade.Category = "基层员工"; gradelist.Add(grade); break; };
-                        case 1: { grade.Category = "基层职员"; gradelist.Add(grade); break; };
-                        case 2: { grade.Category = "中层管理"; gradelist.Add(grade); break; };
-                        case 3: { grade.Category = "储备干部"; gradelist.Add(grade); break; };
-                        default: break;
-                    }
-                    grade = new SummaryDto();
-                }
-                foreach(var item in query)
-                {
-                    foreach(var ga in gradelist)
-                    {
-                        if (item.PositionLevel== PositionLevel.GrassrootsStaff && ga.Category== "基层员工")
-                        {
-                            ga.Number++;
-                            percent = Convert.ToDouble(ga.Number) / Convert.ToDouble(number);
-                            ga.Proportion = percent.ToString("0.00%");
-                            break;
-                        }
-                        else if(item.PositionLevel == PositionLevel.JuniorStaff && ga.Category == "基层职员")
-                        {
-                            ga.Number++;
-                            percent = Convert.ToDouble(ga.Number) / Convert.ToDouble(number);
-                            ga.Proportion = percent.ToString("0.00%");
-                            break;
-                        }
-                        else if (item.PositionLevel == PositionLevel.MiddleManager && ga.Category == "中层管理")
-                        {
-                            ga.Number++;
-                            percent = Convert.ToDouble(ga.Number) / Convert.ToDouble(number);
-                            ga.Proportion = percent.ToString("0.00%");
-                            break;
-                        }
-                        else if (item.PositionLevel == PositionLevel.ManagementTrainee && ga.Category == "储备干部")
-                        {
-                            ga.Number++;
-                            percent = Convert.ToDouble(ga.Number) / Convert.ToDouble(number);
-                            ga.Proportion = percent.ToString("0.00%");
-                            break;
-                        }
-                        else{continue;}
-                    }
+                    grade.Category = item.Desction;
+                    grade.Number = count;
+                    percent = Convert.ToDouble(grade.Number) / Convert.ToDouble(number);
+                    grade.Proportion = percent.ToString("0.00%");
+                    gradelist.Add(grade);
+                    grade = new EmployeeDto.SummaryDto();
                 }
                 return gradelist;
             }
         }
-        public List<SummaryDto> GetAgeSummary()
+        public List<EmployeeDto.SummaryDto> GetAgeSummary()
         {
             using (var db = new HRM())
             {
-                var agelist = new List<SummaryDto>();
-                var age = new SummaryDto();
+                var agelist = new List<EmployeeDto.SummaryDto>();
+                var age = new EmployeeDto.SummaryDto();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -353,7 +317,7 @@ namespace HumanResourcesManagementBackend.Services
                         case 7: { age.Category = "60周岁以上"; agelist.Add(age); break; };
                         default: break;
                     }
-                    age = new SummaryDto();
+                    age = new EmployeeDto.SummaryDto();
                 }
                 foreach(var item in query)
                 {
@@ -420,6 +384,144 @@ namespace HumanResourcesManagementBackend.Services
                     }
                 }
                 return agelist;
+            }
+        }
+        public List<EmployeeDto.SummaryDto> GetEducationSummary()
+        {
+            using (var db = new HRM())
+            {
+                var educationlist = new List<EmployeeDto.SummaryDto>();
+                var education = new EmployeeDto.SummaryDto();
+                var query = from employ in db.Employees
+                            where employ.Status != DataStatus.Deleted
+                            select employ;
+                //总人数
+                long number = query.Count();
+                double percent;
+                var enums = EnumHelper.ToList<AcademicDegree>();
+                foreach(var item in enums)
+                {
+                    var count = query.Count(p => p.AcademicDegree.ToString()==item.EnumName);
+                    education.Proportion = "0.00%";
+                    education.Category = item.Desction;
+                    education.Number = count;
+                    percent = Convert.ToDouble(education.Number) / Convert.ToDouble(number);
+                    education.Proportion = percent.ToString("0.00%");
+                    educationlist.Add(education);
+                    education = new EmployeeDto.SummaryDto();
+                }
+                return educationlist;
+            }
+        }
+        public List<EmployeeDto.SummaryDto> GetDepartmentSummary()
+        {
+            using (var db = new HRM())
+            {
+                var departmentlist = new List<EmployeeDto.SummaryDto>();
+                var department = new EmployeeDto.SummaryDto();
+                var query = from employ in db.Employees
+                            where employ.Status != DataStatus.Deleted
+                            select employ;
+                //总人数
+                long number = query.Count();
+                double percent;
+                var enums =db.Departmentes.Where(p=>p.Status==DataStatus.Enable).ToList();
+                foreach (var item in enums)
+                {
+                    var count = query.Count(p => p.DepartmentId == item.Id);
+                    department.Proportion = "0.00%";
+                    department.Category = item.DepartmentName;
+                    department.Number = count;
+                    percent = Convert.ToDouble(department.Number) / Convert.ToDouble(number);
+                    department.Proportion = percent.ToString("0.00%");
+                    departmentlist.Add(department);
+                    department = new EmployeeDto.SummaryDto();
+                }
+                return departmentlist;
+            }
+        }
+        public List<EmployeeDto.SummaryDto> GetGenderSummary()
+        {
+            using (var db = new HRM())
+            {
+                var genderlist = new List<EmployeeDto.SummaryDto>();
+                var gender = new EmployeeDto.SummaryDto();
+                var query = from employ in db.Employees
+                            where employ.Status != DataStatus.Deleted
+                            select employ;
+                //总人数
+                long number = query.Count();
+                double percent;
+                var enums = EnumHelper.ToList<Gender>();
+                foreach (var item in enums)
+                {
+                    var count = query.Count(p => p.Gender.ToString() == item.EnumName);
+                    gender.Proportion = "0.00%";
+                    gender.Category = item.Desction;
+                    gender.Number = count;
+                    percent = Convert.ToDouble(gender.Number) / Convert.ToDouble(number);
+                    gender.Proportion = percent.ToString("0.00%");
+                    genderlist.Add(gender);
+                    gender = new EmployeeDto.SummaryDto();
+                }
+                return genderlist;
+            }
+        }
+        public List<EmployeeDto.SummaryDto> GetMaritalSummary()
+        {
+            using (var db = new HRM())
+            {
+                var maritallist = new List<EmployeeDto.SummaryDto>();
+                var marital = new EmployeeDto.SummaryDto();
+                var query = from employ in db.Employees
+                            where employ.Status != DataStatus.Deleted
+                            select employ;
+                //总人数
+                long number = query.Count();
+                double percent;
+                var enums = EnumHelper.ToList<MaritalStatus>();
+                foreach (var item in enums)
+                {
+                    var count = query.Count(p => p.MaritalStatus.ToString() == item.EnumName);
+                    marital.Proportion = "0.00%";
+                    marital.Category = item.Desction;
+                    marital.Number = count;
+                    percent = Convert.ToDouble(marital.Number) / Convert.ToDouble(number);
+                    marital.Proportion = percent.ToString("0.00%");
+                    maritallist.Add(marital);
+                    marital = new EmployeeDto.SummaryDto();
+                }
+                return maritallist;
+            }
+        }
+        public List<EmployeeDto.BirthdaySummaryDto> GetBirthdaySummary()
+        {
+            using (var db = new HRM())
+            {
+                var birthdaylist = new List<EmployeeDto.BirthdaySummaryDto>();
+                var birthday = new EmployeeDto.BirthdaySummaryDto();
+                var query = from employ in db.Employees
+                            where employ.Status != DataStatus.Deleted
+                            select employ;
+                //总人数
+                long number = query.Count();
+                double percent;
+                for(int i=1;i<=12;i++)
+                {
+                    birthday.Category = i.ToString() + "月";
+                    birthday.BirthdayMonth = i;
+                    birthdaylist.Add(birthday);
+                    birthday= new EmployeeDto.BirthdaySummaryDto();
+                }
+                foreach (var item in birthdaylist)
+                {
+                    var count = query.Count(p => p.BirthDay.Month == item.BirthdayMonth);
+                    item.Proportion = "0.00%";
+                    item.Number = count;
+                    percent = Convert.ToDouble(item.Number) / Convert.ToDouble(number);
+                    item.Proportion = percent.ToString("0.00%");
+                }
+                return birthdaylist;
             }
         }
     }
