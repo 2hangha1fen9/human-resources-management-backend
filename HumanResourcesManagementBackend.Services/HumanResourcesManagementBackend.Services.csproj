@@ -54,6 +54,10 @@
     <Compile Include="AbsenceApplyService.cs" />
     <Compile Include="EmployeeService.cs" />
     <Compile Include="Interface\IEmployeeService.cs" />
+    <Compile Include="Interface\IPermissionService.cs" />
+    <Compile Include="Interface\IRoleService.cs" />
+    <Compile Include="PermissionService.cs" />
+    <Compile Include="RoleService.cs" />
     <Compile Include="VacationApplyService.cs" />
     <Compile Include="BusinessTripApplyService.cs" />
     <Compile Include="CompensatoryApplyService.cs" />

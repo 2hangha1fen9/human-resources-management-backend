@@ -138,6 +138,7 @@ namespace HumanResourcesManagementBackend.Services
                 userEx.Question = user.Question;
                 userEx.Answer = user.Answer;
                 userEx.EmployeeId = user.EmployeeId;
+                userEx.Status = user.Status;
 
                 if (db.SaveChanges() == 0)
                 {
