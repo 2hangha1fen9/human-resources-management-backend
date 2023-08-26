@@ -5,6 +5,7 @@ using HumanResourcesManagementBackend.Repository;
 using HumanResourcesManagementBackend.Services.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security;
 using System.Text;
@@ -125,6 +126,41 @@ namespace HumanResourcesManagementBackend.Services
                 }
 
                 var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<PermissionDto.Permission>();
+                list.ForEach(r =>
+                {
+                    r.StatusStr = r.Status.Description();
+                    r.TypeStr = r.Type.Description();
+                    r.IsPublicStr = r.IsPublic.Description();
+                });
+                return list;
+            }
+        }
+
+        public List<PermissionDto.Permission> GetPermissionsByUserId(long userId, PermissionType type)
+        {
+            using(var db = new HRM())
+            {
+                var permissionList = db.Permissions.SqlQuery($@"
+                select 
+                    *
+                from 
+                    R_Permission as p
+                where p.id in (select 
+                                    permissionId
+                               from 
+                                    R_PermissionRoleRef as rp
+                               where rp.roleId in (select 
+                                                       roleId
+                                                   from 
+                                                        R_UserRoleRef as ur,
+                                                        R_Role r
+                                                   where ur.roleId = r.id
+                                                         and ur.userId = @userId
+                                                         and exists (select * from R_User u where id = ur.userId
+                                                         and u.status = {(int)DataStatus.Enable})
+                                                         and r.status = {(int)DataStatus.Enable}))
+                and status = {(int)DataStatus.Enable} and type = @type",new SqlParameter("@userId",userId), new SqlParameter("@type", type));
+                var list = permissionList.ToList().MapToList<PermissionDto.Permission>();
                 list.ForEach(r =>
                 {
                     r.StatusStr = r.Status.Description();

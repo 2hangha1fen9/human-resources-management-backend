@@ -75,6 +75,7 @@
     <Compile Include="Entity\R_UserRoleRef.cs" />
     <Compile Include="Entity\R_VacationApply.cs" />
     <Compile Include="Extensions\QueryExtension.cs" />
+    <Compile Include="Extensions\TransactionExtension.cs" />
     <Compile Include="HRM.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\R_User.cs" />

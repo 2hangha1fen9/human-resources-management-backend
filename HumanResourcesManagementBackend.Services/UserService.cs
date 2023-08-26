@@ -31,7 +31,7 @@ namespace HumanResourcesManagementBackend.Services
                     query = query.Where(u => u.Status == search.Status);
                 }
                 //分页并将数据库实体映射为dto对象(OrderBy必须调用)
-                var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<UserDto.User>();
+                var list = query.OrderBy(q => q.CreateTime).Pageing(search).MapToList<UserDto.User>();
                 //状态处理
                 list.ForEach(u =>
                 {
@@ -120,7 +120,7 @@ namespace HumanResourcesManagementBackend.Services
 
         public void EditUser(UserDto.Save user)
         {
-            using(var db = new HRM())
+            using (var db = new HRM())
             {
                 //查询是否存在
                 var userEx = db.Users.FirstOrDefault(u => u.Id == user.Id);
@@ -133,7 +133,14 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 //在Context里查询到对象才能这样赋值做修改操作，自己new是不行的
-                userEx.Password = user.Password.Encrypt();
+                if (string.IsNullOrEmpty(userEx.Password))
+                {
+                    userEx.Password = user.Password.Encrypt();
+                }
+                if (string.IsNullOrEmpty(userEx.LoginName))
+                {
+                    userEx.LoginName = user.LoginName;
+                }
                 userEx.UpdateTime = DateTime.Now;
                 userEx.Question = user.Question;
                 userEx.Answer = user.Answer;
@@ -258,6 +265,35 @@ namespace HumanResourcesManagementBackend.Services
                     throw new BusinessException
                     {
                         ErrorMessage = "修改密保失败,正在维护",
+                        Status = ResponseStatus.AddError
+                    };
+                }
+            }
+        }
+
+        public void ChangeStatus(Save user)
+        {
+            using (var db = new HRM())
+            {
+                //查询是否存在
+                var userEx = db.Users.FirstOrDefault(u => u.Id == user.Id);
+                if (userEx == null)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "用户不存在",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+
+                userEx.UpdateTime = DateTime.Now;
+                userEx.Status = user.Status;
+
+                if (db.SaveChanges() == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "用户修改失败",
                         Status = ResponseStatus.AddError
                     };
                 }

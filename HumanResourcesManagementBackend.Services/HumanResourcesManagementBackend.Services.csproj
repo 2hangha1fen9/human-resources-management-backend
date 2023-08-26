@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbsenceApplyService.cs" />
+    <Compile Include="AuthService.cs" />
     <Compile Include="EmployeeService.cs" />
     <Compile Include="Interface\IAuthService.cs" />
     <Compile Include="Interface\IEmployeeService.cs" />

@@ -21,7 +21,8 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public DataResponse<List<Enumber>> GetEnum(string name)
+        [HttpGet]
+        public DataResponse<List<Enumber>> Get(string id)
         {
             var result = new DataResponse<List<Enumber>>();
 
@@ -30,10 +31,10 @@ namespace HumanResourcesManagementBackend.Api.Controllers
               .Where(type => type.IsEnum)
               .ToList();
             //获取指定枚举
-            var enumType = enums.FirstOrDefault(e => string.Compare(e.Name,name,true) == 0);
+            var enumType = enums.FirstOrDefault(e => string.Compare(e.Name, id, true) == 0);
             if(enumType != null)
             {
-                result.Data = EnumHelper.ToList(enumType);
+                result.Data = EnumHelper.ToList(enumType).Where(e => e.EnumValue != 99).ToList();
                 result.Status = ResponseStatus.Success;
                 result.Message = ResponseStatus.Success.Description();
             }

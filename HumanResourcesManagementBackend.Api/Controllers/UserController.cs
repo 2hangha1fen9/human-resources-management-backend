@@ -51,6 +51,23 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         }
 
         /// <summary>
+        /// 根据用户id获取用户详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public DataResponse<UserDto.User> GetUserById(long id)
+        {
+            var user = userService.GetUserById(id);
+            return new DataResponse<User>
+            {
+                Data = user,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+            };
+        }
+
+        /// <summary>
         /// 用户登录
         /// </summary>
         /// <param name="login"></param>
@@ -159,6 +176,22 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public Response ChangeQuestion(UserDto.ChangePwd changeQuestion)
         {
             userService.ChangeQuestion(changeQuestion);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
+
+        /// <summary>
+        /// 修改密保
+        /// </summary>
+        /// <param name="changeQuestion"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public Response ChangeStatus(UserDto.Save user)
+        {
+            userService.ChangeStatus(user);
             return new Response
             {
                 Status = ResponseStatus.Success,

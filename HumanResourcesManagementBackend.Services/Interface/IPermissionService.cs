@@ -1,4 +1,5 @@
-﻿using HumanResourcesManagementBackend.Models.Dto;
+﻿using HumanResourcesManagementBackend.Models;
+using HumanResourcesManagementBackend.Models.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,5 +31,13 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="search"></param>
         /// <returns></returns>
         List<PermissionDto.Permission> GetPermissions(PermissionDto.Search search);
+
+        /// <summary>
+        /// 根据用户ID查询对应权限
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        List<PermissionDto.Permission> GetPermissionsByUserId(long userId, PermissionType type);
     }
 }

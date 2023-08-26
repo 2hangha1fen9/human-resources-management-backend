@@ -20,5 +20,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="bind"></param>
         void RolePermissionBind(AuthDto.RolePermissionBind bind);
+
+        /// <summary>
+        /// 判断用户是否有权限访问api资源
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        void CheckApi(AuthDto.CheckApi check);
     }
 }

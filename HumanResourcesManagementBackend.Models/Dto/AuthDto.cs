@@ -9,6 +9,20 @@ namespace HumanResourcesManagementBackend.Models.Dto
     public class AuthDto
     {
         /// <summary>
+        /// 判断用户是否有权限访问Api
+        /// </summary>
+        public class CheckApi
+        {
+            /// <summary>
+            /// 用户Id
+            /// </summary>
+            public long UserId { get; set; }
+            /// <summary>
+            /// 访问资源
+            /// </summary>
+            public string Resource { get; set; }
+        }
+        /// <summary>
         /// 用户角色绑定
         /// </summary>
         public class UserRoleBind

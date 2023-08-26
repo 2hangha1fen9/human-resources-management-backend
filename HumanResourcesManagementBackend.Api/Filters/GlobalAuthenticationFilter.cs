@@ -14,6 +14,7 @@ using System.Web.Http.Filters;
 using System.Web.Http;
 using System.Web;
 using System.Text;
+using HumanResourcesManagementBackend.Models.Dto;
 
 namespace HumanResourcesManagementBackend.Api.Filters
 {
@@ -22,6 +23,8 @@ namespace HumanResourcesManagementBackend.Api.Filters
     /// </summary>
     public class GlobalAuthenticationFilter : AuthorizationFilterAttribute
     {
+        private static IAuthService authService = new AuthService();
+
         public override Task OnAuthorizationAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
@@ -38,10 +41,14 @@ namespace HumanResourcesManagementBackend.Api.Filters
                     //验证Token,并获取自定义信息
                     var payLoad = JwtHelper.VerifyWithPayLoad(token);
                     var user = payLoad.ToObject<UserDto.User>();
-                    //DODO: 验证权限
-
+                    //验证权限
+                    authService.CheckApi(new AuthDto.CheckApi
+                    {
+                        UserId = user.Id,
+                        Resource = $"{actionContext.ActionDescriptor.ControllerDescriptor.ControllerName}:{actionContext.ActionDescriptor.ActionName}"
+                    });
                     //将用户信息放入控制器
-                    if(actionContext.ControllerContext.Controller is BaseApiController controller)
+                    if (actionContext.ControllerContext.Controller is BaseApiController controller)
                     {
                         controller.CurrentUser = user;
                     }

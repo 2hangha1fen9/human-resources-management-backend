@@ -43,6 +43,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         void EditUser(UserDto.Save user);
 
         /// <summary>
+        /// 修改状态
+        /// </summary>
+        /// <param name="user"></param>
+        void ChangeStatus(UserDto.Save user);
+
+        /// <summary>
         /// 删除用户
         /// </summary>
         /// <param name="userId"></param>
