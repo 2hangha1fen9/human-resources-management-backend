@@ -13,9 +13,9 @@ namespace HumanResourcesManagementBackend.Models
     public enum PermissionType
     {
         /// <summary>
-        /// Url路径
+        /// API路径
         /// </summary>
-        [Description("Url路径")]
+        [Description("API路径")]
         Api = 1,
         /// <summary>
         /// 前端菜单

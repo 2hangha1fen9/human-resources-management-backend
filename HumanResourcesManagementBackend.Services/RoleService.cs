@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HumanResourcesManagementBackend.Models.Dto.RoleDto;
+using static HumanResourcesManagementBackend.Models.UserDto;
 
 
 namespace HumanResourcesManagementBackend.Services
@@ -60,6 +62,7 @@ namespace HumanResourcesManagementBackend.Services
                 role.Status = DataStatus.Deleted;
                 role.UpdateTime = DateTime.Now;
                 db.SaveChanges();
+                AuthService.permissionCache.Clear();
             }
         }
 
@@ -81,6 +84,7 @@ namespace HumanResourcesManagementBackend.Services
                 roleEx.Name = role.Name;
                 roleEx.UpdateTime = DateTime.Now;
                 roleEx.Status = role.Status;
+                roleEx.IsDefault = role.IsDefault;
 
                 if (db.SaveChanges() == 0)
                 {
@@ -90,6 +94,8 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.AddError
                     };
                 }
+
+                AuthService.permissionCache.Clear();
             }
         }
 
@@ -108,6 +114,7 @@ namespace HumanResourcesManagementBackend.Services
                 }
                 var role = roleR.MapTo<RoleDto.Role>();
                 role.StatusStr = role.Status.Description();
+                role.IsDefaultStr= role.IsDefault.Description();
                 return role;
             }
         }
@@ -125,12 +132,35 @@ namespace HumanResourcesManagementBackend.Services
                 }
                 if(search.Status > 0)
                 {
-                    query = query.Where(r =>  r.Status != DataStatus.Deleted);
+                    query = query.Where(r =>  r.Status != search.Status);
+                }
+                if (search.IsDefault > 0)
+                {
+                    query = query.Where(r => r.IsDefault != search.IsDefault);
                 }
                 var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<RoleDto.Role>();
                 list.ForEach(r =>
                 {
                     r.StatusStr = r.Status.Description();
+                    r.IsDefaultStr = r.IsDefault.Description();
+                });
+                return list;
+            }
+        }
+
+        public List<Role> GetRolesByUserId(long userId)
+        {
+            using(var db = new HRM())
+            {
+                var query = (from role in db.Roles
+                             join rid in db.UserRoleRefs.Where(r => r.UserId == userId).Select(r => r.RoleId) on role.Id equals rid
+                             where role.Status == DataStatus.Enable
+                             select role);
+                var list = query.MapToList<RoleDto.Role>();
+                list.ForEach(r =>
+                {
+                    r.StatusStr = r.Status.Description();
+                    r.IsDefaultStr = r.IsDefault.Description();
                 });
                 return list;
             }

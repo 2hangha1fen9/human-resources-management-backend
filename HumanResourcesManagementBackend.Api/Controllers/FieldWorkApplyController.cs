@@ -26,7 +26,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="FieldWorkApply"></param>
         /// <returns></returns>
         [HttpPost]
-        public Response FieldWorkApply(FieldWorkApplyDto.FieldWorkApply fieldWorkApply)
+        public Response Apply(FieldWorkApplyDto.FieldWorkApply fieldWorkApply)
         {
             fieldWorkApply.EmployeeId = CurrentUser.EmployeeId;
             _fieldWorkApplyService.FieldWorkApply(fieldWorkApply);

@@ -39,5 +39,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="type"></param>
         /// <returns></returns>
         List<PermissionDto.Permission> GetPermissionsByUserId(long userId, PermissionType type);
+
+        /// <summary>
+        /// 根据ID获取权限详情
+        /// </summary>
+        /// <param name="permissionId"></param>
+        /// <returns></returns>
+        PermissionDto.Permission GetPermissionById(long permissionId);  
     }
 }

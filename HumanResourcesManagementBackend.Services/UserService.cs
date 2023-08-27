@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static HumanResourcesManagementBackend.Models.UserDto;
+using HumanResourcesManagementBackend.Repository.Extensions;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -100,14 +101,43 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
-                //DTO映射为真正的实体，添加到数据库中
-                var userR = user.MapTo<R_User>();
-                userR.Password = userR.Password.Encrypt();
-                userR.CreateTime = DateTime.Now;
-                userR.UpdateTime = DateTime.Now;
-                db.Users.Add(userR);
+                
+                var flag = db.Transaction(() =>
+                {
+                    //DTO映射为真正的实体，添加到数据库中
+                    var userR = user.MapTo<R_User>();
+                    userR.Password = userR.Password.Encrypt();
+                    userR.CreateTime = DateTime.Now;
+                    userR.UpdateTime = DateTime.Now;
+                    userR = db.Users.Add(userR);
+                    db.SaveChanges();
+                    if(userR == null && userR.Id > 0)
+                    {
+                        return false;
+                    }
+                    //绑定默认角色
+                    var defaultRoles = db.Roles.Where(r => r.IsDefault == YesOrNo.Yes && r.Status == DataStatus.Enable).ToList();
+                    if(defaultRoles == null || defaultRoles.Count == 0)
+                    {
+                        var bindList = defaultRoles.Select(r => new R_UserRoleRef
+                        {
+                            UserId = userR.Id,
+                            RoleId = r.Id,
+                            CreateTime = DateTime.Now,
+                            UpdateTime = DateTime.Now,
+                        }).ToList();
+                        var bindResult = db.UserRoleRefs.AddRange(bindList).ToList();
+                        db.SaveChanges();
+                        if (bindResult == null || bindList.Count != bindResult.Count)
+                        {
+                            return false;
+                        }
+                    }
 
-                if (db.SaveChanges() == 0)
+                    return true;
+                });
+
+                if (!flag)
                 {
                     throw new BusinessException
                     {
@@ -155,6 +185,7 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.AddError
                     };
                 }
+                AuthService.permissionCache.Remove(user.Id);
             }
         }
 
@@ -171,6 +202,8 @@ namespace HumanResourcesManagementBackend.Services
                 user.Status = DataStatus.Deleted;
                 user.UpdateTime = DateTime.Now;
                 db.SaveChanges();
+
+                AuthService.permissionCache.Remove(user.Id);
             }
         }
 
@@ -294,9 +327,11 @@ namespace HumanResourcesManagementBackend.Services
                     throw new BusinessException
                     {
                         ErrorMessage = "用户修改失败",
-                        Status = ResponseStatus.AddError
+                        Status = ResponseStatus.UpdateError
                     };
                 }
+
+                AuthService.permissionCache.Remove(user.Id);
             }
         }
     }

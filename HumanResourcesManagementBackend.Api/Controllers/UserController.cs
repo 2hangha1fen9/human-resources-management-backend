@@ -10,7 +10,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using static HumanResourcesManagementBackend.Models.UserDto;
 
 namespace HumanResourcesManagementBackend.Api.Controllers
 {
@@ -59,7 +58,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public DataResponse<UserDto.User> GetUserById(long id)
         {
             var user = userService.GetUserById(id);
-            return new DataResponse<User>
+            return new DataResponse<UserDto.User>
             {
                 Data = user,
                 Status = ResponseStatus.Success,
@@ -184,7 +183,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         }
 
         /// <summary>
-        /// 修改密保
+        /// 修改状态
         /// </summary>
         /// <param name="changeQuestion"></param>
         /// <returns></returns>

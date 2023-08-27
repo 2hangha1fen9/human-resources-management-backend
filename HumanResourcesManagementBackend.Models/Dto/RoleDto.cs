@@ -28,6 +28,14 @@ namespace HumanResourcesManagementBackend.Models.Dto
             /// </summary>
             public DateTime UpdateTime { get; set; }
             /// <summary>
+            /// 是否是默认角色
+            /// </summary>
+            public YesOrNo IsDefault { get; set; }
+            /// <summary>
+            /// 是否是默认角色
+            /// </summary>
+            public string IsDefaultStr { get; set; }
+            /// <summary>
             /// 角色名称
             /// </summary>
             public string Name { get; set; }
@@ -50,6 +58,10 @@ namespace HumanResourcesManagementBackend.Models.Dto
             /// 数据状态
             /// </summary>
             public DataStatus Status { get; set; }
+            /// <summary>
+            /// 是否是默认角色
+            /// </summary>
+            public YesOrNo IsDefault { get; set; }
         }
         public class Search:PageRequest  
         {
@@ -61,6 +73,10 @@ namespace HumanResourcesManagementBackend.Models.Dto
             /// 数据状态
             /// </summary>
             public DataStatus Status { get; set; }
+            /// <summary>
+            /// 是否是默认角色
+            /// </summary>
+            public YesOrNo IsDefault { get; set; }
         }
     }
 }

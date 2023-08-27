@@ -28,7 +28,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="VacationApply"></param>
         /// <returns></returns>
         [HttpPost]
-        public Response VacationApply(VacationApplyDto.VacationApply vacationApply)
+        public Response Apply(VacationApplyDto.VacationApply vacationApply)
         {
             vacationApply.EmployeeId = CurrentUser.EmployeeId;
             _vacationapplyService.VacationApply(vacationApply);

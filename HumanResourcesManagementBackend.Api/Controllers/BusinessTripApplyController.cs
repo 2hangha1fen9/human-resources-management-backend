@@ -25,7 +25,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="BusinessTripApply"></param>
         /// <returns></returns>
         [HttpPost]
-        public Response BusinessTripApply(BusinessTripApplyDto.BusinessTripApply businessTripApply)
+        public Response Apply(BusinessTripApplyDto.BusinessTripApply businessTripApply)
         {
             businessTripApply.EmployeeId = CurrentUser.EmployeeId;
             _businessTripApplyService.BusinessTripApply(businessTripApply);

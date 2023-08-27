@@ -26,7 +26,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="absenceApply"></param>
         /// <returns></returns> 
         [HttpPost]
-        public Response AbsenceApply(AbsenceApplyDto.AbsenceApply absenceApply)
+        public Response Apply(AbsenceApplyDto.AbsenceApply absenceApply)
         {
             absenceApply.EmployeeId = CurrentUser.EmployeeId;
             _iabsenceapplyService.AbsenceApply(absenceApply);

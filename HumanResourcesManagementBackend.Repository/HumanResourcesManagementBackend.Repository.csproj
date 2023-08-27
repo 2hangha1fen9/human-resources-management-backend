@@ -95,6 +95,10 @@
     <Compile Include="Migrations\202308250533308_departmentname.designer.cs">
       <DependentUpon>202308250533308_departmentname.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308271049473_addCol.cs" />
+    <Compile Include="Migrations\202308271049473_addCol.designer.cs">
+      <DependentUpon>202308271049473_addCol.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -124,6 +128,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308250533308_departmentname.resx">
       <DependentUpon>202308250533308_departmentname.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308271049473_addCol.resx">
+      <DependentUpon>202308271049473_addCol.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

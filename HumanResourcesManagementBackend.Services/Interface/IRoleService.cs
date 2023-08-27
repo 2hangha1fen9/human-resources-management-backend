@@ -16,6 +16,13 @@ namespace HumanResourcesManagementBackend.Services.Interface
         List<RoleDto.Role> GetRoles(RoleDto.Search search);
 
         /// <summary>
+        /// 根据用户ID获取拥有的角色
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        List<RoleDto.Role> GetRolesByUserId(long userId);
+
+        /// <summary>
         /// 根据ID获取角色名称
         /// </summary>
         /// <param name="roleId"></param>

@@ -15,6 +15,10 @@ using System.Web.Http;
 using System.Web;
 using System.Text;
 using HumanResourcesManagementBackend.Models.Dto;
+using System.Collections.Generic;
+using System.Reflection;
+using Namotion.Reflection;
+using HumanResourcesManagementBackend.Api.Controllers;
 
 namespace HumanResourcesManagementBackend.Api.Filters
 {
@@ -24,6 +28,11 @@ namespace HumanResourcesManagementBackend.Api.Filters
     public class GlobalAuthenticationFilter : AuthorizationFilterAttribute
     {
         private static IAuthService authService = new AuthService();
+
+        public GlobalAuthenticationFilter()
+        {
+            ScanController();
+        }
 
         public override Task OnAuthorizationAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
         {
@@ -45,7 +54,7 @@ namespace HumanResourcesManagementBackend.Api.Filters
                     authService.CheckApi(new AuthDto.CheckApi
                     {
                         UserId = user.Id,
-                        Resource = $"{actionContext.ActionDescriptor.ControllerDescriptor.ControllerName}:{actionContext.ActionDescriptor.ActionName}"
+                        Resource = $"/{actionContext.ActionDescriptor.ControllerDescriptor.ControllerName}/{actionContext.ActionDescriptor.ActionName}"
                     });
                     //将用户信息放入控制器
                     if (actionContext.ControllerContext.Controller is BaseApiController controller)
@@ -83,6 +92,36 @@ namespace HumanResourcesManagementBackend.Api.Filters
             {
                 return string.Empty;
             }
+        }
+
+        /// <summary>
+        /// 扫描API,同步到数据库
+        /// </summary>
+        private void ScanController()
+        {
+            List<Type> controllers = Assembly.GetAssembly(typeof(PermissionController)).GetTypes()
+              .Where(type => type.BaseType == typeof(BaseApiController))
+              .ToList();
+            List<PermissionDto.Save> permissions = new List<PermissionDto.Save>();
+            foreach (Type type in controllers)
+            {
+                //遍历控制的所有方法
+                var methods = type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
+                foreach (MethodInfo method in methods)
+                {
+                    var permission = new PermissionDto.Save
+                    {
+                        Name = method.GetXmlDocsSummary(),
+                        Resource = $"/{type.Name.Replace("Controller", "")}/{method.Name}",
+                        IsPublic = method.GetCustomAttribute<AllowAnonymousAttribute>() != null ? YesOrNo.Yes : YesOrNo.No,
+                        Type = PermissionType.Api,
+                        Status = DataStatus.Enable,
+                    };
+                    permissions.Add(permission);
+                }
+            }
+
+            authService.SyncPermission(permissions);
         }
     }
 }

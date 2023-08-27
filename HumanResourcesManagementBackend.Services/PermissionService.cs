@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using static HumanResourcesManagementBackend.Models.Dto.PermissionDto;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -45,6 +46,11 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.AddError
                     };
                 }
+
+                if(permissionR.IsPublic == YesOrNo.Yes)
+                {
+                    AuthService.FlushPublicAuth();
+                }
             }
         }
 
@@ -61,6 +67,11 @@ namespace HumanResourcesManagementBackend.Services
                 permission.Status = DataStatus.Deleted;
                 permission.UpdateTime = DateTime.Now;
                 db.SaveChanges();
+                AuthService.permissionCache.Clear();
+                if (permission.IsPublic == YesOrNo.Yes)
+                {
+                    AuthService.FlushPublicAuth();
+                }
             }
         }
 
@@ -94,6 +105,32 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.AddError
                     };
                 }
+                AuthService.permissionCache.Clear();
+                if (permissionEx.IsPublic == YesOrNo.Yes)
+                {
+                    AuthService.FlushPublicAuth();
+                }
+            }
+        }
+
+        public PermissionDto.Permission GetPermissionById(long permissionId)
+        {
+            using (var db = new HRM())
+            {
+                var permissionR = db.Permissions.FirstOrDefault(u => u.Id == permissionId && u.Status != DataStatus.Deleted);
+                if (permissionR == null)
+                {
+                    throw new BusinessException
+                    {
+                        Status = ResponseStatus.NoData,
+                        ErrorMessage = ResponseStatus.NoData.Description()
+                    };
+                }
+                var permission = permissionR.MapTo<PermissionDto.Permission>();
+                permission.StatusStr = permission.Status.Description();
+                permission.IsPublicStr = permission.IsPublic.Description();
+                permission.TypeStr = permission.Type.Description();
+                return permission;
             }
         }
 
@@ -114,7 +151,7 @@ namespace HumanResourcesManagementBackend.Services
                 }
                 if (search.Status > 0)
                 {
-                    query = query.Where(r => r.Status != DataStatus.Deleted);
+                    query = query.Where(r => r.Status == search.Status);
                 }
                 if (search.Type > 0)
                 {

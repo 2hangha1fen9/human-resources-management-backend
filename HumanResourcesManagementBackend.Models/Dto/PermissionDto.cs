@@ -105,6 +105,10 @@ namespace HumanResourcesManagementBackend.Models.Dto
             /// 权限标识 根据权限类型有所区别  *代表所有权限
             /// </summary>
             public string Resource { get; set; }
+            /// <summary>
+            /// 用户ID
+            /// </summary>
+            public long UserId { get; set; }
         }
     }
 }

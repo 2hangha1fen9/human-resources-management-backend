@@ -76,9 +76,9 @@ namespace HumanResourcesManagementBackend.Common
         /// 颁发Token
         /// </summary>
         /// <param name="body">Token自定义内容体</param>
-        /// <param name="periodValidity">有效期（默认60分钟）</param>
+        /// <param name="periodValidity">有效期（默认120分钟）</param>
         /// <returns></returns>
-        public static string Publish(string payLoad = "", int periodValidity = 60)
+        public static string Publish(string payLoad = "", int periodValidity = 120)
         {
             try
             {
