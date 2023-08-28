@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static HumanResourcesManagementBackend.Models.UserDto;
+using HumanResourcesManagementBackend.Repository.Extensions;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -31,7 +32,7 @@ namespace HumanResourcesManagementBackend.Services
                     query = query.Where(u => u.Status == search.Status);
                 }
                 //分页并将数据库实体映射为dto对象(OrderBy必须调用)
-                var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<UserDto.User>();
+                var list = query.OrderBy(q => q.CreateTime).Pageing(search).MapToList<UserDto.User>();
                 //状态处理
                 list.ForEach(u =>
                 {
@@ -78,6 +79,15 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.NoPermission
                     };
                 }
+                if(userR.Status != DataStatus.Enable)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "账号禁止登陆",
+                        Status = ResponseStatus.NoPermission
+                    };
+                }
+
                 var user = userR.MapTo<UserDto.User>();
                 user.StatusStr = user.Status.Description();
                 return user;
@@ -100,14 +110,43 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
-                //DTO映射为真正的实体，添加到数据库中
-                var userR = user.MapTo<R_User>();
-                userR.Password = userR.Password.Encrypt();
-                userR.CreateTime = DateTime.Now;
-                userR.UpdateTime = DateTime.Now;
-                db.Users.Add(userR);
+                
+                var flag = db.Transaction(() =>
+                {
+                    //DTO映射为真正的实体，添加到数据库中
+                    var userR = user.MapTo<R_User>();
+                    userR.Password = userR.Password.Encrypt();
+                    userR.CreateTime = DateTime.Now;
+                    userR.UpdateTime = DateTime.Now;
+                    userR = db.Users.Add(userR);
+                    db.SaveChanges();
+                    if(userR == null && userR.Id > 0)
+                    {
+                        return false;
+                    }
+                    //绑定默认角色
+                    var defaultRoles = db.Roles.Where(r => r.IsDefault == YesOrNo.Yes && r.Status == DataStatus.Enable).ToList();
+                    if(defaultRoles == null || defaultRoles.Count == 0)
+                    {
+                        var bindList = defaultRoles.Select(r => new R_UserRoleRef
+                        {
+                            UserId = userR.Id,
+                            RoleId = r.Id,
+                            CreateTime = DateTime.Now,
+                            UpdateTime = DateTime.Now,
+                        }).ToList();
+                        var bindResult = db.UserRoleRefs.AddRange(bindList).ToList();
+                        db.SaveChanges();
+                        if (bindResult == null || bindList.Count != bindResult.Count)
+                        {
+                            return false;
+                        }
+                    }
 
-                if (db.SaveChanges() == 0)
+                    return true;
+                });
+
+                if (!flag)
                 {
                     throw new BusinessException
                     {
@@ -120,7 +159,7 @@ namespace HumanResourcesManagementBackend.Services
 
         public void EditUser(UserDto.Save user)
         {
-            using(var db = new HRM())
+            using (var db = new HRM())
             {
                 //查询是否存在
                 var userEx = db.Users.FirstOrDefault(u => u.Id == user.Id);
@@ -133,11 +172,19 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 //在Context里查询到对象才能这样赋值做修改操作，自己new是不行的
-                userEx.Password = user.Password.Encrypt();
+                if (string.IsNullOrEmpty(userEx.Password))
+                {
+                    userEx.Password = user.Password.Encrypt();
+                }
+                if (string.IsNullOrEmpty(userEx.LoginName))
+                {
+                    userEx.LoginName = user.LoginName;
+                }
                 userEx.UpdateTime = DateTime.Now;
                 userEx.Question = user.Question;
                 userEx.Answer = user.Answer;
                 userEx.EmployeeId = user.EmployeeId;
+                userEx.Status = user.Status;
 
                 if (db.SaveChanges() == 0)
                 {
@@ -147,6 +194,7 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.AddError
                     };
                 }
+                AuthService.FlushPermissionCache(user.Id);
             }
         }
 
@@ -163,6 +211,8 @@ namespace HumanResourcesManagementBackend.Services
                 user.Status = DataStatus.Deleted;
                 user.UpdateTime = DateTime.Now;
                 db.SaveChanges();
+
+                AuthService.FlushPermissionCache(user.Id);
             }
         }
 
@@ -260,6 +310,37 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.AddError
                     };
                 }
+            }
+        }
+
+        public void ChangeStatus(Save user)
+        {
+            using (var db = new HRM())
+            {
+                //查询是否存在
+                var userEx = db.Users.FirstOrDefault(u => u.Id == user.Id);
+                if (userEx == null)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "用户不存在",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
+
+                userEx.UpdateTime = DateTime.Now;
+                userEx.Status = user.Status;
+
+                if (db.SaveChanges() == 0)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "用户修改失败",
+                        Status = ResponseStatus.UpdateError
+                    };
+                }
+
+                AuthService.FlushPermissionCache(user.Id);
             }
         }
     }

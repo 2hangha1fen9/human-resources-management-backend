@@ -25,7 +25,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="CompensatoryApply"></param>
         /// <returns></returns>
         [HttpPost]
-        public Response CompensatoryApply(CompensatoryApplyDto.CompensatoryApply compensatoryApply)
+        public Response Apply(CompensatoryApplyDto.CompensatoryApply compensatoryApply)
         {
             compensatoryApply.EmployeeId = CurrentUser.EmployeeId;
             _compensatoryApplyService.CompensatoryApply(compensatoryApply);

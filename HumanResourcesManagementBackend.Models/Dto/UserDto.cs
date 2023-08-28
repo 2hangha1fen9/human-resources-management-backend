@@ -81,6 +81,10 @@ namespace HumanResourcesManagementBackend.Models
             /// 员工ID
             /// </summary>
             public long EmployeeId { get; set; }
+            /// <summary>
+            /// 数据状态 1启用 2禁用 99删除
+            /// </summary>
+            public DataStatus Status { get; set; }
 
         }
 

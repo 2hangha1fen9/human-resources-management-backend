@@ -13,19 +13,14 @@ namespace HumanResourcesManagementBackend.Models
     public enum PermissionType
     {
         /// <summary>
-        /// Url路径
+        /// API路径
         /// </summary>
-        [Description("Url路径")]
+        [Description("API路径")]
         Api = 1,
         /// <summary>
         /// 前端菜单
         /// </summary>
         [Description("前端菜单")]
         Menu = 2,
-        /// <summary>
-        /// 前端按钮
-        /// </summary>
-        [Description("前端按钮")]
-        Button = 3,
     }
 }

@@ -10,7 +10,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using static HumanResourcesManagementBackend.Models.UserDto;
 
 namespace HumanResourcesManagementBackend.Api.Controllers
 {
@@ -47,6 +46,23 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 {
                     Status = ResponseStatus.NoData
                 }
+            };
+        }
+
+        /// <summary>
+        /// 根据用户id获取用户详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public DataResponse<UserDto.User> GetUserById(long id)
+        {
+            var user = userService.GetUserById(id);
+            return new DataResponse<UserDto.User>
+            {
+                Data = user,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
             };
         }
 
@@ -159,6 +175,22 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public Response ChangeQuestion(UserDto.ChangePwd changeQuestion)
         {
             userService.ChangeQuestion(changeQuestion);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
+
+        /// <summary>
+        /// 修改状态
+        /// </summary>
+        /// <param name="changeQuestion"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public Response ChangeStatus(UserDto.Save user)
+        {
+            userService.ChangeStatus(user);
             return new Response
             {
                 Status = ResponseStatus.Success,

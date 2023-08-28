@@ -160,7 +160,6 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public PositionLevel PositionLevel { get; set; }
         }
-
         /// <summary>
         /// 员工查询
         /// </summary>

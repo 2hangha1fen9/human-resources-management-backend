@@ -16,5 +16,9 @@ namespace HumanResourcesManagementBackend.Repository
         /// 角色名称
         /// </summary>
         public string Name { get;set; }
+        /// <summary>
+        /// 是否是默认角色
+        /// </summary>
+        public YesOrNo IsDefault { get; set; }
     }
 }

@@ -75,6 +75,7 @@
     <Compile Include="Entity\R_UserRoleRef.cs" />
     <Compile Include="Entity\R_VacationApply.cs" />
     <Compile Include="Extensions\QueryExtension.cs" />
+    <Compile Include="Extensions\TransactionExtension.cs" />
     <Compile Include="HRM.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\R_User.cs" />
@@ -93,6 +94,14 @@
     <Compile Include="Migrations\202308250533308_departmentname.cs" />
     <Compile Include="Migrations\202308250533308_departmentname.designer.cs">
       <DependentUpon>202308250533308_departmentname.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308271049473_addCol.cs" />
+    <Compile Include="Migrations\202308271049473_addCol.designer.cs">
+      <DependentUpon>202308271049473_addCol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202308280544112_delCol.cs" />
+    <Compile Include="Migrations\202308280544112_delCol.designer.cs">
+      <DependentUpon>202308280544112_delCol.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,6 +132,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308250533308_departmentname.resx">
       <DependentUpon>202308250533308_departmentname.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308271049473_addCol.resx">
+      <DependentUpon>202308271049473_addCol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308280544112_delCol.resx">
+      <DependentUpon>202308280544112_delCol.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
