@@ -241,5 +241,23 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 Message = ResponseStatus.Success.Description()
             };
         }
+
+        #region 读取Excel数据
+        /// <summary>
+        /// 读取excel数据
+        /// </summary>
+        /// <param name="ReadExcel"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public Response ReadExcel(string fileName, string sheetName, bool isFirstRowColumn)
+        {
+            _employeeService.ReadExcel(fileName,sheetName,isFirstRowColumn);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
+        #endregion
     }
 }

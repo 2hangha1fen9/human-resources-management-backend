@@ -91,5 +91,14 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="GetBirthdaySummary"></param>
         /// <returns></returns>
         List<EmployeeDto.BirthdaySummaryDto> GetBirthdaySummary();
+
+        /// <summary>
+        /// 读取excel数据
+        /// </summary>
+        /// <param name="fileName">文件路径</param>
+        /// <param name="sheetName">excel工作薄sheet的名称</param>
+        /// <param name="isFirstRowColumn">第一行是否是DataTable的列名，true是</param>
+        /// <returns>返回的DataTable</returns>
+        void ReadExcel(string fileName, string sheetName, bool isFirstRowColumn);
     }
 }

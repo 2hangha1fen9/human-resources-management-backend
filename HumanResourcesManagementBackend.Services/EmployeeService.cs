@@ -5,13 +5,19 @@ using HumanResourcesManagementBackend.Repository.Migrations;
 using HumanResourcesManagementBackend.Services.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
 using static HumanResourcesManagementBackend.Models.UserDto;
 using static System.Data.Entity.Migrations.Model.UpdateDatabaseOperation;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using NPOI.HSSF.UserModel;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -522,6 +528,116 @@ namespace HumanResourcesManagementBackend.Services
                     item.Proportion = percent.ToString("0.00%");
                 }
                 return birthdaylist;
+            }
+        }
+
+
+        public void ReadExcel(string fileName, string sheetName, bool isFirstRowColumn)
+        {
+            DataTable dt = ExcelToDatatable(fileName, sheetName, isFirstRowColumn);
+            //将excel表格数据存入list集合中
+            //EachdayTX定义的类，字段值对应excel表中的每一列
+            List<EmployeeDto.Employee> employTX = new List<EmployeeDto.Employee>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                EmployeeDto.Employee employ = new EmployeeDto.Employee
+                {
+                    Id = (long)dr[0],
+                    WorkNum = dr[1].ToString(),
+                    WorkStatus = (WorkStatus)dr[2],
+                    Name = dr[3].ToString(),
+                    Gender = (Gender)dr[4],
+                    MaritalStatus = (MaritalStatus)dr[5],
+                    BirthDay = (DateTime)dr[6],
+                    IdCard = dr[7].ToString(),
+                    Native = dr[8].ToString(),
+                    Phone = dr[9].ToString(),
+                    Email = dr[10].ToString(),
+                    AcademicDegree = (AcademicDegree)dr[11],
+                    HireDate= (DateTime)dr[12],
+                    PositionId = (long)dr[13],
+                    Status = (DataStatus)dr[1],
+                    CreateTime = DateTime.Now,
+                    UpdateTime= DateTime.Now,
+
+
+                };
+                employTX.Add(employ);
+            }
+        }
+        public static DataTable ExcelToDatatable(string fileName, string sheetName, bool isFirstRowColumn)
+        {
+            ISheet sheet = null;
+            DataTable data = new DataTable();
+            int startRow = 0;
+            FileStream fs;
+            IWorkbook workbook = null;
+            int cellCount = 0;//列数
+            int rowCount = 0;//行数
+            try
+            {
+                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                if (fileName.IndexOf(".xlsx") > 0) // 2007版本
+                {
+                    workbook = new XSSFWorkbook(fs);
+                }
+                else if (fileName.IndexOf(".xls") > 0) // 2003版本
+                {
+                    workbook = new HSSFWorkbook(fs);
+                }
+                if (sheetName != null)
+                {
+                    sheet = workbook.GetSheet(sheetName);//根据给定的sheet名称获取数据
+                }
+                else
+                {
+                    //也可以根据sheet编号来获取数据
+                    sheet = workbook.GetSheetAt(0);//获取第几个sheet表（此处表示如果没有给定sheet名称，默认是第一个sheet表）  
+                }
+                if (sheet != null)
+                {
+                    IRow firstRow = sheet.GetRow(0);
+                    cellCount = firstRow.LastCellNum; //第一行最后一个cell的编号 即总的列数
+                    if (isFirstRowColumn)//如果第一行是标题行
+                    {
+                        for (int i = firstRow.FirstCellNum; i < cellCount; ++i)//第一行列数循环
+                        {
+                            DataColumn column = new DataColumn(firstRow.GetCell(i).StringCellValue);//获取标题
+                            data.Columns.Add(column);//添加列
+                        }
+                        startRow = sheet.FirstRowNum + 1;//1（即第二行，第一行0从开始）
+                    }
+                    else
+                    {
+                        startRow = sheet.FirstRowNum;//0
+                    }
+                    //最后一行的标号
+                    rowCount = sheet.LastRowNum;
+                    for (int i = startRow; i <= rowCount; ++i)//循环遍历所有行
+                    {
+                        IRow row = sheet.GetRow(i);//第几行
+                        if (row == null)
+                        {
+                            continue; //没有数据的行默认是null;
+                        }
+                        //将excel表每一行的数据添加到datatable的行中
+                        DataRow dataRow = data.NewRow();
+                        for (int j = row.FirstCellNum; j < cellCount; ++j)
+                        {
+                            if (row.GetCell(j) != null) //同理，没有数据的单元格都默认是null
+                            {
+                                dataRow[j] = row.GetCell(j).ToString();
+                            }
+                        }
+                        data.Rows.Add(dataRow);
+                    }
+                }
+                return data;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                return null;
             }
         }
     }

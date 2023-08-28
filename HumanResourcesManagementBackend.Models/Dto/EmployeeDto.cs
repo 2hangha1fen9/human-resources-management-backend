@@ -93,7 +93,7 @@ namespace HumanResourcesManagementBackend.Models
             /// 学历 （详见枚举定义）
             /// </summary>
             public string AcademicDegreeStr { get; set; }
-            /// <summary>
+            /// <summary>`
             /// 入职日期
             /// </summary>
             public DateTime HireDate { get; set; }

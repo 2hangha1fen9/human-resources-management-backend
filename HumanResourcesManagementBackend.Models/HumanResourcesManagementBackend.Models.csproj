@@ -47,7 +47,6 @@
     <Compile Include="Dto\CompensatoryApplyDto.cs" />
     <Compile Include="Dto\EmployeeDto.cs" />
     <Compile Include="Dto\FieldWorkApplyDto.cs" />
-    <Compile Include="Dto\SummaryDto.cs" />
     <Compile Include="Dto\VacationApplyDto.cs" />
     <Compile Include="Exceptions\BusinessException.cs" />
     <Compile Include="Public\Enumber.cs" />
