@@ -50,7 +50,6 @@
     <Compile Include="Dto\FieldWorkApplyDto.cs" />
     <Compile Include="Dto\PermissionDto.cs" />
     <Compile Include="Dto\RoleDto.cs" />
-    <Compile Include="Dto\SummaryDto.cs" />
     <Compile Include="Dto\VacationApplyDto.cs" />
     <Compile Include="Exceptions\BusinessException.cs" />
     <Compile Include="Public\Enumber.cs" />
