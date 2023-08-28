@@ -17,7 +17,7 @@ namespace HumanResourcesManagementBackend.Repository
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 权限类型 1Api 2菜单 3按钮
+        /// 权限类型 1Api 2菜单
         /// </summary>
         public PermissionType Type { get; set; }
         /// <summary>

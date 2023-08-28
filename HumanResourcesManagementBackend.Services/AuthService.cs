@@ -5,6 +5,7 @@ using HumanResourcesManagementBackend.Repository;
 using HumanResourcesManagementBackend.Repository.Extensions;
 using HumanResourcesManagementBackend.Services.Interface;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -18,8 +19,8 @@ namespace HumanResourcesManagementBackend.Services
     {
         private static readonly IPermissionService _permissionService = new PermissionService();
         //权限缓存
-        public static readonly Dictionary<long, List<PermissionDto.Permission>> permissionCache = new Dictionary<long, List<PermissionDto.Permission>>();
-        private static List<PermissionDto.Permission> publicPermissions = new List<PermissionDto.Permission>();
+        public static readonly ConcurrentDictionary<long, List<PermissionDto.Permission>> permissionCache = new ConcurrentDictionary<long, List<PermissionDto.Permission>>();
+        private static List<PermissionDto.Permission> publicPermissions = null;
         public AuthService()
         {
             if(publicPermissions == null)
@@ -36,10 +37,28 @@ namespace HumanResourcesManagementBackend.Services
         {
             publicPermissions = _permissionService.GetPermissions(new PermissionDto.Search
             {
+                Type = PermissionType.Api,
                 IsPublic = YesOrNo.Yes,
                 Rows = 0
             });
         }
+        /// <summary>
+        /// 刷新权限
+        /// </summary>
+        /// <param name="userId"></param>
+        public static void FlushPermissionCache(long userId = 0)
+        {
+            if(userId > 0)
+            {
+                permissionCache.TryRemove(userId, out List<PermissionDto.Permission> list);
+            }
+            else
+            {
+                permissionCache.Clear();
+            }
+        }
+
+
 
         public void CheckApi(AuthDto.CheckApi check)
         {
@@ -51,10 +70,11 @@ namespace HumanResourcesManagementBackend.Services
                 if(!permissionCache.TryGetValue(check.UserId,out permissionList))
                 {
                     permissionList = _permissionService.GetPermissionsByUserId(check.UserId, PermissionType.Api);
-                    permissionCache.Add(check.UserId, permissionList);
+                    permissionCache.TryAdd(check.UserId, permissionList);
+                    //添加公共权限
+                    permissionList.AddRange(publicPermissions);
                 }
-                //添加公共权限
-                permissionList.AddRange(publicPermissions);
+               
                 if(permissionList == null)
                 {
                     throw new BusinessException();
@@ -94,7 +114,7 @@ namespace HumanResourcesManagementBackend.Services
                     return true;
                 });
 
-                permissionCache.Clear();
+                FlushPermissionCache();
             }
         }
 
@@ -123,7 +143,7 @@ namespace HumanResourcesManagementBackend.Services
                     return true;
                 });
                 //刷新权限
-                permissionCache.Remove(bind.userId);
+                FlushPermissionCache(bind.userId);
             }
         }
 

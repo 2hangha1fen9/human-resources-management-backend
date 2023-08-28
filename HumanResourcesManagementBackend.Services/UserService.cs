@@ -79,6 +79,15 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.NoPermission
                     };
                 }
+                if(userR.Status != DataStatus.Enable)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "账号禁止登陆",
+                        Status = ResponseStatus.NoPermission
+                    };
+                }
+
                 var user = userR.MapTo<UserDto.User>();
                 user.StatusStr = user.Status.Description();
                 return user;
@@ -185,7 +194,7 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.AddError
                     };
                 }
-                AuthService.permissionCache.Remove(user.Id);
+                AuthService.FlushPermissionCache(user.Id);
             }
         }
 
@@ -203,7 +212,7 @@ namespace HumanResourcesManagementBackend.Services
                 user.UpdateTime = DateTime.Now;
                 db.SaveChanges();
 
-                AuthService.permissionCache.Remove(user.Id);
+                AuthService.FlushPermissionCache(user.Id);
             }
         }
 
@@ -331,7 +340,7 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
 
-                AuthService.permissionCache.Remove(user.Id);
+                AuthService.FlushPermissionCache(user.Id);
             }
         }
     }

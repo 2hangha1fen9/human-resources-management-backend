@@ -22,10 +22,5 @@ namespace HumanResourcesManagementBackend.Models
         /// </summary>
         [Description("前端菜单")]
         Menu = 2,
-        /// <summary>
-        /// 前端按钮
-        /// </summary>
-        [Description("前端按钮")]
-        Button = 3,
     }
 }

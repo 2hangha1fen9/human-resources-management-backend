@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HumanResourcesManagementBackend.Models.Dto.RoleDto;
 
 namespace HumanResourcesManagementBackend.Services.Interface
 {
@@ -45,6 +46,13 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="permissionId"></param>
         /// <returns></returns>
-        PermissionDto.Permission GetPermissionById(long permissionId);  
+        PermissionDto.Permission GetPermissionById(long permissionId);
+
+        /// <summary>
+        /// 根据角色ID获取权限
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        List<PermissionDto.Permission> GetPermissionsByRoleId(long roleId);
     }
 }

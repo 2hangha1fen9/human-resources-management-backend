@@ -11,6 +11,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using static HumanResourcesManagementBackend.Models.Dto.PermissionDto;
+using static HumanResourcesManagementBackend.Models.Dto.RoleDto;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -92,8 +93,8 @@ namespace HumanResourcesManagementBackend.Services
                 //在Context里查询到对象才能这样赋值做修改操作，自己new是不行的
                 permissionEx.Name = permission.Name;
                 permissionEx.Type = permission.Type;
-                permission.IsPublic = permission.IsPublic;
-                permission.Resource = permission.Resource;
+                permissionEx.IsPublic = permission.IsPublic;
+                permissionEx.Resource = permission.Resource;
                 permissionEx.UpdateTime = DateTime.Now;
                 permissionEx.Status = permission.Status;
 
@@ -196,8 +197,27 @@ namespace HumanResourcesManagementBackend.Services
                                                          and exists (select * from R_User u where id = ur.userId
                                                          and u.status = {(int)DataStatus.Enable})
                                                          and r.status = {(int)DataStatus.Enable}))
-                and status = {(int)DataStatus.Enable} and type = @type",new SqlParameter("@userId",userId), new SqlParameter("@type", type));
+                and status = {(int)DataStatus.Enable} and type = @type order by resource",new SqlParameter("@userId",userId), new SqlParameter("@type", type));
                 var list = permissionList.ToList().MapToList<PermissionDto.Permission>();
+                list.ForEach(r =>
+                {
+                    r.StatusStr = r.Status.Description();
+                    r.TypeStr = r.Type.Description();
+                    r.IsPublicStr = r.IsPublic.Description();
+                });
+                return list;
+            }
+        }
+
+        public List<PermissionDto.Permission> GetPermissionsByRoleId(long roleId)
+        {
+            using (var db = new HRM())
+            {
+                var query = (from permission in db.Permissions
+                             join pid in db.PermissionRoleRefs.Where(r => r.RoleId == roleId).Select(r => r.PermissionId) on permission.Id equals pid
+                             where permission.Status == DataStatus.Enable
+                             select permission);
+                var list = query.MapToList<PermissionDto.Permission>();
                 list.ForEach(r =>
                 {
                     r.StatusStr = r.Status.Description();

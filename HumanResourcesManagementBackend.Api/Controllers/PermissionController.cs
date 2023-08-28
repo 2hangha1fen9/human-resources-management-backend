@@ -61,12 +61,29 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         }
 
         /// <summary>
+        /// 根据角色ID查询权限信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public DataResponse<List<PermissionDto.Permission>> GetPermissionsByRoleId(long id)
+        {
+            var permission = permissionService.GetPermissionsByRoleId(id);
+            return new DataResponse<List<PermissionDto.Permission>>
+            {
+                Data = permission,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+            };
+        }
+
+        /// <summary>
         /// 根据用户ID查询权限信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public DataResponse<List<PermissionDto.Permission>> GetPermissionByUserId(long id,[FromUri]PermissionType type)
+        public DataResponse<List<PermissionDto.Permission>> GetPermissionsByUserId(long id, [FromUri] PermissionType type)
         {
             var permission = permissionService.GetPermissionsByUserId(id,type);
             return new DataResponse<List<PermissionDto.Permission>>

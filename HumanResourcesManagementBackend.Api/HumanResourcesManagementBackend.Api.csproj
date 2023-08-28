@@ -173,6 +173,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AbsenceApplyController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BusinessTripApplyController.cs" />
     <Compile Include="Controllers\CompensatoryApplyController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />

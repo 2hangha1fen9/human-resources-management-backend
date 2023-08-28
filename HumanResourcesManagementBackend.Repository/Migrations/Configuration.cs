@@ -84,20 +84,6 @@
                         UpdateTime = DateTime.Now,
                     });
                 }
-                var permission3 = context.Permissions.FirstOrDefault(p => p.Name == "ALL_BUTTONS");
-                if (permission3 == null)
-                {
-                    permission3 = context.Permissions.Add(new R_Permission
-                    {
-                        Name = "ALL_BUTTONS",
-                        Type = PermissionType.Button,
-                        IsPublic = YesOrNo.No,
-                        Resource = "*",
-                        Status = DataStatus.Enable,
-                        CreateTime = DateTime.Now,
-                        UpdateTime = DateTime.Now,
-                    });
-                }
 
                 return true;
             });
