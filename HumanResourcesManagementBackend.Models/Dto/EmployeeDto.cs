@@ -128,6 +128,10 @@ namespace HumanResourcesManagementBackend.Models
         public class Edit
         {
             /// <summary>
+            /// 姓名
+            /// </summary>
+            public string Name { get; set; }
+            /// <summary>
             /// 工号
             /// </summary>
             public string WorkNum { get; set; }
@@ -175,6 +179,10 @@ namespace HumanResourcesManagementBackend.Models
             /// 入职日期
             /// </summary>
             public DateTime HireDate { get; set; }
+            /// <summary>
+            /// 性别
+            /// </summary>
+            public Gender Gender { get; set; }
         }
         /// <summary>
         /// 员工查询

@@ -163,6 +163,7 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
+                employEx.Gender = edit.Gender;
                 employEx.WorkStatus = edit.WorkStatus;
                 employEx.IdCard = edit.IdCard;
                 employEx.Native= edit.Native;
