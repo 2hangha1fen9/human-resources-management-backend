@@ -24,6 +24,13 @@ namespace HumanResourcesManagementBackend.Services.Interface
         UserDto.User GetUserById(long id);
 
         /// <summary>
+        /// 根据登录名获取登录信息
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <returns></returns>
+        UserDto.User GetUserByLoginName(string loginName);
+
+        /// <summary>
         /// 用户登录
         /// </summary>
         /// <param name="login"></param>
@@ -71,5 +78,11 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="question"></param>
         void ChangeQuestion(UserDto.ChangePwd changeQuestion);
+
+        /// <summary>
+        /// 检查密保问题
+        /// </summary>
+        /// <param name="changeAnswer"></param>
+        void CheckAnswer(UserDto.ChangePwd changeAnswer);
     }
 }

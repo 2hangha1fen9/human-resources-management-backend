@@ -35,7 +35,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public PageResponse<UserDto.User> QueryUserByPage(UserDto.Search search)
         {
             var users = userService.GetUsers(search);
-            
+
             //返回响应结果
             return new PageResponse<UserDto.User>()
             {
@@ -71,7 +71,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        [HttpPost,AllowAnonymous]
+        [HttpPost, AllowAnonymous]
         public DataResponse<string> Login(UserDto.Login login)
         {
             var user = userService.Login(login);
@@ -83,6 +83,23 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 Data = token,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
+            };
+        }
+
+        /// <summary>
+        /// 根据登录名获取用户信息
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <returns></returns>
+        [HttpGet, AllowAnonymous]
+        public DataResponse<UserDto.User> GetUserByLoginName(string loginName)
+        {
+            var user = userService.GetUserByLoginName(loginName);
+            return new DataResponse<UserDto.User>
+            {
+                Data = user,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
             };
         }
 
@@ -159,6 +176,22 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public Response ForgotPassword(UserDto.ChangePwd changePwd)
         {
             userService.ForgotPassword(changePwd);
+            return new Response
+            {
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
+        }
+
+        /// <summary>
+        /// 检测密保问题
+        /// </summary>
+        /// <param name="changepwd"></param>
+        /// <returns></returns>
+        [HttpPost, AllowAnonymous]
+        public Response CheckAnswer(UserDto.ChangePwd changePwd)
+        {
+            userService.CheckAnswer(changePwd);
             return new Response
             {
                 Status = ResponseStatus.Success,
