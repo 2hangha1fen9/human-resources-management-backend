@@ -110,13 +110,12 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="GetSenioritySummary"></param>
         /// <returns></returns>
         [HttpGet]
-        public DataResponse<dynamic> GetSenioritySummary()
+        public DataResponse<List<EmployeeDto.Summary>> GetSenioritySummary()
         {
             var  getseniority= _employeeService.GetSenioritySummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { SeniorityCount = getseniority, Count = count },
+                Data = getseniority,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -128,13 +127,12 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="GetGradeSummary"></param>
         /// <returns></returns>
         [HttpGet]
-        public DataResponse<dynamic> GetGradeSummary()
+        public DataResponse<List<EmployeeDto.Summary>> GetGradeSummary()
         {
             var getgrade= _employeeService.GetGradeSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { GradeCount = getgrade, Count = count },
+                Data = getgrade,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -145,13 +143,12 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="GetAgeSummary"></param>
         /// <returns></returns>
         [HttpGet]
-        public DataResponse<dynamic> GetAgeSummary()
+        public DataResponse<List<EmployeeDto.Summary>> GetAgeSummary()
         {
             var getage = _employeeService.GetAgeSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { AgeConunt = getage, Count = count },
+                Data = getage,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -162,13 +159,12 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="GetEducationSummary"></param>
         /// <returns></returns>
         [HttpGet]
-        public DataResponse<dynamic> GetEducationSummary()
+        public DataResponse<List<EmployeeDto.Summary>> GetEducationSummary()
         {
             var geteducation = _employeeService.GetEducationSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { EducationCount= geteducation, Count=count},               
+                Data = geteducation,               
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -179,13 +175,12 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="GetDepartmentSummary"></param>
         /// <returns></returns>
         [HttpGet]
-        public DataResponse<dynamic> GetDepartmentSummary()
+        public DataResponse<List<EmployeeDto.Summary>> GetDepartmentSummary()
         {
             var getdepartment = _employeeService.GetDepartmentSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { DepartmentCount = getdepartment, Count = count },
+                Data = getdepartment,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -196,13 +191,12 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="GetGenderSummary"></param>
         /// <returns></returns>
         [HttpGet]
-        public DataResponse<dynamic> GetGenderSummary()
+        public DataResponse<List<EmployeeDto.Summary>> GetGenderSummary()
         {
             var getgender = _employeeService.GetGenderSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { GenderCount = getgender, Count = count },
+                Data = getgender,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -213,13 +207,12 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="GetMaritalSummary"></param>
         /// <returns></returns>
         [HttpGet]
-        public DataResponse<dynamic> GetMaritalSummary()
+        public DataResponse<List<EmployeeDto.Summary>> GetMaritalSummary()
         {
             var getmarital = _employeeService.GetMaritalSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { MaritalCount = getmarital, Count = count },
+                Data = getmarital,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -230,13 +223,13 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="GetBirthdaySummary"></param>
         /// <returns></returns>
         [HttpGet]
-        public DataResponse<dynamic> GetBirthdaySummary()
+        public DataResponse<List<EmployeeDto.BirthdaySummary>> GetBirthdaySummary()
         {
             var getbirthday = _employeeService.GetBirthdaySummary();
             int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.BirthdaySummary>>
             {
-                Data = new { BirthdayCount = getbirthday, Count = count },
+                Data = getbirthday,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
