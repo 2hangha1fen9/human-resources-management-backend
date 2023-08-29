@@ -233,9 +233,11 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BusinessTripApplyController.cs" />
     <Compile Include="Controllers\CompensatoryApplyController.cs" />
+    <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\FieldWorkApplyController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
+    <Compile Include="Controllers\PositionController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\VacationApplyController.cs" />
     <Compile Include="Controllers\EnumController.cs" />

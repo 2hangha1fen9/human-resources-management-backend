@@ -102,9 +102,17 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public long PositionId { get; set; }
             /// <summary>
+            /// 职位名
+            /// </summary>
+            public string PositionName { get; set; }
+            /// <summary>
             /// 部门ID
             /// </summary>
             public long DepartmentId { get; set; }
+            /// <summary>
+            /// 部门名称
+            /// </summary>
+            public string DepartmentName { get; set; }
             /// <summary>
             /// 职位等级 
             /// </summary>
@@ -148,6 +156,10 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public AcademicDegree AcademicDegree { get; set; }
             /// <summary>
+            /// 婚姻状态 0 未知 1已婚 2未婚
+            /// </summary>
+            public MaritalStatus MaritalStatus { get; set; }
+            /// <summary>
             /// 职位ID
             /// </summary>
             public long PositionId { get; set; }
@@ -159,6 +171,10 @@ namespace HumanResourcesManagementBackend.Models
             /// 职位等级 
             /// </summary>
             public PositionLevel PositionLevel { get; set; }
+            /// <summary>`
+            /// 入职日期
+            /// </summary>
+            public DateTime HireDate { get; set; }
         }
         /// <summary>
         /// 员工查询
@@ -169,20 +185,43 @@ namespace HumanResourcesManagementBackend.Models
             /// 数据状态 1启用 2禁用 99删除
             /// </summary>
             public DataStatus Status { get; set; }
-
             /// <summary>
-            /// 工号
+            /// 工作状态 (详见枚举定义)
             /// </summary>
-            public string WorkNum { get; set; }
+            public WorkStatus WorkStatus { get; set; }
             /// <summary>
-            /// 员工名称
+            /// 性别 0未知 1男 2女
             /// </summary>
-            public string Name { get; set; }
+            public Gender Gender { get; set; }
+            /// <summary>
+            /// 婚姻状态 0 未知 1已婚 2未婚
+            /// </summary>
+            public MaritalStatus MaritalStatus { get; set; }
+            /// <summary>
+            /// 学历 （详见枚举定义）
+            /// </summary>
+            public AcademicDegree AcademicDegree { get; set; }
+            /// <summary>
+            /// 职位等级 
+            /// </summary>
+            public PositionLevel PositionLevel { get; set; }
+            /// <summary>
+            /// 职位ID
+            /// </summary>
+            public long PositionId { get; set; }
+            /// <summary>
+            /// 部门ID
+            /// </summary>
+            public long DepartmentId { get; set; }
+            /// <summary>
+            /// 搜索关键字
+            /// </summary>
+            public string SearchKey { get; set; }
         }
         /// <summary>
         /// 汇总
         /// </summary>
-        public class SummaryDto : DataResponse<dynamic>
+        public class Summary : DataResponse<dynamic>
         {
             /// <summary>
             /// 类别
@@ -200,7 +239,7 @@ namespace HumanResourcesManagementBackend.Models
         /// <summary>
         /// 生日汇总
         /// </summary>
-        public class BirthdaySummaryDto : DataResponse<dynamic>
+        public class BirthdaySummary : DataResponse<dynamic>
         {
             /// <summary>
             /// 类别

@@ -26,7 +26,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="seleemployee"></param>
         /// <returns></returns>
         [HttpPost]
-        public PageResponse<EmployeeDto.Employee> QueryUserByPage(EmployeeDto.Search search)
+        public PageResponse<EmployeeDto.Employee> QueryEmployeeByPage(EmployeeDto.Search search)
         {
             var employees =_employeeService.GetEmploysees(search);
             //返回响应结果
@@ -46,7 +46,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="seleemployeebyid"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public DataResponse<EmployeeDto.Employee> GetEmployeeById(long id)
         {
             var employee = _employeeService.GetEmployseeById(id);
@@ -109,7 +109,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetSenioritySummary"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public DataResponse<dynamic> GetSenioritySummary()
         {
             var  getseniority= _employeeService.GetSenioritySummary();
@@ -127,7 +127,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetGradeSummary"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public DataResponse<dynamic> GetGradeSummary()
         {
             var getgrade= _employeeService.GetGradeSummary();
@@ -144,7 +144,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetAgeSummary"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public DataResponse<dynamic> GetAgeSummary()
         {
             var getage = _employeeService.GetAgeSummary();
@@ -161,7 +161,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetEducationSummary"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public DataResponse<dynamic> GetEducationSummary()
         {
             var geteducation = _employeeService.GetEducationSummary();
@@ -178,7 +178,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetDepartmentSummary"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public DataResponse<dynamic> GetDepartmentSummary()
         {
             var getdepartment = _employeeService.GetDepartmentSummary();
@@ -195,7 +195,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetGenderSummary"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public DataResponse<dynamic> GetGenderSummary()
         {
             var getgender = _employeeService.GetGenderSummary();
@@ -212,7 +212,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetMaritalSummary"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public DataResponse<dynamic> GetMaritalSummary()
         {
             var getmarital = _employeeService.GetMaritalSummary();
@@ -229,7 +229,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetBirthdaySummary"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public DataResponse<dynamic> GetBirthdaySummary()
         {
             var getbirthday = _employeeService.GetBirthdaySummary();

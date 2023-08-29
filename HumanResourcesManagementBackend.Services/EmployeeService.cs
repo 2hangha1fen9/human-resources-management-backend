@@ -28,27 +28,63 @@ namespace HumanResourcesManagementBackend.Services
                             where employ.Status != DataStatus.Deleted
                             select employ;
                 //条件过滤
-                if (!string.IsNullOrEmpty(search.Name))
+                if (!string.IsNullOrEmpty(search.SearchKey))
                 {
-                    query = query.Where(u => u.Name.Contains(search.Name));
-                }
-                if (!string.IsNullOrEmpty(search.WorkNum))
-                {
-                    query = query.Where(u => u.WorkNum.Contains(search.WorkNum));
+                    query = query.Where(u => u.IdCard.Contains(search.SearchKey) || 
+                                                    u.Name.Contains(search.SearchKey) || 
+                                                    u.WorkNum.Contains(search.SearchKey) || 
+                                                    u.Native.Contains(search.SearchKey) || 
+                                                    u.Phone.Contains(search.SearchKey) || 
+                                                    u.Email.Contains(search.SearchKey));
                 }
                 if (search.Status > 0)
                 {
                     query = query.Where(u => u.Status == search.Status);
                 }
+                if (search.WorkStatus > 0)
+                {
+                    query = query.Where(u => u.WorkStatus == search.WorkStatus);
+                }
+                if (search.Gender > 0)
+                {
+                    query = query.Where(u => u.Gender == search.Gender);
+                }
+                if (search.MaritalStatus > 0)
+                {
+                    query = query.Where(u => u.MaritalStatus == search.MaritalStatus);
+                }
+                if (search.AcademicDegree > 0)
+                {
+                    query = query.Where(u => u.AcademicDegree == search.AcademicDegree);
+                }
+                if (search.PositionLevel > 0)
+                {
+                    query = query.Where(u => u.PositionLevel == search.PositionLevel);
+                }
+                if (search.PositionId > 0)
+                {
+                    query = query.Where(u => u.PositionId == search.PositionId);
+                }
+                if (search.DepartmentId > 0)
+                {
+                    query = query.Where(u => u.DepartmentId == search.DepartmentId);
+                }
                 //分页并将数据库实体映射为dto对象(OrderBy必须调用)
                 var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<EmployeeDto.Employee>();
+                //查询部门,职级数据
+                var deps = db.Departmentes.Where(d => d.Status == DataStatus.Enable).ToList();
+                var position = db.Positiones.Where(d => d.Status == DataStatus.Enable).ToList();
                 //状态处理
                 list.ForEach(u =>
                 {
                     u.StatusStr = u.Status.Description();
+                    u.GenderStr = u.Gender.Description();
                     u.PositionLevelStr = u.PositionLevel.Description();
                     u.WorkStatusStr= u.WorkStatus.Description();
                     u.AcademicDegreeStr= u.AcademicDegree.Description();
+                    u.MaritalStatusStr = u.MaritalStatus.Description();
+                    u.DepartmentName = deps?.FirstOrDefault(d => d.Id == u.DepartmentId)?.DepartmentName ?? "";
+                    u.PositionName = position?.FirstOrDefault(d => d.Id == u.PositionId)?.PositionName ?? "";
                 });
                 return list;
             }
@@ -68,9 +104,13 @@ namespace HumanResourcesManagementBackend.Services
                 }
                 var employ = employR.MapTo<EmployeeDto.Employee>();
                 employ.StatusStr = employ.Status.Description();
-                employ.PositionLevelStr =employ.PositionLevel.Description();
+                employ.GenderStr = employ.Gender.Description();
+                employ.PositionLevelStr = employ.PositionLevel.Description();
                 employ.WorkStatusStr = employ.WorkStatus.Description();
                 employ.AcademicDegreeStr = employ.AcademicDegree.Description();
+                employ.MaritalStatusStr = employ.MaritalStatus.Description();
+                employ.DepartmentName = db.Departmentes.FirstOrDefault(d => d.Id == employ.DepartmentId)?.DepartmentName ?? "";
+                employ.PositionName = db.Positiones.FirstOrDefault(d => d.Id == employ.PositionId)?.PositionName ?? "";
                 return employ;
             }
         }
@@ -169,12 +209,12 @@ namespace HumanResourcesManagementBackend.Services
                 return number;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetSenioritySummary()
+        public List<EmployeeDto.Summary> GetSenioritySummary()
         {
             using (var db = new HRM())
             {
-                var senioritylist = new List<EmployeeDto.SummaryDto>();
-                var seniority = new EmployeeDto.SummaryDto();
+                var senioritylist = new List<EmployeeDto.Summary>();
+                var seniority = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -196,7 +236,7 @@ namespace HumanResourcesManagementBackend.Services
                         case 7: { seniority.Category = "8年以上"; senioritylist.Add(seniority); break; };
                         default:break;
                     }
-                    seniority = new EmployeeDto.SummaryDto();                 
+                    seniority = new EmployeeDto.Summary();                 
                 }
                 foreach (var item in query)
                 {
@@ -266,12 +306,12 @@ namespace HumanResourcesManagementBackend.Services
                 return senioritylist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetGradeSummary()
+        public List<EmployeeDto.Summary> GetGradeSummary()
         {
             using (var db = new HRM())
             {
-                var gradelist = new List<EmployeeDto.SummaryDto>();
-                var grade = new EmployeeDto.SummaryDto();
+                var gradelist = new List<EmployeeDto.Summary>();
+                var grade = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -288,17 +328,17 @@ namespace HumanResourcesManagementBackend.Services
                     percent = Convert.ToDouble(grade.Number) / Convert.ToDouble(number);
                     grade.Proportion = percent.ToString("0.00%");
                     gradelist.Add(grade);
-                    grade = new EmployeeDto.SummaryDto();
+                    grade = new EmployeeDto.Summary();
                 }
                 return gradelist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetAgeSummary()
+        public List<EmployeeDto.Summary> GetAgeSummary()
         {
             using (var db = new HRM())
             {
-                var agelist = new List<EmployeeDto.SummaryDto>();
-                var age = new EmployeeDto.SummaryDto();
+                var agelist = new List<EmployeeDto.Summary>();
+                var age = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -320,7 +360,7 @@ namespace HumanResourcesManagementBackend.Services
                         case 7: { age.Category = "60周岁以上"; agelist.Add(age); break; };
                         default: break;
                     }
-                    age = new EmployeeDto.SummaryDto();
+                    age = new EmployeeDto.Summary();
                 }
                 foreach(var item in query)
                 {
@@ -389,12 +429,12 @@ namespace HumanResourcesManagementBackend.Services
                 return agelist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetEducationSummary()
+        public List<EmployeeDto.Summary> GetEducationSummary()
         {
             using (var db = new HRM())
             {
-                var educationlist = new List<EmployeeDto.SummaryDto>();
-                var education = new EmployeeDto.SummaryDto();
+                var educationlist = new List<EmployeeDto.Summary>();
+                var education = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -411,17 +451,17 @@ namespace HumanResourcesManagementBackend.Services
                     percent = Convert.ToDouble(education.Number) / Convert.ToDouble(number);
                     education.Proportion = percent.ToString("0.00%");
                     educationlist.Add(education);
-                    education = new EmployeeDto.SummaryDto();
+                    education = new EmployeeDto.Summary();
                 }
                 return educationlist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetDepartmentSummary()
+        public List<EmployeeDto.Summary> GetDepartmentSummary()
         {
             using (var db = new HRM())
             {
-                var departmentlist = new List<EmployeeDto.SummaryDto>();
-                var department = new EmployeeDto.SummaryDto();
+                var departmentlist = new List<EmployeeDto.Summary>();
+                var department = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -438,17 +478,17 @@ namespace HumanResourcesManagementBackend.Services
                     percent = Convert.ToDouble(department.Number) / Convert.ToDouble(number);
                     department.Proportion = percent.ToString("0.00%");
                     departmentlist.Add(department);
-                    department = new EmployeeDto.SummaryDto();
+                    department = new EmployeeDto.Summary();
                 }
                 return departmentlist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetGenderSummary()
+        public List<EmployeeDto.Summary> GetGenderSummary()
         {
             using (var db = new HRM())
             {
-                var genderlist = new List<EmployeeDto.SummaryDto>();
-                var gender = new EmployeeDto.SummaryDto();
+                var genderlist = new List<EmployeeDto.Summary>();
+                var gender = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -465,17 +505,17 @@ namespace HumanResourcesManagementBackend.Services
                     percent = Convert.ToDouble(gender.Number) / Convert.ToDouble(number);
                     gender.Proportion = percent.ToString("0.00%");
                     genderlist.Add(gender);
-                    gender = new EmployeeDto.SummaryDto();
+                    gender = new EmployeeDto.Summary();
                 }
                 return genderlist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetMaritalSummary()
+        public List<EmployeeDto.Summary> GetMaritalSummary()
         {
             using (var db = new HRM())
             {
-                var maritallist = new List<EmployeeDto.SummaryDto>();
-                var marital = new EmployeeDto.SummaryDto();
+                var maritallist = new List<EmployeeDto.Summary>();
+                var marital = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -492,17 +532,17 @@ namespace HumanResourcesManagementBackend.Services
                     percent = Convert.ToDouble(marital.Number) / Convert.ToDouble(number);
                     marital.Proportion = percent.ToString("0.00%");
                     maritallist.Add(marital);
-                    marital = new EmployeeDto.SummaryDto();
+                    marital = new EmployeeDto.Summary();
                 }
                 return maritallist;
             }
         }
-        public List<EmployeeDto.BirthdaySummaryDto> GetBirthdaySummary()
+        public List<EmployeeDto.BirthdaySummary> GetBirthdaySummary()
         {
             using (var db = new HRM())
             {
-                var birthdaylist = new List<EmployeeDto.BirthdaySummaryDto>();
-                var birthday = new EmployeeDto.BirthdaySummaryDto();
+                var birthdaylist = new List<EmployeeDto.BirthdaySummary>();
+                var birthday = new EmployeeDto.BirthdaySummary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -514,7 +554,7 @@ namespace HumanResourcesManagementBackend.Services
                     birthday.Category = i.ToString() + "月";
                     birthday.BirthdayMonth = i;
                     birthdaylist.Add(birthday);
-                    birthday= new EmployeeDto.BirthdaySummaryDto();
+                    birthday= new EmployeeDto.BirthdaySummary();
                 }
                 foreach (var item in birthdaylist)
                 {
