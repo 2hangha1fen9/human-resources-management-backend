@@ -68,10 +68,12 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             // 设置响应的Content-Type
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             // 设置响应的Content-Disposition，以便在浏览器中触发文件下载
+            response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
             {
                 FileName = encodedFileName
             };
+            
             return response;
         }
 
