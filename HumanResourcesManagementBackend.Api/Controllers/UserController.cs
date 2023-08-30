@@ -159,6 +159,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPut]
         public Response ChangePwd(UserDto.ChangePwd changePwd)
         {
+            changePwd.Id = CurrentUser.Id;
             userService.ChangePwd(changePwd);
             return new Response
             {
@@ -207,6 +208,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPut]
         public Response ChangeQuestion(UserDto.ChangePwd changeQuestion)
         {
+            changeQuestion.LoginName = CurrentUser.LoginName;
             userService.ChangeQuestion(changeQuestion);
             return new Response
             {
