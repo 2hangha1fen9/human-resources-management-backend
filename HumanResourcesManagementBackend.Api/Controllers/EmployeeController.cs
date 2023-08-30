@@ -9,6 +9,10 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using HumanResourcesManagementBackend.Common;
+using System.IO;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Web;
 
 namespace HumanResourcesManagementBackend.Api.Controllers
 {
@@ -29,6 +33,8 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public PageResponse<EmployeeDto.Employee> QueryEmployeeByPage(EmployeeDto.Search search)
         {
             var employees =_employeeService.GetEmploysees(search);
+
+            employees.ToExcel();
             //返回响应结果
             return new PageResponse<EmployeeDto.Employee>()
             {
@@ -41,6 +47,34 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 }
             };
         }
+
+        /// <summary>
+        /// 导出员工列表到excel
+        /// </summary>
+        /// <param name="seleemployee"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage ExportEmployeeToExcel(EmployeeDto.Search search)
+        {
+            var employees = _employeeService.GetEmploysees(search);
+            var stream = employees.ToExcel();
+            // 创建一个HttpResponseMessage实例
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream)
+            };
+            string fileName = $"员工列表-{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}.xlsx";
+            string encodedFileName = HttpUtility.UrlEncode(fileName, Encoding.UTF8);
+            // 设置响应的Content-Type
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            // 设置响应的Content-Disposition，以便在浏览器中触发文件下载
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = encodedFileName
+            };
+            return response;
+        }
+
         /// <summary>
         /// 根据id查询员工
         /// </summary>
