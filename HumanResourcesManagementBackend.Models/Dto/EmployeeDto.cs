@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -68,7 +69,7 @@ namespace HumanResourcesManagementBackend.Models
             /// <summary>
             /// 出生日期
             /// </summary>
-            public DateTime BirthDay { get; set; }
+            public DateTime? BirthDay { get; set; }
             /// <summary>
             /// 身份证号
             /// </summary>
@@ -121,6 +122,11 @@ namespace HumanResourcesManagementBackend.Models
             /// 职位等级 
             /// </summary>
             public string PositionLevelStr { get; set; }
+            /// <summary>
+            /// 是否创建默认账号
+            /// </summary>
+            [JsonIgnore]
+            public bool CreateUser { get; set; } = false;
         }
         /// <summary>
         /// 员工编辑
@@ -183,6 +189,14 @@ namespace HumanResourcesManagementBackend.Models
             /// 性别
             /// </summary>
             public Gender Gender { get; set; }
+            /// <summary>
+            /// 出生日期
+            /// </summary>
+            public DateTime? BirthDay { get; set; }
+            /// <summary>
+            /// 数据状态 1启用 2禁用 99删除
+            /// </summary>
+            public DataStatus Status { get; set; }
         }
         /// <summary>
         /// 员工查询

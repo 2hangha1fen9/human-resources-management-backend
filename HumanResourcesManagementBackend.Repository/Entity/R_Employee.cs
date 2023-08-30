@@ -35,7 +35,7 @@ namespace HumanResourcesManagementBackend.Repository
         /// <summary>
         /// 出生日期
         /// </summary>
-        public DateTime BirthDay { get; set; }
+        public DateTime? BirthDay { get; set; }
         /// <summary>
         /// 身份证号
         /// </summary>
