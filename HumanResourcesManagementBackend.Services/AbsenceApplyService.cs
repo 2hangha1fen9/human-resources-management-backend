@@ -89,6 +89,27 @@ namespace HumanResourcesManagementBackend.Services
             }
         }
 
+        public AbsenceApplyDto.AbsenceApply GetAbsenceById(long id)
+        {
+            using (var db = new HRM())
+            {
+                var absenceR = db.AbsenceApplies.FirstOrDefault(u => u.Id == id && u.Status != DataStatus.Deleted);
+                if (absenceR == null)
+                {
+                    throw new BusinessException
+                    {
+                        Status = ResponseStatus.NoData,
+                        ErrorMessage = ResponseStatus.NoData.Description()
+                    };
+                }
+                var absence = absenceR.MapTo<AbsenceApplyDto.AbsenceApply>();
+                absence.StatusStr = absence.Status.Description();
+                absence.AuditStatusStr = absence.AuditStatus.Description();
+                absence.AuditTypeStr = absence.AuditType.Description();
+                absence.CheckInTypeStr = absence.CheckInType.Description();
+                return absence;
+            }
+        }
         public void ExamineAbsenceApply(AbsenceApplyDto.Examine examine)
         {
             using (var db = new HRM())

@@ -82,6 +82,22 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             };
         }
         /// <summary>
+        /// 查询缺勤申请记录详情
+        /// </summary>
+        /// <param name="GetAbsenceById"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public DataResponse<AbsenceApplyDto.AbsenceApply> GetAbsenceById(long id)
+        {
+            var absence = _iabsenceapplyService.GetAbsenceById(id);
+            return new DataResponse<AbsenceApplyDto.AbsenceApply>
+            {
+                Data = absence,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+            };
+        }
+        /// <summary>
         /// 审核员工的缺勤申请记录
         /// </summary>
         /// <param name="ExamineAbsenceApply"></param>

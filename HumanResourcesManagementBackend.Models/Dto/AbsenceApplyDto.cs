@@ -9,7 +9,7 @@ namespace HumanResourcesManagementBackend.Models
     public class AbsenceApplyDto
     {
         /// <summary>
-        /// 休假申请对象
+        /// 缺勤申请对象
         /// </summary>
         public class AbsenceApply
         {
@@ -76,7 +76,7 @@ namespace HumanResourcesManagementBackend.Models
             public string AuditResult { get; set; }
         }
         /// <summary>
-        /// 休假查询对象
+        /// 缺勤查询对象
         /// </summary>
         public class Search : PageRequest
         {
