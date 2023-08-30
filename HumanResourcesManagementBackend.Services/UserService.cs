@@ -180,6 +180,8 @@ namespace HumanResourcesManagementBackend.Services
                 {
                     userEx.LoginName = user.LoginName;
                 }
+                userEx.LoginName = user.LoginName;
+                userEx.Password = user.Password.Encrypt();
                 userEx.UpdateTime = DateTime.Now;
                 userEx.Question = user.Question;
                 userEx.Answer = user.Answer;
