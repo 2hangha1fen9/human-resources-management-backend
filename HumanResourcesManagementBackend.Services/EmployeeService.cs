@@ -1,20 +1,15 @@
 ﻿using HumanResourcesManagementBackend.Common;
 using HumanResourcesManagementBackend.Models;
 using HumanResourcesManagementBackend.Repository;
-using HumanResourcesManagementBackend.Repository.Migrations;
 using HumanResourcesManagementBackend.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Data;
-using System.Diagnostics;
-using System.IO;
+
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using System.Text;
-using System.Threading.Tasks;
+using HumanResourcesManagementBackend.Repository.Extensions;
 using static HumanResourcesManagementBackend.Models.UserDto;
-using static System.Data.Entity.Migrations.Model.UpdateDatabaseOperation;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -118,28 +113,78 @@ namespace HumanResourcesManagementBackend.Services
         {
             using (var db = new HRM())
             {
-                var employse = db.Employees.FirstOrDefault(p => p.WorkNum == employee.WorkNum);
-                if (employse != null)
+                var flag = db.Transaction(() =>
                 {
-                    throw new BusinessException
+                    var employse = db.Employees.FirstOrDefault(p => p.WorkNum == employee.WorkNum);
+                    if (employse != null)
                     {
-                        ErrorMessage = "员工已经存在",
-                        Status = ResponseStatus.ParameterError
-                    };
-                }
-                if(employee.WorkNum==""||employee.Name==""||employee.HireDate==null||employee.IdCard=="")
-                {
-                    throw new BusinessException
+                        return false;
+                    }
+                    if (employee.WorkNum == "" || employee.Name == "" || employee.HireDate == null || employee.IdCard == "")
                     {
-                        ErrorMessage = "请输入对应的参数",
-                        Status = ResponseStatus.ParameterError
-                    };
-                }
-                var employeeR = employee.MapTo<R_Employee>();
-                employeeR.CreateTime = DateTime.Now;
-                employeeR.UpdateTime = DateTime.Now;
-                db.Employees.Add(employeeR);
-                if (db.SaveChanges() == 0)
+                        return false;
+                    }
+                    var employeeR = employee.MapTo<R_Employee>();
+                    employeeR.CreateTime = DateTime.Now;
+                    employeeR.UpdateTime = DateTime.Now;
+                    db.Employees.Add(employeeR);
+                    db.SaveChanges();
+                    if (employeeR == null || employeeR.Id == 0)
+                    {
+                        return false;
+                    }
+
+                    //创建默认账号
+                    if (employee.CreateUser)
+                    {
+                        var userR = new R_User
+                        {
+                            LoginName = employeeR.WorkNum,
+                            Password = employeeR.WorkNum.Encrypt(),
+                            Question = "我的工号是什么",
+                            Answer = employeeR.WorkNum,
+                            EmployeeId = employeeR.Id,
+                            CreateTime = DateTime.Now,
+                            UpdateTime = DateTime.Now,
+                        };
+
+                        //查询是否存在
+                        var userEx = db.Users.FirstOrDefault(u => u.LoginName == userR.LoginName);
+                        if (userEx != null)
+                        {
+                            return false;
+                        }
+
+                        userR = db.Users.Add(userR);
+                        db.SaveChanges();
+                        if (userR == null || userR.Id == 0)
+                        {
+                            return false;
+                        }
+                        //绑定默认角色
+                        var defaultRoles = db.Roles.Where(r => r.IsDefault == YesOrNo.Yes && r.Status == DataStatus.Enable).ToList();
+                        if (defaultRoles == null || defaultRoles.Count == 0)
+                        {
+                            var bindList = defaultRoles.Select(r => new R_UserRoleRef
+                            {
+                                UserId = userR.Id,
+                                RoleId = r.Id,
+                                CreateTime = DateTime.Now,
+                                UpdateTime = DateTime.Now,
+                            }).ToList();
+                            var bindResult = db.UserRoleRefs.AddRange(bindList).ToList();
+                            db.SaveChanges();
+                            if (bindResult == null || bindList.Count != bindResult.Count)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+
+                    return true;
+                });
+
+                if (!flag)
                 {
                     throw new BusinessException
                     {
@@ -168,11 +213,14 @@ namespace HumanResourcesManagementBackend.Services
                 employEx.IdCard = edit.IdCard;
                 employEx.Native= edit.Native;
                 employEx.AcademicDegree=edit.AcademicDegree;
+                employEx.MaritalStatus = edit.MaritalStatus;
                 employEx.PositionId = edit.PositionId;
                 employEx.DepartmentId= edit.DepartmentId;
                 employEx.PositionLevel=edit.PositionLevel;
                 employEx.Phone = edit.Phone;
                 employEx.Email=edit.Email;
+                employEx.BirthDay = edit.BirthDay;
+                employEx.Status = edit.Status;
                 employEx.UpdateTime = DateTime.Now;
                 if (db.SaveChanges() == 0)
                 {
@@ -365,7 +413,11 @@ namespace HumanResourcesManagementBackend.Services
                 }
                 foreach(var item in query)
                 {
-                    int years = DateTime.Now.Year - item.BirthDay.Year;
+                    if (!item.BirthDay.HasValue)
+                    {
+                        continue;
+                    }
+                    int years = DateTime.Now.Year - item.BirthDay.Value.Year;
                     foreach (var ag in agelist)
                     {
                         if (ag.Category == "18周岁以下" && years < 18)
@@ -559,7 +611,7 @@ namespace HumanResourcesManagementBackend.Services
                 }
                 foreach (var item in birthdaylist)
                 {
-                    var count = query.Count(p => p.BirthDay.Month == item.BirthdayMonth);
+                    var count = query.Count(p => (p.BirthDay.HasValue ? p.BirthDay.Value.Month : 0) == item.BirthdayMonth);
                     item.Proportion = "0.00%";
                     item.Number = count;
                     percent = Convert.ToDouble(item.Number) / Convert.ToDouble(number);

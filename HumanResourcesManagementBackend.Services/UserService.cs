@@ -120,7 +120,7 @@ namespace HumanResourcesManagementBackend.Services
                     userR.UpdateTime = DateTime.Now;
                     userR = db.Users.Add(userR);
                     db.SaveChanges();
-                    if(userR == null && userR.Id > 0)
+                    if(userR == null || userR.Id == 0)
                     {
                         return false;
                     }
