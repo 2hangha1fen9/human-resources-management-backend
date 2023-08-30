@@ -125,7 +125,6 @@ namespace HumanResourcesManagementBackend.Models
             /// <summary>
             /// 是否创建默认账号
             /// </summary>
-            [JsonIgnore]
             public bool CreateUser { get; set; } = false;
         }
         /// <summary>
@@ -239,6 +238,10 @@ namespace HumanResourcesManagementBackend.Models
             /// 搜索关键字
             /// </summary>
             public string SearchKey { get; set; }
+            /// <summary>
+            /// 员工id
+            /// </summary>
+            public long EmployeeId { get; set; }
         }
         /// <summary>
         /// 汇总

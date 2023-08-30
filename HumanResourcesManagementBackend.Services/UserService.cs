@@ -126,7 +126,7 @@ namespace HumanResourcesManagementBackend.Services
                     }
                     //绑定默认角色
                     var defaultRoles = db.Roles.Where(r => r.IsDefault == YesOrNo.Yes && r.Status == DataStatus.Enable).ToList();
-                    if(defaultRoles == null || defaultRoles.Count == 0)
+                    if (defaultRoles != null || defaultRoles.Count > 0)
                     {
                         var bindList = defaultRoles.Select(r => new R_UserRoleRef
                         {
