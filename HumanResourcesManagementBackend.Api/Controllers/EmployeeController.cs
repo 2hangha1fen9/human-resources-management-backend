@@ -13,6 +13,9 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Web;
+using System.Threading.Tasks;
+using System.Security.RightsManagement;
+using System.Web.UI;
 
 namespace HumanResourcesManagementBackend.Api.Controllers
 {
@@ -54,27 +57,89 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="seleemployee"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage ExportEmployeeToExcel(EmployeeDto.Search search)
+        public async Task<HttpResponseMessage> ExportEmployeeToExcel(EmployeeDto.Search search)
         {
             var employees = _employeeService.GetEmploysees(search);
-            var stream = employees.ToExcel();
+            var stream = await employees.ToExcel();
             // 创建一个HttpResponseMessage实例
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StreamContent(stream)
             };
-            string fileName = $"员工列表-{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}.xlsx";
+            string fileName = $"员工列表-第{search.PageNum}页,共{Math.Ceiling(search.RecordCount / (double)search.Rows)}页.xlsx";
             string encodedFileName = HttpUtility.UrlEncode(fileName, Encoding.UTF8);
             // 设置响应的Content-Type
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             // 设置响应的Content-Disposition，以便在浏览器中触发文件下载
-            response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-            {
-                FileName = encodedFileName
-            };
-            
+            response.Headers.Add("Access-Control-Expose-Headers", "FileName");
+            response.Headers.Add("FileName", encodedFileName);
             return response;
+        }
+
+        /// <summary>
+        /// 下载员工导入模板
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<HttpResponseMessage> DownloadEmployeeTemplate()
+        {
+            var template = new EmployeeDto.Employee
+            {
+                WorkStatusStr = string.Join("/",EnumHelper.ToList<WorkStatus>().ToList().Select(e => e.Desction).ToList()),
+                GenderStr = string.Join("/", EnumHelper.ToList<Gender>().ToList().Select(e => e.Desction).ToList()),
+                MaritalStatusStr = string.Join("/", EnumHelper.ToList<MaritalStatus>().ToList().Select(e => e.Desction).ToList()),
+                AcademicDegreeStr = string.Join("/", EnumHelper.ToList<AcademicDegree>().ToList().Select(e => e.Desction).ToList()),
+                PositionName = "详见职位信息",
+                DepartmentName = "详见部门信息",
+                PositionLevelStr = string.Join("/", EnumHelper.ToList<PositionLevel>().ToList().Select(e => e.Desction).ToList()),
+            };
+            var stream = await new List<EmployeeDto.Employee> { template }.ToExcel();
+            // 创建一个HttpResponseMessage实例
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream)
+            };
+            string fileName = $"员工导入模板.xlsx";
+            string encodedFileName = HttpUtility.UrlEncode(fileName, Encoding.UTF8);
+            // 设置响应的Content-Type
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            // 设置响应的Content-Disposition，以便在浏览器中触发文件下载
+            response.Headers.Add("Access-Control-Expose-Headers", "FileName");
+            response.Headers.Add("FileName", encodedFileName);
+            return response;
+        }
+
+        /// <summary>
+        /// 导入员工信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<DataResponse<dynamic>> ImportEmployeeForExcel([FromUri] bool createUser)
+        {
+            // 检查请求内容是否为multipart/form-data
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+            // 读取multipart/form-data内容
+            var provider = new MultipartMemoryStreamProvider();
+            await Request.Content.ReadAsMultipartAsync(provider);
+
+            // 获取上传的文件流
+            var fileContent = provider.Contents[0];
+            var fileStream = await fileContent.ReadAsStreamAsync();
+
+            //读取excel
+            var list = await ExcelHelper.ExcelToList<EmployeeDto.Employee>(fileStream);
+            //批量保存数据
+            var result = _employeeService.BatchSaveEmployee(list.ToList(),createUser);
+
+            return new DataResponse<dynamic>
+            {
+                Data = result,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description()
+            };
         }
 
         /// <summary>
@@ -270,23 +335,5 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                 Message = ResponseStatus.Success.Description()
             };
         }
-
-        //#region 读取Excel数据
-        ///// <summary>
-        ///// 读取excel数据
-        ///// </summary>
-        ///// <param name="ReadExcel"></param>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public Response ReadExcel(string fileName, string sheetName, bool isFirstRowColumn)
-        //{
-        //    _employeeService.ReadExcel(fileName,sheetName,isFirstRowColumn);
-        //    return new Response
-        //    {
-        //        Status = ResponseStatus.Success,
-        //        Message = ResponseStatus.Success.Description()
-        //    };
-        //}
-        //#endregion
     }
 }

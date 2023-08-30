@@ -20,7 +20,7 @@ namespace HumanResourcesManagementBackend.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static MemoryStream ToExcel<T>(this List<T> list)
+        public async static Task<MemoryStream> ToExcel<T>(this List<T> list)
         {
             //获取数据列表元素类型
             var rowType = typeof(T);
@@ -45,13 +45,24 @@ namespace HumanResourcesManagementBackend.Common
                 }
             }
             var memoryStream = new MemoryStream();
-            memoryStream.SaveAs(list,configuration: new OpenXmlConfiguration()
+            await memoryStream.SaveAsAsync(list,configuration: new OpenXmlConfiguration()
             {
                 AutoFilter = false,
                 DynamicColumns = header.ToArray(),
             });
             memoryStream.Seek(0, SeekOrigin.Begin);
             return memoryStream;
+        }
+
+        /// <summary>
+        /// Excel文件转集合
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public async static Task<IEnumerable<T>> ExcelToList<T>(this Stream stream) where T : class,new()
+        {
+            return await MiniExcel.QueryAsync<T>(stream);
         }
     }
 }

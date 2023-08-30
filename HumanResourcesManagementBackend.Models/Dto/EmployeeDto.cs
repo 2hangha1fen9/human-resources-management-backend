@@ -154,7 +154,7 @@ namespace HumanResourcesManagementBackend.Models
             /// <summary>
             /// 是否创建默认账号
             /// </summary>
-            [ExcelColumn(Name = "是否创建默认账号", Width = 15)]
+            [ExcelIgnore]
             public bool CreateUser { get; set; } = false;
         }
         /// <summary>
