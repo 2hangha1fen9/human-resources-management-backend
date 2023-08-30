@@ -85,6 +85,10 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public long EmployeeId { get; set; }
             /// <summary>
+            /// 创建时间
+            /// </summary>
+            public DateTime CreateTime { get; set; }
+            /// <summary>
             /// 打卡类型 1上班卡 2下班卡
             /// </summary>
             public CheckInType CheckInType { get; set; }
