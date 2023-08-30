@@ -246,8 +246,15 @@ namespace HumanResourcesManagementBackend.Services
         {
             using (var db=new HRM())
             {
+                if (string.IsNullOrEmpty(changePwd.Password) || string.IsNullOrEmpty(changePwd.NewPassword))
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "密码不能为空",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
                 var user = db.Users.FirstOrDefault(p=>p.LoginName==changePwd.LoginName);
-                user.Password = user.Password.Decrypt();
                 if (user==null)
                 {
                     throw new BusinessException
@@ -256,17 +263,15 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
-                else
+                else if(user.Answer != changePwd.Answer)
                 {
-                    if(user.Answer!=changePwd.Answer)
+                    throw new BusinessException
                     {
-                        throw new BusinessException
-                        {
-                            ErrorMessage = "答案错误",
-                            Status = ResponseStatus.ParameterError
-                        };
-                    }
+                        ErrorMessage = "答案错误",
+                        Status = ResponseStatus.ParameterError
+                    };
                 }
+                user.Password = user.Password.Decrypt();
                 if (user.Password == changePwd.NewPassword)
                 {
                     throw new BusinessException
@@ -341,6 +346,41 @@ namespace HumanResourcesManagementBackend.Services
                 }
 
                 AuthService.FlushPermissionCache(user.Id);
+            }
+        }
+
+        public User GetUserByLoginName(string loginName)
+        {
+            using (var db = new HRM())
+            {
+                var userR = db.Users.FirstOrDefault(u => u.LoginName == loginName && u.Status != DataStatus.Deleted);
+                if (userR == null)
+                {
+                    throw new BusinessException
+                    {
+                        Status = ResponseStatus.NoData,
+                        ErrorMessage = "没有这个用户"
+                    };
+                }
+                var user = userR.MapTo<UserDto.User>();
+                user.StatusStr = user.Status.Description();
+                return user;
+            }
+        }
+
+        public void CheckAnswer(ChangePwd changeAnswer)
+        {
+            using (var db = new HRM())
+            {
+                var userR = db.Users.FirstOrDefault(u => u.LoginName == changeAnswer.LoginName && u.Question == changeAnswer.Question && u.Answer == changeAnswer.Answer && u.Status != DataStatus.Deleted);
+                if (userR == null)
+                {
+                    throw new BusinessException
+                    {
+                        Status = ResponseStatus.NoData,
+                        ErrorMessage = "密保问题错误"
+                    };
+                }
             }
         }
     }

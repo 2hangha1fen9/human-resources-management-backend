@@ -15,9 +15,6 @@ using System.Text;
 using System.Threading.Tasks;
 using static HumanResourcesManagementBackend.Models.UserDto;
 using static System.Data.Entity.Migrations.Model.UpdateDatabaseOperation;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
-using NPOI.HSSF.UserModel;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -31,27 +28,63 @@ namespace HumanResourcesManagementBackend.Services
                             where employ.Status != DataStatus.Deleted
                             select employ;
                 //条件过滤
-                if (!string.IsNullOrEmpty(search.Name))
+                if (!string.IsNullOrEmpty(search.SearchKey))
                 {
-                    query = query.Where(u => u.Name.Contains(search.Name));
-                }
-                if (!string.IsNullOrEmpty(search.WorkNum))
-                {
-                    query = query.Where(u => u.WorkNum.Contains(search.WorkNum));
+                    query = query.Where(u => u.IdCard.Contains(search.SearchKey) || 
+                                                    u.Name.Contains(search.SearchKey) || 
+                                                    u.WorkNum.Contains(search.SearchKey) || 
+                                                    u.Native.Contains(search.SearchKey) || 
+                                                    u.Phone.Contains(search.SearchKey) || 
+                                                    u.Email.Contains(search.SearchKey));
                 }
                 if (search.Status > 0)
                 {
                     query = query.Where(u => u.Status == search.Status);
                 }
+                if (search.WorkStatus > 0)
+                {
+                    query = query.Where(u => u.WorkStatus == search.WorkStatus);
+                }
+                if (search.Gender > 0)
+                {
+                    query = query.Where(u => u.Gender == search.Gender);
+                }
+                if (search.MaritalStatus > 0)
+                {
+                    query = query.Where(u => u.MaritalStatus == search.MaritalStatus);
+                }
+                if (search.AcademicDegree > 0)
+                {
+                    query = query.Where(u => u.AcademicDegree == search.AcademicDegree);
+                }
+                if (search.PositionLevel > 0)
+                {
+                    query = query.Where(u => u.PositionLevel == search.PositionLevel);
+                }
+                if (search.PositionId > 0)
+                {
+                    query = query.Where(u => u.PositionId == search.PositionId);
+                }
+                if (search.DepartmentId > 0)
+                {
+                    query = query.Where(u => u.DepartmentId == search.DepartmentId);
+                }
                 //分页并将数据库实体映射为dto对象(OrderBy必须调用)
                 var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<EmployeeDto.Employee>();
+                //查询部门,职级数据
+                var deps = db.Departmentes.Where(d => d.Status == DataStatus.Enable).ToList();
+                var position = db.Positiones.Where(d => d.Status == DataStatus.Enable).ToList();
                 //状态处理
                 list.ForEach(u =>
                 {
                     u.StatusStr = u.Status.Description();
+                    u.GenderStr = u.Gender.Description();
                     u.PositionLevelStr = u.PositionLevel.Description();
                     u.WorkStatusStr= u.WorkStatus.Description();
                     u.AcademicDegreeStr= u.AcademicDegree.Description();
+                    u.MaritalStatusStr = u.MaritalStatus.Description();
+                    u.DepartmentName = deps?.FirstOrDefault(d => d.Id == u.DepartmentId)?.DepartmentName ?? "";
+                    u.PositionName = position?.FirstOrDefault(d => d.Id == u.PositionId)?.PositionName ?? "";
                 });
                 return list;
             }
@@ -71,9 +104,13 @@ namespace HumanResourcesManagementBackend.Services
                 }
                 var employ = employR.MapTo<EmployeeDto.Employee>();
                 employ.StatusStr = employ.Status.Description();
-                employ.PositionLevelStr =employ.PositionLevel.Description();
+                employ.GenderStr = employ.Gender.Description();
+                employ.PositionLevelStr = employ.PositionLevel.Description();
                 employ.WorkStatusStr = employ.WorkStatus.Description();
                 employ.AcademicDegreeStr = employ.AcademicDegree.Description();
+                employ.MaritalStatusStr = employ.MaritalStatus.Description();
+                employ.DepartmentName = db.Departmentes.FirstOrDefault(d => d.Id == employ.DepartmentId)?.DepartmentName ?? "";
+                employ.PositionName = db.Positiones.FirstOrDefault(d => d.Id == employ.PositionId)?.PositionName ?? "";
                 return employ;
             }
         }
@@ -126,6 +163,7 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
+                employEx.Gender = edit.Gender;
                 employEx.WorkStatus = edit.WorkStatus;
                 employEx.IdCard = edit.IdCard;
                 employEx.Native= edit.Native;
@@ -172,12 +210,12 @@ namespace HumanResourcesManagementBackend.Services
                 return number;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetSenioritySummary()
+        public List<EmployeeDto.Summary> GetSenioritySummary()
         {
             using (var db = new HRM())
             {
-                var senioritylist = new List<EmployeeDto.SummaryDto>();
-                var seniority = new EmployeeDto.SummaryDto();
+                var senioritylist = new List<EmployeeDto.Summary>();
+                var seniority = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -199,7 +237,7 @@ namespace HumanResourcesManagementBackend.Services
                         case 7: { seniority.Category = "8年以上"; senioritylist.Add(seniority); break; };
                         default:break;
                     }
-                    seniority = new EmployeeDto.SummaryDto();                 
+                    seniority = new EmployeeDto.Summary();                 
                 }
                 foreach (var item in query)
                 {
@@ -269,12 +307,12 @@ namespace HumanResourcesManagementBackend.Services
                 return senioritylist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetGradeSummary()
+        public List<EmployeeDto.Summary> GetGradeSummary()
         {
             using (var db = new HRM())
             {
-                var gradelist = new List<EmployeeDto.SummaryDto>();
-                var grade = new EmployeeDto.SummaryDto();
+                var gradelist = new List<EmployeeDto.Summary>();
+                var grade = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -291,17 +329,17 @@ namespace HumanResourcesManagementBackend.Services
                     percent = Convert.ToDouble(grade.Number) / Convert.ToDouble(number);
                     grade.Proportion = percent.ToString("0.00%");
                     gradelist.Add(grade);
-                    grade = new EmployeeDto.SummaryDto();
+                    grade = new EmployeeDto.Summary();
                 }
                 return gradelist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetAgeSummary()
+        public List<EmployeeDto.Summary> GetAgeSummary()
         {
             using (var db = new HRM())
             {
-                var agelist = new List<EmployeeDto.SummaryDto>();
-                var age = new EmployeeDto.SummaryDto();
+                var agelist = new List<EmployeeDto.Summary>();
+                var age = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -323,7 +361,7 @@ namespace HumanResourcesManagementBackend.Services
                         case 7: { age.Category = "60周岁以上"; agelist.Add(age); break; };
                         default: break;
                     }
-                    age = new EmployeeDto.SummaryDto();
+                    age = new EmployeeDto.Summary();
                 }
                 foreach(var item in query)
                 {
@@ -392,12 +430,12 @@ namespace HumanResourcesManagementBackend.Services
                 return agelist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetEducationSummary()
+        public List<EmployeeDto.Summary> GetEducationSummary()
         {
             using (var db = new HRM())
             {
-                var educationlist = new List<EmployeeDto.SummaryDto>();
-                var education = new EmployeeDto.SummaryDto();
+                var educationlist = new List<EmployeeDto.Summary>();
+                var education = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -414,17 +452,17 @@ namespace HumanResourcesManagementBackend.Services
                     percent = Convert.ToDouble(education.Number) / Convert.ToDouble(number);
                     education.Proportion = percent.ToString("0.00%");
                     educationlist.Add(education);
-                    education = new EmployeeDto.SummaryDto();
+                    education = new EmployeeDto.Summary();
                 }
                 return educationlist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetDepartmentSummary()
+        public List<EmployeeDto.Summary> GetDepartmentSummary()
         {
             using (var db = new HRM())
             {
-                var departmentlist = new List<EmployeeDto.SummaryDto>();
-                var department = new EmployeeDto.SummaryDto();
+                var departmentlist = new List<EmployeeDto.Summary>();
+                var department = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -441,17 +479,17 @@ namespace HumanResourcesManagementBackend.Services
                     percent = Convert.ToDouble(department.Number) / Convert.ToDouble(number);
                     department.Proportion = percent.ToString("0.00%");
                     departmentlist.Add(department);
-                    department = new EmployeeDto.SummaryDto();
+                    department = new EmployeeDto.Summary();
                 }
                 return departmentlist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetGenderSummary()
+        public List<EmployeeDto.Summary> GetGenderSummary()
         {
             using (var db = new HRM())
             {
-                var genderlist = new List<EmployeeDto.SummaryDto>();
-                var gender = new EmployeeDto.SummaryDto();
+                var genderlist = new List<EmployeeDto.Summary>();
+                var gender = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -468,17 +506,17 @@ namespace HumanResourcesManagementBackend.Services
                     percent = Convert.ToDouble(gender.Number) / Convert.ToDouble(number);
                     gender.Proportion = percent.ToString("0.00%");
                     genderlist.Add(gender);
-                    gender = new EmployeeDto.SummaryDto();
+                    gender = new EmployeeDto.Summary();
                 }
                 return genderlist;
             }
         }
-        public List<EmployeeDto.SummaryDto> GetMaritalSummary()
+        public List<EmployeeDto.Summary> GetMaritalSummary()
         {
             using (var db = new HRM())
             {
-                var maritallist = new List<EmployeeDto.SummaryDto>();
-                var marital = new EmployeeDto.SummaryDto();
+                var maritallist = new List<EmployeeDto.Summary>();
+                var marital = new EmployeeDto.Summary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -495,17 +533,17 @@ namespace HumanResourcesManagementBackend.Services
                     percent = Convert.ToDouble(marital.Number) / Convert.ToDouble(number);
                     marital.Proportion = percent.ToString("0.00%");
                     maritallist.Add(marital);
-                    marital = new EmployeeDto.SummaryDto();
+                    marital = new EmployeeDto.Summary();
                 }
                 return maritallist;
             }
         }
-        public List<EmployeeDto.BirthdaySummaryDto> GetBirthdaySummary()
+        public List<EmployeeDto.BirthdaySummary> GetBirthdaySummary()
         {
             using (var db = new HRM())
             {
-                var birthdaylist = new List<EmployeeDto.BirthdaySummaryDto>();
-                var birthday = new EmployeeDto.BirthdaySummaryDto();
+                var birthdaylist = new List<EmployeeDto.BirthdaySummary>();
+                var birthday = new EmployeeDto.BirthdaySummary();
                 var query = from employ in db.Employees
                             where employ.Status != DataStatus.Deleted
                             select employ;
@@ -517,7 +555,7 @@ namespace HumanResourcesManagementBackend.Services
                     birthday.Category = i.ToString() + "月";
                     birthday.BirthdayMonth = i;
                     birthdaylist.Add(birthday);
-                    birthday= new EmployeeDto.BirthdaySummaryDto();
+                    birthday= new EmployeeDto.BirthdaySummary();
                 }
                 foreach (var item in birthdaylist)
                 {
@@ -532,113 +570,113 @@ namespace HumanResourcesManagementBackend.Services
         }
 
 
-        public void ReadExcel(string fileName, string sheetName, bool isFirstRowColumn)
-        {
-            DataTable dt = ExcelToDatatable(fileName, sheetName, isFirstRowColumn);
-            //将excel表格数据存入list集合中
-            //EachdayTX定义的类，字段值对应excel表中的每一列
-            List<EmployeeDto.Employee> employTX = new List<EmployeeDto.Employee>();
-            foreach (DataRow dr in dt.Rows)
-            {
-                EmployeeDto.Employee employ = new EmployeeDto.Employee
-                {
-                    Id = (long)dr[0],
-                    WorkNum = dr[1].ToString(),
-                    WorkStatus = (WorkStatus)dr[2],
-                    Name = dr[3].ToString(),
-                    Gender = (Gender)dr[4],
-                    MaritalStatus = (MaritalStatus)dr[5],
-                    BirthDay = (DateTime)dr[6],
-                    IdCard = dr[7].ToString(),
-                    Native = dr[8].ToString(),
-                    Phone = dr[9].ToString(),
-                    Email = dr[10].ToString(),
-                    AcademicDegree = (AcademicDegree)dr[11],
-                    HireDate= (DateTime)dr[12],
-                    PositionId = (long)dr[13],
-                    Status = (DataStatus)dr[1],
-                    CreateTime = DateTime.Now,
-                    UpdateTime= DateTime.Now,
+        //public void ReadExcel(string fileName, string sheetName, bool isFirstRowColumn)
+        //{
+        //    DataTable dt = ExcelToDatatable(fileName, sheetName, isFirstRowColumn);
+        //    //将excel表格数据存入list集合中
+        //    //EachdayTX定义的类，字段值对应excel表中的每一列
+        //    List<EmployeeDto.Employee> employTX = new List<EmployeeDto.Employee>();
+        //    foreach (DataRow dr in dt.Rows)
+        //    {
+        //        EmployeeDto.Employee employ = new EmployeeDto.Employee
+        //        {
+        //            Id = (long)dr[0],
+        //            WorkNum = dr[1].ToString(),
+        //            WorkStatus = (WorkStatus)dr[2],
+        //            Name = dr[3].ToString(),
+        //            Gender = (Gender)dr[4],
+        //            MaritalStatus = (MaritalStatus)dr[5],
+        //            BirthDay = (DateTime)dr[6],
+        //            IdCard = dr[7].ToString(),
+        //            Native = dr[8].ToString(),
+        //            Phone = dr[9].ToString(),
+        //            Email = dr[10].ToString(),
+        //            AcademicDegree = (AcademicDegree)dr[11],
+        //            HireDate= (DateTime)dr[12],
+        //            PositionId = (long)dr[13],
+        //            Status = (DataStatus)dr[1],
+        //            CreateTime = DateTime.Now,
+        //            UpdateTime= DateTime.Now,
 
 
-                };
-                employTX.Add(employ);
-            }
-        }
-        public static DataTable ExcelToDatatable(string fileName, string sheetName, bool isFirstRowColumn)
-        {
-            ISheet sheet = null;
-            DataTable data = new DataTable();
-            int startRow = 0;
-            FileStream fs;
-            IWorkbook workbook = null;
-            int cellCount = 0;//列数
-            int rowCount = 0;//行数
-            try
-            {
-                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                if (fileName.IndexOf(".xlsx") > 0) // 2007版本
-                {
-                    workbook = new XSSFWorkbook(fs);
-                }
-                else if (fileName.IndexOf(".xls") > 0) // 2003版本
-                {
-                    workbook = new HSSFWorkbook(fs);
-                }
-                if (sheetName != null)
-                {
-                    sheet = workbook.GetSheet(sheetName);//根据给定的sheet名称获取数据
-                }
-                else
-                {
-                    //也可以根据sheet编号来获取数据
-                    sheet = workbook.GetSheetAt(0);//获取第几个sheet表（此处表示如果没有给定sheet名称，默认是第一个sheet表）  
-                }
-                if (sheet != null)
-                {
-                    IRow firstRow = sheet.GetRow(0);
-                    cellCount = firstRow.LastCellNum; //第一行最后一个cell的编号 即总的列数
-                    if (isFirstRowColumn)//如果第一行是标题行
-                    {
-                        for (int i = firstRow.FirstCellNum; i < cellCount; ++i)//第一行列数循环
-                        {
-                            DataColumn column = new DataColumn(firstRow.GetCell(i).StringCellValue);//获取标题
-                            data.Columns.Add(column);//添加列
-                        }
-                        startRow = sheet.FirstRowNum + 1;//1（即第二行，第一行0从开始）
-                    }
-                    else
-                    {
-                        startRow = sheet.FirstRowNum;//0
-                    }
-                    //最后一行的标号
-                    rowCount = sheet.LastRowNum;
-                    for (int i = startRow; i <= rowCount; ++i)//循环遍历所有行
-                    {
-                        IRow row = sheet.GetRow(i);//第几行
-                        if (row == null)
-                        {
-                            continue; //没有数据的行默认是null;
-                        }
-                        //将excel表每一行的数据添加到datatable的行中
-                        DataRow dataRow = data.NewRow();
-                        for (int j = row.FirstCellNum; j < cellCount; ++j)
-                        {
-                            if (row.GetCell(j) != null) //同理，没有数据的单元格都默认是null
-                            {
-                                dataRow[j] = row.GetCell(j).ToString();
-                            }
-                        }
-                        data.Rows.Add(dataRow);
-                    }
-                }
-                return data;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception: " + ex.Message);
-                return null;
-            }
-        }
+        //        };
+        //        employTX.Add(employ);
+        //    }
+        //}
+        //public static DataTable ExcelToDatatable(string fileName, string sheetName, bool isFirstRowColumn)
+        //{
+        //    ISheet sheet = null;
+        //    DataTable data = new DataTable();
+        //    int startRow = 0;
+        //    FileStream fs;
+        //    IWorkbook workbook = null;
+        //    int cellCount = 0;//列数
+        //    int rowCount = 0;//行数
+        //    try
+        //    {
+        //        fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        //        if (fileName.IndexOf(".xlsx") > 0) // 2007版本
+        //        {
+        //            workbook = new XSSFWorkbook(fs);
+        //        }
+        //        else if (fileName.IndexOf(".xls") > 0) // 2003版本
+        //        {
+        //            workbook = new HSSFWorkbook(fs);
+        //        }
+        //        if (sheetName != null)
+        //        {
+        //            sheet = workbook.GetSheet(sheetName);//根据给定的sheet名称获取数据
+        //        }
+        //        else
+        //        {
+        //            //也可以根据sheet编号来获取数据
+        //            sheet = workbook.GetSheetAt(0);//获取第几个sheet表（此处表示如果没有给定sheet名称，默认是第一个sheet表）  
+        //        }
+        //        if (sheet != null)
+        //        {
+        //            IRow firstRow = sheet.GetRow(0);
+        //            cellCount = firstRow.LastCellNum; //第一行最后一个cell的编号 即总的列数
+        //            if (isFirstRowColumn)//如果第一行是标题行
+        //            {
+        //                for (int i = firstRow.FirstCellNum; i < cellCount; ++i)//第一行列数循环
+        //                {
+        //                    DataColumn column = new DataColumn(firstRow.GetCell(i).StringCellValue);//获取标题
+        //                    data.Columns.Add(column);//添加列
+        //                }
+        //                startRow = sheet.FirstRowNum + 1;//1（即第二行，第一行0从开始）
+        //            }
+        //            else
+        //            {
+        //                startRow = sheet.FirstRowNum;//0
+        //            }
+        //            //最后一行的标号
+        //            rowCount = sheet.LastRowNum;
+        //            for (int i = startRow; i <= rowCount; ++i)//循环遍历所有行
+        //            {
+        //                IRow row = sheet.GetRow(i);//第几行
+        //                if (row == null)
+        //                {
+        //                    continue; //没有数据的行默认是null;
+        //                }
+        //                //将excel表每一行的数据添加到datatable的行中
+        //                DataRow dataRow = data.NewRow();
+        //                for (int j = row.FirstCellNum; j < cellCount; ++j)
+        //                {
+        //                    if (row.GetCell(j) != null) //同理，没有数据的单元格都默认是null
+        //                    {
+        //                        dataRow[j] = row.GetCell(j).ToString();
+        //                    }
+        //                }
+        //                data.Rows.Add(dataRow);
+        //            }
+        //        }
+        //        return data;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("Exception: " + ex.Message);
+        //        return null;
+        //    }
+        //}
     }
 }

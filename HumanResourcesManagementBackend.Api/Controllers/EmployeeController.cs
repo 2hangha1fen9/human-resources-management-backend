@@ -26,7 +26,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// <param name="seleemployee"></param>
         /// <returns></returns>
         [HttpPost]
-        public PageResponse<EmployeeDto.Employee> QueryUserByPage(EmployeeDto.Search search)
+        public PageResponse<EmployeeDto.Employee> QueryEmployeeByPage(EmployeeDto.Search search)
         {
             var employees =_employeeService.GetEmploysees(search);
             //返回响应结果
@@ -46,7 +46,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="seleemployeebyid"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public DataResponse<EmployeeDto.Employee> GetEmployeeById(long id)
         {
             var employee = _employeeService.GetEmployseeById(id);
@@ -109,14 +109,13 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetSenioritySummary"></param>
         /// <returns></returns>
-        [HttpPost]
-        public DataResponse<dynamic> GetSenioritySummary()
+        [HttpGet]
+        public DataResponse<List<EmployeeDto.Summary>> GetSenioritySummary()
         {
             var  getseniority= _employeeService.GetSenioritySummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { SeniorityCount = getseniority, Count = count },
+                Data = getseniority,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -127,14 +126,13 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetGradeSummary"></param>
         /// <returns></returns>
-        [HttpPost]
-        public DataResponse<dynamic> GetGradeSummary()
+        [HttpGet]
+        public DataResponse<List<EmployeeDto.Summary>> GetGradeSummary()
         {
             var getgrade= _employeeService.GetGradeSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { GradeCount = getgrade, Count = count },
+                Data = getgrade,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -144,14 +142,13 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetAgeSummary"></param>
         /// <returns></returns>
-        [HttpPost]
-        public DataResponse<dynamic> GetAgeSummary()
+        [HttpGet]
+        public DataResponse<List<EmployeeDto.Summary>> GetAgeSummary()
         {
             var getage = _employeeService.GetAgeSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { AgeConunt = getage, Count = count },
+                Data = getage,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -161,14 +158,13 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetEducationSummary"></param>
         /// <returns></returns>
-        [HttpPost]
-        public DataResponse<dynamic> GetEducationSummary()
+        [HttpGet]
+        public DataResponse<List<EmployeeDto.Summary>> GetEducationSummary()
         {
             var geteducation = _employeeService.GetEducationSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { EducationCount= geteducation, Count=count},               
+                Data = geteducation,               
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -178,14 +174,13 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetDepartmentSummary"></param>
         /// <returns></returns>
-        [HttpPost]
-        public DataResponse<dynamic> GetDepartmentSummary()
+        [HttpGet]
+        public DataResponse<List<EmployeeDto.Summary>> GetDepartmentSummary()
         {
             var getdepartment = _employeeService.GetDepartmentSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { DepartmentCount = getdepartment, Count = count },
+                Data = getdepartment,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -195,14 +190,13 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetGenderSummary"></param>
         /// <returns></returns>
-        [HttpPost]
-        public DataResponse<dynamic> GetGenderSummary()
+        [HttpGet]
+        public DataResponse<List<EmployeeDto.Summary>> GetGenderSummary()
         {
             var getgender = _employeeService.GetGenderSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { GenderCount = getgender, Count = count },
+                Data = getgender,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -212,14 +206,13 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetMaritalSummary"></param>
         /// <returns></returns>
-        [HttpPost]
-        public DataResponse<dynamic> GetMaritalSummary()
+        [HttpGet]
+        public DataResponse<List<EmployeeDto.Summary>> GetMaritalSummary()
         {
             var getmarital = _employeeService.GetMaritalSummary();
-            int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.Summary>>
             {
-                Data = new { MaritalCount = getmarital, Count = count },
+                Data = getmarital,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
@@ -229,35 +222,35 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="GetBirthdaySummary"></param>
         /// <returns></returns>
-        [HttpPost]
-        public DataResponse<dynamic> GetBirthdaySummary()
+        [HttpGet]
+        public DataResponse<List<EmployeeDto.BirthdaySummary>> GetBirthdaySummary()
         {
             var getbirthday = _employeeService.GetBirthdaySummary();
             int count = _employeeService.TotalPeople();
-            return new DataResponse<dynamic>
+            return new DataResponse<List<EmployeeDto.BirthdaySummary>>
             {
-                Data = new { BirthdayCount = getbirthday, Count = count },
+                Data = getbirthday,
                 Status = ResponseStatus.Success,
                 Message = ResponseStatus.Success.Description()
             };
         }
 
-        #region 读取Excel数据
-        /// <summary>
-        /// 读取excel数据
-        /// </summary>
-        /// <param name="ReadExcel"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public Response ReadExcel(string fileName, string sheetName, bool isFirstRowColumn)
-        {
-            _employeeService.ReadExcel(fileName,sheetName,isFirstRowColumn);
-            return new Response
-            {
-                Status = ResponseStatus.Success,
-                Message = ResponseStatus.Success.Description()
-            };
-        }
-        #endregion
+        //#region 读取Excel数据
+        ///// <summary>
+        ///// 读取excel数据
+        ///// </summary>
+        ///// <param name="ReadExcel"></param>
+        ///// <returns></returns>
+        //[HttpGet]
+        //public Response ReadExcel(string fileName, string sheetName, bool isFirstRowColumn)
+        //{
+        //    _employeeService.ReadExcel(fileName,sheetName,isFirstRowColumn);
+        //    return new Response
+        //    {
+        //        Status = ResponseStatus.Success,
+        //        Message = ResponseStatus.Success.Description()
+        //    };
+        //}
+        //#endregion
     }
 }

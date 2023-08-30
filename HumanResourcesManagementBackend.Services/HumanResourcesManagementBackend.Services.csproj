@@ -125,12 +125,16 @@
   <ItemGroup>
     <Compile Include="AbsenceApplyService.cs" />
     <Compile Include="AuthService.cs" />
+    <Compile Include="DepartmentService.cs" />
     <Compile Include="EmployeeService.cs" />
     <Compile Include="Interface\IAuthService.cs" />
+    <Compile Include="Interface\IDepartmentService.cs" />
     <Compile Include="Interface\IEmployeeService.cs" />
     <Compile Include="Interface\IPermissionService.cs" />
+    <Compile Include="Interface\IPositionService.cs" />
     <Compile Include="Interface\IRoleService.cs" />
     <Compile Include="PermissionService.cs" />
+    <Compile Include="PositionService.cs" />
     <Compile Include="RoleService.cs" />
     <Compile Include="VacationApplyService.cs" />
     <Compile Include="BusinessTripApplyService.cs" />

@@ -132,11 +132,11 @@ namespace HumanResourcesManagementBackend.Services
                 }
                 if(search.Status > 0)
                 {
-                    query = query.Where(r =>  r.Status != search.Status);
+                    query = query.Where(r =>  r.Status == search.Status);
                 }
                 if (search.IsDefault > 0)
                 {
-                    query = query.Where(r => r.IsDefault != search.IsDefault);
+                    query = query.Where(r => r.IsDefault == search.IsDefault);
                 }
                 var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<RoleDto.Role>();
                 list.ForEach(r =>

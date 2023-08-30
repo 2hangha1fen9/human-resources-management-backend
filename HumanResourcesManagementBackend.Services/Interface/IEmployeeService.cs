@@ -48,57 +48,57 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="GetSenioritySummary"></param>
         /// <returns></returns>
-        List<EmployeeDto.SummaryDto> GetSenioritySummary();
+        List<EmployeeDto.Summary> GetSenioritySummary();
         /// <summary>
         /// 查询职别汇总
         /// </summary>
         /// <param name="GetSenioritySummary"></param>
         /// <returns></returns>
-        List<EmployeeDto.SummaryDto> GetGradeSummary();
+        List<EmployeeDto.Summary> GetGradeSummary();
         /// <summary>
         /// 查询年龄汇总
         /// </summary>
         /// <param name="GetAgeSummary"></param>
         /// <returns></returns>
-        List<EmployeeDto.SummaryDto> GetAgeSummary();
+        List<EmployeeDto.Summary> GetAgeSummary();
         /// <summary>
         /// 查询学历汇总信息
         /// </summary>
         /// <param name="GetEducationSummary"></param>
         /// <returns></returns>
-        List<EmployeeDto.SummaryDto> GetEducationSummary();
+        List<EmployeeDto.Summary> GetEducationSummary();
         /// <summary>
         /// 查询部门汇总信息
         /// </summary>
         /// <param name="GetDepartmentSummary"></param>
         /// <returns></returns>
-        List<EmployeeDto.SummaryDto> GetDepartmentSummary();
+        List<EmployeeDto.Summary> GetDepartmentSummary();
         /// <summary>
         /// 查询性别汇总信息
         /// </summary>
         /// <param name="GetGenderSummary"></param>
         /// <returns></returns>
-        List<EmployeeDto.SummaryDto> GetGenderSummary();
+        List<EmployeeDto.Summary> GetGenderSummary();
         /// <summary>
         /// 查询婚姻汇总信息
         /// </summary>
         /// <param name="GetMaritalSummary"></param>
         /// <returns></returns>
-        List<EmployeeDto.SummaryDto> GetMaritalSummary();
+        List<EmployeeDto.Summary> GetMaritalSummary();
         /// <summary>
         /// 查询生日汇总信息
         /// </summary>
         /// <param name="GetBirthdaySummary"></param>
         /// <returns></returns>
-        List<EmployeeDto.BirthdaySummaryDto> GetBirthdaySummary();
+        List<EmployeeDto.BirthdaySummary> GetBirthdaySummary();
 
-        /// <summary>
-        /// 读取excel数据
-        /// </summary>
-        /// <param name="fileName">文件路径</param>
-        /// <param name="sheetName">excel工作薄sheet的名称</param>
-        /// <param name="isFirstRowColumn">第一行是否是DataTable的列名，true是</param>
-        /// <returns>返回的DataTable</returns>
-        void ReadExcel(string fileName, string sheetName, bool isFirstRowColumn);
+        ///// <summary>
+        ///// 读取excel数据
+        ///// </summary>
+        ///// <param name="fileName">文件路径</param>
+        ///// <param name="sheetName">excel工作薄sheet的名称</param>
+        ///// <param name="isFirstRowColumn">第一行是否是DataTable的列名，true是</param>
+        ///// <returns>返回的DataTable</returns>
+        //void ReadExcel(string fileName, string sheetName, bool isFirstRowColumn);
     }
 }
