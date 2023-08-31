@@ -231,11 +231,11 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 //获取审核列表
-                var auditNodeList = vacationEx.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>().Where(a => a.AuditStatus == AuditStatus.Pending).ToList();
+                var auditNodeList = vacationEx.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>().ToList();
                 //开始审核
                 if (auditNodeList != null)
                 {
-                    var audit = auditNodeList.FirstOrDefault();
+                    var audit = auditNodeList.FirstOrDefault(u => u.AuditStatus == AuditStatus.Pending);
                     if(audit == null)
                     {
                         throw new BusinessException
