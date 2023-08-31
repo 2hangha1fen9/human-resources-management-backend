@@ -39,6 +39,14 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public long EmployeeId { get; set; }
             /// <summary>
+            /// 员工姓名
+            /// </summary>
+            public string EmployeeName { get; set; }
+            /// <summary>
+            /// 部门名称
+            /// </summary>
+            public string DepartmentName { get; set; }
+            /// <summary>
             /// 出差目的地
             /// </summary>
             public string Address { get; set; }
@@ -104,6 +112,14 @@ namespace HumanResourcesManagementBackend.Models
             /// 员工ID
             /// </summary>
             public long EmployeeId { get; set; }
+            /// <summary>
+            /// 员工姓名
+            /// </summary>
+            public string EmployeeName { get; set; }
+            /// <summary>
+            /// 部门id
+            /// </summary>
+            public long DepartmentId { get; set; }
             /// <summary>
             /// 数据状态 1启用 2禁用 99删除
             /// </summary>

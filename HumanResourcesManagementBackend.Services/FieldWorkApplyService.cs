@@ -83,6 +83,18 @@ namespace HumanResourcesManagementBackend.Services
                 var query = from fieldworkapply in db.FieldWorkApplies
                             where fieldworkapply.Status != DataStatus.Deleted
                             select fieldworkapply;
+                if (search.DepartmentId > 0)
+                {
+                    query = from fieldworkapply in db.FieldWorkApplies
+                            join employees in db.Employees
+                            on fieldworkapply.EmployeeId equals employees.Id
+                            where fieldworkapply.Status != DataStatus.Deleted && employees.DepartmentId == search.DepartmentId
+                            select fieldworkapply;
+                }
+                if (!string.IsNullOrEmpty(search.EmployeeName))
+                {
+                    query = query.Where(u => u.EmployeeId == (db.Employees.FirstOrDefault(p => p.Name == search.EmployeeName).Id));
+                }
                 if (search.EmployeeId > 0)
                 {
                     query = query.Where(u => u.EmployeeId == search.EmployeeId);
@@ -101,6 +113,8 @@ namespace HumanResourcesManagementBackend.Services
                 //状态处理
                 list.ForEach(u =>
                 {
+                    u.EmployeeName = db.Employees.FirstOrDefault(p => p.Id == u.EmployeeId).Name;
+                    u.DepartmentName = db.Departmentes.FirstOrDefault(p => p.Id == (db.Employees.FirstOrDefault(x => x.Id == u.EmployeeId).DepartmentId)).DepartmentName;
                     u.Duration = DateHelper.GetDateLength(u.BeginDate, u.EndDate);
                     u.StatusStr = u.Status.Description();
                     u.AuditStatusStr = u.AuditStatus.Description();

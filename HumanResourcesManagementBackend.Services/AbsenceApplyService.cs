@@ -71,10 +71,7 @@ namespace HumanResourcesManagementBackend.Services
                 var query = from absenceapply in db.AbsenceApplies
                             where absenceapply.Status != DataStatus.Deleted
                             select absenceapply;
-                if(!string.IsNullOrEmpty(search.EmployeeName))
-                {
-                    search.EmployeeId = db.Employees.FirstOrDefault(p => p.Name == search.EmployeeName)?.Id??0;
-                }
+
                 if (search.DepartmentId > 0)
                 {
                     query = from absenceapply in db.AbsenceApplies
@@ -82,6 +79,10 @@ namespace HumanResourcesManagementBackend.Services
                             on absenceapply.EmployeeId equals employees.Id
                             where absenceapply.Status != DataStatus.Deleted && employees.DepartmentId == search.DepartmentId
                             select absenceapply;
+                }
+                if (!string.IsNullOrEmpty(search.EmployeeName))
+                {
+                    query = query.Where(u => u.EmployeeId == (db.Employees.FirstOrDefault(p => p.Name == search.EmployeeName).Id));
                 }
                 if (search.EmployeeId > 0)
                 {
@@ -120,17 +121,17 @@ namespace HumanResourcesManagementBackend.Services
                 });
 
                 //过滤能审核的
-                //var refs = db.UserRoleRefs.Where(r => r.UserId == currentusere.Id).ToList();
-                //list = list.Where(l =>
-                //{
-                //    var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
-                //    if (refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
-                //    {
-                //        return false;
-                //    }
+                var refs = db.UserRoleRefs.Where(r => r.UserId == currentusere.Id).ToList();
+                list = list.Where(l =>
+                {
+                    var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
+                    if (refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
+                    {
+                        return false;
+                    }
 
-                //    return true;
-                //}).ToList();
+                    return true;
+                }).ToList();
                 return list;
             }
         }

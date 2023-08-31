@@ -70,6 +70,18 @@ namespace HumanResourcesManagementBackend.Services
                 var query = from compnesatoryapply in db.CompensatoryApplies
                             where compnesatoryapply.Status != DataStatus.Deleted
                             select compnesatoryapply;
+                if (search.DepartmentId > 0)
+                {
+                    query = from compnesatoryapply in db.CompensatoryApplies
+                            join employees in db.Employees
+                            on compnesatoryapply.EmployeeId equals employees.Id
+                            where compnesatoryapply.Status != DataStatus.Deleted && employees.DepartmentId == search.DepartmentId
+                            select compnesatoryapply;
+                }
+                if (!string.IsNullOrEmpty(search.EmployeeName))
+                {
+                    query = query.Where(u => u.EmployeeId == (db.Employees.FirstOrDefault(p => p.Name == search.EmployeeName).Id));
+                }
                 if (search.EmployeeId > 0)
                 {
                     query = query.Where(u => u.EmployeeId == search.EmployeeId);
@@ -88,6 +100,8 @@ namespace HumanResourcesManagementBackend.Services
                 //状态处理
                 list.ForEach(u =>
                 {
+                    u.EmployeeName = db.Employees.FirstOrDefault(p => p.Id == u.EmployeeId).Name;
+                    u.DepartmentName = db.Departmentes.FirstOrDefault(p => p.Id == (db.Employees.FirstOrDefault(x => x.Id == u.EmployeeId).DepartmentId)).DepartmentName;
                     u.StatusStr = u.Status.Description();
                     u.AuditStatusStr = u.AuditStatus.Description();
                     u.AuditTypeStr = u.AuditType.Description();
