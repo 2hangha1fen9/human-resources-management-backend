@@ -40,5 +40,9 @@ namespace HumanResourcesManagementBackend.Repository
         /// 审核意见
         /// </summary>
         public string AuditResult { get; set; }
+        /// <summary>
+        /// 审核节点列表
+        /// </summary>
+        public string AuditNodeJson { get; set; }
     }
 }

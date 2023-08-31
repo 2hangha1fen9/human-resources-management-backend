@@ -21,6 +21,13 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="SeleFieldWorkApply"></param>
         /// <returns></returns>
+        List<FieldWorkApplyDto.FieldWorkApply> QueryFieldWorkListByPage(FieldWorkApplyDto.Search search, UserDto.User currentuser);
+
+        /// <summary>
+        /// 查询当前员工的外勤申请记录
+        /// </summary>
+        /// <param name="SeleFieldWorkApply"></param>
+        /// <returns></returns>
         List<FieldWorkApplyDto.FieldWorkApply> QueryMyFieldWorkListByPage(FieldWorkApplyDto.Search search);
         /// <summary>
         /// 查询外勤申请记录详情
@@ -33,6 +40,6 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="ExamineFieldWorkApply"></param>
         /// <returns></returns>
-        void ExamineFieldWorkApply(FieldWorkApplyDto.Examine examine);
+        void ExamineFieldWorkApply(FieldWorkApplyDto.Examine examine, UserDto.User currentuser);
     }
 }

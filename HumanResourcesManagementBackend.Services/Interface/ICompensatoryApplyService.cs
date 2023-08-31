@@ -20,6 +20,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="search"></param>
         /// <returns></returns>
+        List<CompensatoryApplyDto.CompensatoryApply> QueryCompensatoryListByPage(CompensatoryApplyDto.Search search, UserDto.User currentuser);
+        /// <summary>
+        /// 获取调休申请记录
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
         List<CompensatoryApplyDto.CompensatoryApply> QueryMyCompensatoryListByPage(CompensatoryApplyDto.Search search);
         /// <summary>
         /// 查询调休申请记录详情
@@ -32,6 +38,6 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="ExamineCompensatoryApply"></param>
         /// <returns></returns>
-        void ExamineCompensatoryApply(CompensatoryApplyDto.Examine examine);
+        void ExamineCompensatoryApply(CompensatoryApplyDto.Examine examine, UserDto.User currentusere);
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HumanResourcesManagementBackend.Models.VacationApplyDto;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -40,6 +41,18 @@ namespace HumanResourcesManagementBackend.Services
                 absenceapplyR.Status = DataStatus.Enable;
                 absenceapplyR.AuditStatus = AuditStatus.Pending;
                 absenceapplyR.AuditType = AuditType.DepartmentManager;
+                //填充审核列表
+                var roles = db.Roles.ToList();
+                var audioList = new List<AbsenceApplyDto.Examine>
+                {
+                    new AbsenceApplyDto.Examine
+                    {
+                        RoleId = roles.FirstOrDefault(r => r.Name == "部门主管").Id,
+                        RoleName = roles.FirstOrDefault(r => r.Name == "部门主管").Name,
+                        AuditStatus = AuditStatus.Pending,
+                    },
+                };
+                absenceapplyR.AuditNodeJson = audioList.ToJson();
                 db.AbsenceApplies.Add(absenceapplyR);
                 if (db.SaveChanges() == 0)
                 {
@@ -51,7 +64,7 @@ namespace HumanResourcesManagementBackend.Services
                 }
             }
         }
-        public List<AbsenceApplyDto.AbsenceApply> GetAbsenceApplyList(AbsenceApplyDto.Search search)
+        public List<AbsenceApplyDto.AbsenceApply> GetAbsenceApplyList(AbsenceApplyDto.Search search, UserDto.User currentusere)
         {
             using(var db = new HRM())
             {
@@ -108,8 +121,74 @@ namespace HumanResourcesManagementBackend.Services
                     u.AuditStatusStr = u.AuditStatus.Description();
                     u.AuditTypeStr = u.AuditType.Description();
                     u.CheckInTypeStr = u.CheckInType.Description();
+                    u.AuditNode = u.AuditNodeJson.ToObject<List<AbsenceApplyDto.Examine>>();
+                    u.AuditNode?.ForEach(a =>
+                    {
+                        a.AuditStatusStr = a.AuditStatus.Description();
+                    });
                 });
-                
+
+                //过滤能审核的
+                var refs = db.UserRoleRefs.Where(r => r.UserId == currentusere.Id).ToList();
+                list = list.Where(l =>
+                {
+                    var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
+                    if (refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }).ToList();
+                return list;
+            }
+        }
+
+        public List<AbsenceApplyDto.AbsenceApply> GetMyAbsenceApplyList(AbsenceApplyDto.Search search)
+        {
+            using (var db = new HRM())
+            {
+                var query = from absenceapply in db.AbsenceApplies
+                            where absenceapply.Status != DataStatus.Deleted
+                            select absenceapply;
+                if (search.EmployeeId > 0)
+                {
+                    query = query.Where(u => u.EmployeeId == search.EmployeeId);
+                }
+                if (search.CreateTime != DateTime.Parse("0001 / 1 / 1 0:00:00"))
+                {
+                    query = query.Where(u => u.CreateTime.Year == search.CreateTime.Year
+                    && u.CreateTime.Month == search.CreateTime.Month && u.CreateTime.Day == search.CreateTime.Day);
+                }
+                if (search.CheckInType > 0)
+                {
+                    query = query.Where(u => u.CheckInType == search.CheckInType);
+                }
+                if (search.AuditType > 0)
+                {
+                    query = query.Where(u => u.AuditType == search.AuditType);
+                }
+                if (search.AuditStatus > 0)
+                {
+                    query = query.Where(u => u.AuditStatus == search.AuditStatus);
+                }
+
+                //分页并将数据库实体映射为dto对象(OrderBy必须调用)
+                var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<AbsenceApplyDto.AbsenceApply>();
+                //状态处理
+                list.ForEach(u =>
+                {
+                    u.EmployeeName = db.Employees.FirstOrDefault(p => p.Id == u.EmployeeId).Name;
+                    u.StatusStr = u.Status.Description();
+                    u.AuditStatusStr = u.AuditStatus.Description();
+                    u.AuditTypeStr = u.AuditType.Description();
+                    u.CheckInTypeStr = u.CheckInType.Description();
+                    u.AuditNode = u.AuditNodeJson.ToObject<List<AbsenceApplyDto.Examine>>();
+                    u.AuditNode?.ForEach(a =>
+                    {
+                        a.AuditStatusStr = a.AuditStatus.Description();
+                    });
+                });
                 return list;
             }
         }
@@ -135,7 +214,7 @@ namespace HumanResourcesManagementBackend.Services
                 return absence;
             }
         }
-        public void ExamineAbsenceApply(AbsenceApplyDto.Examine examine)
+        public void ExamineAbsenceApply(AbsenceApplyDto.Examine examine, UserDto.User currentusere)
         {
             using (var db = new HRM())
             {
@@ -157,9 +236,53 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
-                absenceEx.AuditStatus = examine.AuditStatus;
-                absenceEx.AuditResult = examine.AuditResult;
-                absenceEx.UpdateTime=DateTime.Now;
+                //获取审核列表
+                var auditNodeList = absenceEx.AuditNodeJson.ToObject<List<AbsenceApplyDto.Examine>>().Where(a => a.AuditStatus == AuditStatus.Pending).ToList();
+                //开始审核
+                if (auditNodeList != null)
+                {
+                    var audit = auditNodeList.FirstOrDefault();
+                    if (audit == null)
+                    {
+                        throw new BusinessException
+                        {
+                            ErrorMessage = "审核出现错误,请联系管理员",
+                            Status = ResponseStatus.NoPermission
+                        };
+                    }
+
+                    //查询当前用户能不能审核
+                    var canAudit = db.UserRoleRefs.FirstOrDefault(u => u.UserId == currentusere.Id && u.RoleId == audit.RoleId);
+                    if (canAudit == null)
+                    {
+                        throw new BusinessException
+                        {
+                            ErrorMessage = "当前用户不能审核",
+                            Status = ResponseStatus.NoPermission
+                        };
+                    }
+                    //填入审核结果
+                    audit.UserId = currentusere.Id;
+                    audit.UserName = currentusere.LoginName;
+                    audit.AuditStatus = examine.AuditStatus;
+                    audit.AuditResult = examine.AuditResult;
+                    //更新审核节点列表
+                    absenceEx.AuditNodeJson = auditNodeList.ToJson();
+                    //如果是最后一个节点结束整个流程
+                    if (auditNodeList.LastOrDefault().RoleId == audit.RoleId)
+                    {
+                        absenceEx.AuditStatus = examine.AuditStatus;
+                        absenceEx.AuditResult = examine.AuditResult;
+                    }
+                }
+                else
+                {
+                    //流程为空直接通过
+                    absenceEx.AuditStatus = examine.AuditStatus;
+                    absenceEx.AuditResult = examine.AuditResult;
+                }
+
+                absenceEx.UpdateTime = DateTime.Now;
                 if (db.SaveChanges() == 0)
                 {
                     throw new BusinessException

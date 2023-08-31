@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HumanResourcesManagementBackend.Models.VacationApplyDto;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -39,6 +40,24 @@ namespace HumanResourcesManagementBackend.Services
                 compensatoryapplyR.Status = DataStatus.Enable;
                 compensatoryapplyR.AuditStatus = AuditStatus.Pending;
                 compensatoryapplyR.AuditType = AuditType.DepartmentManager;
+                //填充审核列表
+                var roles = db.Roles.ToList();
+                var audioList = new List<CompensatoryApplyDto.Examine>
+                {
+                    new CompensatoryApplyDto.Examine
+                    {
+                        RoleId = roles.FirstOrDefault(r => r.Name == "部门主管").Id,
+                        AuditStatus = AuditStatus.Pending,
+                        RoleName = roles.FirstOrDefault(r => r.Name == "部门主管").Name,
+                    },
+                    new CompensatoryApplyDto.Examine
+                    {
+                        RoleId = roles.FirstOrDefault(r => r.Name == "校区主任").Id,
+                        AuditStatus = AuditStatus.Pending,
+                        RoleName = roles.FirstOrDefault(r => r.Name == "校区主任").Name,
+                    }
+                };
+                compensatoryapplyR.AuditNodeJson = audioList.ToJson();
                 db.CompensatoryApplies.Add(compensatoryapplyR);
                 if (db.SaveChanges() == 0)
                 {
@@ -48,6 +67,60 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.AddError
                     };
                 }
+            }
+        }
+        public List<CompensatoryApplyDto.CompensatoryApply> QueryCompensatoryListByPage(CompensatoryApplyDto.Search search, UserDto.User currentUser)
+        {
+            using (var db = new HRM())
+            {
+                var query = from compnesatoryapply in db.CompensatoryApplies
+                            where compnesatoryapply.Status != DataStatus.Deleted
+                            select compnesatoryapply;
+                if (search.EmployeeId > 0)
+                {
+                    query = query.Where(u => u.EmployeeId == search.EmployeeId);
+                }
+                if (search.CreateTime != DateTime.Parse("0001 / 1 / 1 0:00:00"))
+                {
+                    query = query.Where(u => u.CreateTime.Year == search.CreateTime.Year
+                    && u.CreateTime.Month == search.CreateTime.Month && u.CreateTime.Day == search.CreateTime.Day);
+                }
+                if (search.AuditType > 0)
+                {
+                    query = query.Where(u => u.AuditType == search.AuditType);
+                }
+                if (search.AuditStatus > 0)
+                {
+                    query = query.Where(u => u.AuditStatus == search.AuditStatus);
+                }
+
+                //分页并将数据库实体映射为dto对象(OrderBy必须调用)
+                var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<CompensatoryApplyDto.CompensatoryApply>();
+                //状态处理
+                list.ForEach(u =>
+                {
+                    u.StatusStr = u.Status.Description();
+                    u.AuditStatusStr = u.AuditStatus.Description();
+                    u.AuditTypeStr = u.AuditType.Description();
+                    u.AuditNode = u.AuditNodeJson.ToObject<List<CompensatoryApplyDto.Examine>>();
+                    u.AuditNode?.ForEach(a =>
+                    {
+                        a.AuditStatusStr = a.AuditStatus.Description();
+                    });
+                });
+                //过滤能审核的
+                var refs = db.UserRoleRefs.Where(r => r.UserId == currentUser.Id).ToList();
+                list = list.Where(l =>
+                {
+                    var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
+                    if (refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }).ToList();
+                return list;
             }
         }
         public List<CompensatoryApplyDto.CompensatoryApply> QueryMyCompensatoryListByPage(CompensatoryApplyDto.Search search)
@@ -83,6 +156,11 @@ namespace HumanResourcesManagementBackend.Services
                     u.StatusStr = u.Status.Description();
                     u.AuditStatusStr = u.AuditStatus.Description();
                     u.AuditTypeStr = u.AuditType.Description();
+                    u.AuditNode = u.AuditNodeJson.ToObject<List<CompensatoryApplyDto.Examine>>();
+                    u.AuditNode?.ForEach(a =>
+                    {
+                        a.AuditStatusStr = a.AuditStatus.Description();
+                    });
                 });
                 return list;
             }
@@ -107,7 +185,7 @@ namespace HumanResourcesManagementBackend.Services
                 return compensatory;
             }
         }
-        public void ExamineCompensatoryApply(CompensatoryApplyDto.Examine examine)
+        public void ExamineCompensatoryApply(CompensatoryApplyDto.Examine examine, UserDto.User currentuser)
         {
             using (var db = new HRM())
             {
@@ -129,8 +207,53 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
-                compensatoryEx.AuditStatus = examine.AuditStatus;
-                compensatoryEx.AuditResult = examine.AuditResult;
+                //获取审核列表
+                var auditNodeList = compensatoryEx.AuditNodeJson.ToObject<List<CompensatoryApplyDto.Examine>>().Where(a => a.AuditStatus == AuditStatus.Pending).ToList();
+                //开始审核
+                if (auditNodeList != null)
+                {
+                    var audit = auditNodeList.FirstOrDefault();
+                    if (audit == null)
+                    {
+                        throw new BusinessException
+                        {
+                            ErrorMessage = "审核出现错误,请联系管理员",
+                            Status = ResponseStatus.NoPermission
+                        };
+                    }
+
+                    //查询当前用户能不能审核
+                    var canAudit = db.UserRoleRefs.FirstOrDefault(u => u.UserId == currentuser.Id && u.RoleId == audit.RoleId);
+                    if (canAudit == null)
+                    {
+                        throw new BusinessException
+                        {
+                            ErrorMessage = "当前用户不能审核",
+                            Status = ResponseStatus.NoPermission
+                        };
+                    }
+                    //填入审核结果
+                    audit.UserId = currentuser.Id;
+                    audit.UserName = currentuser.LoginName;
+                    audit.AuditStatus = examine.AuditStatus;
+                    audit.AuditResult = examine.AuditResult;
+                    //更新审核节点列表
+                    compensatoryEx.AuditNodeJson = auditNodeList.ToJson();
+                    //如果是最后一个节点结束整个流程
+                    if (auditNodeList.LastOrDefault().RoleId == audit.RoleId)
+                    {
+                        compensatoryEx.AuditStatus = examine.AuditStatus;
+                        compensatoryEx.AuditResult = examine.AuditResult;
+                    }
+                }
+                else
+                {
+                    //流程为空直接通过
+                    compensatoryEx.AuditStatus = examine.AuditStatus;
+                    compensatoryEx.AuditResult = examine.AuditResult;
+                }
+
+                compensatoryEx.UpdateTime = DateTime.Now;
                 if (db.SaveChanges() == 0)
                 {
                     throw new BusinessException

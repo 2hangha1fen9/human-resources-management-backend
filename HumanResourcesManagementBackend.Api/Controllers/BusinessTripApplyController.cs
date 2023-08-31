@@ -65,7 +65,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public PageResponse<BusinessTripApplyDto.BusinessTripApply> QueryBusinessTripListByPage(BusinessTripApplyDto.Search search)
         {
-            var vacationapply = _businessTripApplyService.QueryMyBusinessTripListByPage(search);
+            var vacationapply = _businessTripApplyService.QueryBusinessTripListByPage(search, CurrentUser);
             return new PageResponse<BusinessTripApplyDto.BusinessTripApply>()
             {
                 RecordCount = search.RecordCount,
@@ -102,7 +102,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPut]
         public Response ExamineBusinessTripApply(BusinessTripApplyDto.Examine examine)
         {
-            _businessTripApplyService.ExamineBusinessTripApply(examine);
+            _businessTripApplyService.ExamineBusinessTripApply(examine, CurrentUser);
             return new Response
             {
                 Status = ResponseStatus.Success,

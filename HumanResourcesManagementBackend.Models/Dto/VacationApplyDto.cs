@@ -147,6 +147,10 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public long RoleId { get; set; }
             /// <summary>
+            /// 角色名
+            /// </summary>
+            public string RoleName { get; set; }
+            /// <summary>
             /// 审核状态 1待审核 2同意 3拒绝
             /// </summary>
             public AuditStatus AuditStatus { get; set; }

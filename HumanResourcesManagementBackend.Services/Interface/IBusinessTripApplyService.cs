@@ -20,6 +20,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="SeleBusinessTripApply"></param>
         /// <returns></returns>
+        List<BusinessTripApplyDto.BusinessTripApply> QueryBusinessTripListByPage(BusinessTripApplyDto.Search search, UserDto.User currentuser);
+        /// <summary>
+        /// 查询出差申请记录
+        /// </summary>
+        /// <param name="SeleBusinessTripApply"></param>
+        /// <returns></returns>
         List<BusinessTripApplyDto.BusinessTripApply> QueryMyBusinessTripListByPage(BusinessTripApplyDto.Search search);
         /// <summary>
         /// 查询出差申请记录详情
@@ -32,6 +38,6 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="ExamineBusinessTripApply"></param>
         /// <returns></returns>
-        void ExamineBusinessTripApply(BusinessTripApplyDto.Examine examine);
+        void ExamineBusinessTripApply(BusinessTripApplyDto.Examine examine, UserDto.User currentusere);
     }
 }
