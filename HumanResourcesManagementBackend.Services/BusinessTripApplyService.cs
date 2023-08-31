@@ -226,6 +226,14 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
+                if (businesstripEx.AuditStatus != AuditStatus.Pending)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "该申请已审核",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
                 //获取审核列表
                 var auditNodeList = businesstripEx.AuditNodeJson.ToObject<List<BusinessTripApplyDto.Examine>>().ToList();
                 //开始审核
@@ -260,7 +268,7 @@ namespace HumanResourcesManagementBackend.Services
                     //更新审核节点列表
                     businesstripEx.AuditNodeJson = auditNodeList.ToJson();
                     //如果是最后一个节点结束整个流程
-                    if (auditNodeList.LastOrDefault().RoleId == audit.RoleId)
+                    if (auditNodeList.LastOrDefault().RoleId == audit.RoleId || audit.AuditStatus == AuditStatus.Reject)
                     {
                         businesstripEx.AuditStatus = examine.AuditStatus;
                         businesstripEx.AuditResult = examine.AuditResult;

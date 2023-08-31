@@ -253,6 +253,14 @@ namespace HumanResourcesManagementBackend.Services
                             Status = ResponseStatus.NoPermission
                         };
                     }
+                    if (absenceEx.AuditStatus != AuditStatus.Pending)
+                    {
+                        throw new BusinessException
+                        {
+                            ErrorMessage = "该申请已审核",
+                            Status = ResponseStatus.ParameterError
+                        };
+                    }
                     //填入审核结果
                     audit.UserId = currentusere.Id;
                     audit.UserName = currentusere.LoginName;
@@ -261,8 +269,8 @@ namespace HumanResourcesManagementBackend.Services
                     audit.AuditTime = DateTime.Now;
                     //更新审核节点列表
                     absenceEx.AuditNodeJson = auditNodeList.ToJson();
-                    //如果是最后一个节点结束整个流程
-                    if (auditNodeList.LastOrDefault().RoleId == audit.RoleId)
+                    //如果是最后一个节点,或者拒绝结束整个流程
+                    if (auditNodeList.LastOrDefault().RoleId == audit.RoleId || audit.AuditStatus == AuditStatus.Reject)
                     {
                         absenceEx.AuditStatus = examine.AuditStatus;
                         absenceEx.AuditResult = examine.AuditResult;

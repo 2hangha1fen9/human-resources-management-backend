@@ -226,6 +226,14 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
+                if (fieldworkEx.AuditStatus != AuditStatus.Pending)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "该申请已审核",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
                 //获取审核列表
                 var auditNodeList = fieldworkEx.AuditNodeJson.ToObject<List<FieldWorkApplyDto.Examine>>().ToList();
                 //开始审核
@@ -260,7 +268,7 @@ namespace HumanResourcesManagementBackend.Services
                     //更新审核节点列表
                     fieldworkEx.AuditNodeJson = auditNodeList.ToJson();
                     //如果是最后一个节点结束整个流程
-                    if (auditNodeList.LastOrDefault().RoleId == audit.RoleId)
+                    if (auditNodeList.LastOrDefault().RoleId == audit.RoleId || audit.AuditStatus == AuditStatus.Reject)
                     {
                         fieldworkEx.AuditStatus = examine.AuditStatus;
                         fieldworkEx.AuditResult = examine.AuditResult;

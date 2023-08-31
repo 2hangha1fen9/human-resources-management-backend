@@ -210,6 +210,14 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
+                if (compensatoryEx.AuditStatus != AuditStatus.Pending)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "该申请已审核",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
                 //获取审核列表
                 var auditNodeList = compensatoryEx.AuditNodeJson.ToObject<List<CompensatoryApplyDto.Examine>>().ToList();
                 //开始审核
@@ -235,6 +243,7 @@ namespace HumanResourcesManagementBackend.Services
                             Status = ResponseStatus.NoPermission
                         };
                     }
+
                     //填入审核结果
                     audit.UserId = currentuser.Id;
                     audit.UserName = currentuser.LoginName;
@@ -244,7 +253,7 @@ namespace HumanResourcesManagementBackend.Services
                     //更新审核节点列表
                     compensatoryEx.AuditNodeJson = auditNodeList.ToJson();
                     //如果是最后一个节点结束整个流程
-                    if (auditNodeList.LastOrDefault().RoleId == audit.RoleId)
+                    if (auditNodeList.LastOrDefault().RoleId == audit.RoleId || audit.AuditStatus == AuditStatus.Reject)
                     {
                         compensatoryEx.AuditStatus = examine.AuditStatus;
                         compensatoryEx.AuditResult = examine.AuditResult;
