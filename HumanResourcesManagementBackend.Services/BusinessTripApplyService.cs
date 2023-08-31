@@ -116,7 +116,7 @@ namespace HumanResourcesManagementBackend.Services
                 list = list.Where(l =>
                 {
                     var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
-                    if (refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
+                    if (firstNode == null || refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
                     {
                         return false;
                     }

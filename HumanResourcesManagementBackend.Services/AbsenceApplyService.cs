@@ -120,17 +120,17 @@ namespace HumanResourcesManagementBackend.Services
                 });
 
                 //过滤能审核的
-                //var refs = db.UserRoleRefs.Where(r => r.UserId == currentusere.Id).ToList();
-                //list = list.Where(l =>
-                //{
-                //    var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
-                //    if (refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
-                //    {
-                //        return false;
-                //    }
+                var refs = db.UserRoleRefs.Where(r => r.UserId == currentusere.Id).ToList();
+                list = list.Where(l =>
+                {
+                    var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
+                    if (firstNode == null || refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
+                    {
+                        return false;
+                    }
 
-                //    return true;
-                //}).ToList();
+                    return true;
+                }).ToList();
                 return list;
             }
         }
