@@ -158,6 +158,10 @@ namespace HumanResourcesManagementBackend.Models
             /// 审核意见
             /// </summary>
             public string AuditResult { get; set; }
+            /// <summary>
+            /// 审核时间
+            /// </summary>
+            public DateTime AuditTime { get; set; }
         }
     }
 }

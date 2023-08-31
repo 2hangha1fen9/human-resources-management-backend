@@ -176,6 +176,11 @@ namespace HumanResourcesManagementBackend.Services
                 businesstrip.StatusStr = businesstrip.Status.Description();
                 businesstrip.AuditStatusStr = businesstrip.AuditStatus.Description();
                 businesstrip.AuditTypeStr = businesstrip.AuditType.Description();
+                businesstrip.AuditNode = businesstrip.AuditNodeJson.ToObject<List<BusinessTripApplyDto.Examine>>();
+                businesstrip.AuditNode?.ForEach(a =>
+                {
+                    a.AuditStatusStr = a.AuditStatus.Description();
+                });
                 return businesstrip;
             }
         }
@@ -231,6 +236,7 @@ namespace HumanResourcesManagementBackend.Services
                     audit.UserName = currentuser.LoginName;
                     audit.AuditStatus = examine.AuditStatus;
                     audit.AuditResult = examine.AuditResult;
+                    audit.AuditTime = DateTime.Now;
                     //更新审核节点列表
                     businesstripEx.AuditNodeJson = auditNodeList.ToJson();
                     //如果是最后一个节点结束整个流程

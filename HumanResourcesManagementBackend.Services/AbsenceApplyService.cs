@@ -197,6 +197,11 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 var absence = absenceR.MapTo<AbsenceApplyDto.AbsenceApply>();
+                absence.AuditNode = absence.AuditNodeJson.ToObject<List<AbsenceApplyDto.Examine>>();
+                absence.AuditNode?.ForEach(a =>
+                {
+                    a.AuditStatusStr = a.AuditStatus.Description();
+                });
                 absence.StatusStr = absence.Status.Description();
                 absence.AuditStatusStr = absence.AuditStatus.Description();
                 absence.AuditTypeStr = absence.AuditType.Description();
@@ -256,6 +261,7 @@ namespace HumanResourcesManagementBackend.Services
                     audit.UserName = currentusere.LoginName;
                     audit.AuditStatus = examine.AuditStatus;
                     audit.AuditResult = examine.AuditResult;
+                    audit.AuditTime = DateTime.Now;
                     //更新审核节点列表
                     absenceEx.AuditNodeJson = auditNodeList.ToJson();
                     //如果是最后一个节点结束整个流程
