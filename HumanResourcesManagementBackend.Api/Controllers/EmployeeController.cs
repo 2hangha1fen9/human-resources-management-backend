@@ -36,8 +36,6 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public PageResponse<EmployeeDto.Employee> QueryEmployeeByPage(EmployeeDto.Search search)
         {
             var employees =_employeeService.GetEmploysees(search);
-
-            employees.ToExcel();
             //返回响应结果
             return new PageResponse<EmployeeDto.Employee>()
             {
