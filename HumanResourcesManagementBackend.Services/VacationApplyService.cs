@@ -60,10 +60,10 @@ namespace HumanResourcesManagementBackend.Services
                     },
                     new VacationApplyDto.Examine
                     {
-                        RoleId = roles.FirstOrDefault(r => r.Name == "校区主任").Id,
+                        RoleId = roles.FirstOrDefault(r => r.Name == "校区人事专员").Id,
                         AuditStatus = AuditStatus.Pending,
-                        RoleName = roles.FirstOrDefault(r => r.Name == "校区主任").Name,
-                    }
+                        RoleName = roles.FirstOrDefault(r => r.Name == "校区人事专员").Name,
+                    },
                 };
                 vacationapplyR.AuditNodeJson= audioList.ToJson();
 
@@ -200,6 +200,11 @@ namespace HumanResourcesManagementBackend.Services
                 vacation.AuditStatusStr = vacation.AuditStatus.Description();
                 vacation.AuditTypeStr = vacation.AuditType.Description();
                 vacation.VacationTypeStr = vacation.VacationType.Description();
+                vacation.AuditNode = vacation.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>();
+                vacation.AuditNode?.ForEach(a =>
+                {
+                    a.AuditStatusStr = a.AuditStatus.Description();
+                });
                 return vacation;
             }
         }

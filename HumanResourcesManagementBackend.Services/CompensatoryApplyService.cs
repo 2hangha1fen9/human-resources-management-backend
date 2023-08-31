@@ -50,12 +50,6 @@ namespace HumanResourcesManagementBackend.Services
                         AuditStatus = AuditStatus.Pending,
                         RoleName = roles.FirstOrDefault(r => r.Name == "部门主管").Name,
                     },
-                    new CompensatoryApplyDto.Examine
-                    {
-                        RoleId = roles.FirstOrDefault(r => r.Name == "校区主任").Id,
-                        AuditStatus = AuditStatus.Pending,
-                        RoleName = roles.FirstOrDefault(r => r.Name == "校区主任").Name,
-                    }
                 };
                 compensatoryapplyR.AuditNodeJson = audioList.ToJson();
                 db.CompensatoryApplies.Add(compensatoryapplyR);
@@ -172,6 +166,11 @@ namespace HumanResourcesManagementBackend.Services
                 compensatory.StatusStr = compensatory.Status.Description();
                 compensatory.AuditStatusStr = compensatory.AuditStatus.Description();
                 compensatory.AuditTypeStr = compensatory.AuditType.Description();
+                compensatory.AuditNode = compensatory.AuditNodeJson.ToObject<List<CompensatoryApplyDto.Examine>>();
+                compensatory.AuditNode?.ForEach(a =>
+                {
+                    a.AuditStatusStr = a.AuditStatus.Description();
+                });
                 return compensatory;
             }
         }
@@ -227,6 +226,7 @@ namespace HumanResourcesManagementBackend.Services
                     audit.UserName = currentuser.LoginName;
                     audit.AuditStatus = examine.AuditStatus;
                     audit.AuditResult = examine.AuditResult;
+                    audit.AuditTime = DateTime.Now;
                     //更新审核节点列表
                     compensatoryEx.AuditNodeJson = auditNodeList.ToJson();
                     //如果是最后一个节点结束整个流程

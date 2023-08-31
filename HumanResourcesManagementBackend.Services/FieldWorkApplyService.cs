@@ -53,6 +53,12 @@ namespace HumanResourcesManagementBackend.Services
                     },
                     new FieldWorkApplyDto.Examine
                     {
+                        RoleId = roles.FirstOrDefault(r => r.Name == "校区人事专员").Id,
+                        AuditStatus = AuditStatus.Pending,
+                        RoleName = roles.FirstOrDefault(r => r.Name == "校区人事专员").Name,
+                    },
+                    new FieldWorkApplyDto.Examine
+                    {
                         RoleId = roles.FirstOrDefault(r => r.Name == "校区主任").Id,
                         AuditStatus = AuditStatus.Pending,
                         RoleName = roles.FirstOrDefault(r => r.Name == "校区主任").Name,
@@ -176,6 +182,11 @@ namespace HumanResourcesManagementBackend.Services
                 fieldwork.StatusStr = fieldwork.Status.Description();
                 fieldwork.AuditStatusStr = fieldwork.AuditStatus.Description();
                 fieldwork.AuditTypeStr = fieldwork.AuditType.Description();
+                fieldwork.AuditNode = fieldwork.AuditNodeJson.ToObject<List<FieldWorkApplyDto.Examine>>();
+                fieldwork.AuditNode?.ForEach(a =>
+                {
+                    a.AuditStatusStr = a.AuditStatus.Description();
+                });
                 return fieldwork;
             }
         }
@@ -231,6 +242,7 @@ namespace HumanResourcesManagementBackend.Services
                     audit.UserName = currentuser.LoginName;
                     audit.AuditStatus = examine.AuditStatus;
                     audit.AuditResult = examine.AuditResult;
+                    audit.AuditTime = DateTime.Now;
                     //更新审核节点列表
                     fieldworkEx.AuditNodeJson = auditNodeList.ToJson();
                     //如果是最后一个节点结束整个流程
