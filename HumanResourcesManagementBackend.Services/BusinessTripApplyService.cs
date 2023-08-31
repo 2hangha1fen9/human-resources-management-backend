@@ -130,7 +130,7 @@ namespace HumanResourcesManagementBackend.Services
                 list = list.Where(l =>
                 {
                     var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
-                    if (refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
+                    if (firstNode == null || refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
                     {
                         return false;
                     }
@@ -227,11 +227,11 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 //获取审核列表
-                var auditNodeList = businesstripEx.AuditNodeJson.ToObject<List<BusinessTripApplyDto.Examine>>().Where(a => a.AuditStatus == AuditStatus.Pending).ToList();
+                var auditNodeList = businesstripEx.AuditNodeJson.ToObject<List<BusinessTripApplyDto.Examine>>().ToList();
                 //开始审核
                 if (auditNodeList != null)
                 {
-                    var audit = auditNodeList.FirstOrDefault();
+                    var audit = auditNodeList.FirstOrDefault(u => u.AuditStatus == AuditStatus.Pending);
                     if (audit == null)
                     {
                         throw new BusinessException
