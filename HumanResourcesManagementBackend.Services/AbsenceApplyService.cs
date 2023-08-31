@@ -71,27 +71,23 @@ namespace HumanResourcesManagementBackend.Services
                 var query = from absenceapply in db.AbsenceApplies
                             where absenceapply.Status != DataStatus.Deleted
                             select absenceapply;
+                if(!string.IsNullOrEmpty(search.EmployeeName))
+                {
+                    search.EmployeeId = db.Employees.FirstOrDefault(p => p.Name == search.EmployeeName)?.Id??0;
+                }
+                if (search.DepartmentId > 0)
+                {
+                    query = from absenceapply in db.AbsenceApplies
+                            join employees in db.Employees
+                            on absenceapply.EmployeeId equals employees.Id
+                            where absenceapply.Status != DataStatus.Deleted && employees.DepartmentId == search.DepartmentId
+                            select absenceapply;
+                }
                 if (search.EmployeeId > 0)
                 {
                     query = query.Where(u => u.EmployeeId == search.EmployeeId);
                 }
-                if(search.DepartmentId>0)
-                {
-                    query = from absenceapply in db.AbsenceApplies join employees in db.Employees 
-                            on absenceapply.EmployeeId equals employees.Id join department in db.Departmentes
-                            on employees.DepartmentId equals department.Id
-                            where absenceapply.Status != DataStatus.Deleted
-                            select absenceapply;
-                }
-                //if(!string.IsNullOrEmpty(search.EmployeeName))
-                //{
-                //   var employid= db.Employees.Where(p => p.Name.Contains(search.EmployeeName)).ToList();
-                    
-                //    query = from absenceapply in db.AbsenceApplies
-                //            where absenceapply.EmployeeId 
-                //            select absenceapply;
-                //}
-                if(search.CheckInType>0)
+                if (search.CheckInType>0)
                 {
                     query=query.Where(u=>u.CheckInType== search.CheckInType);
                 }
@@ -124,17 +120,17 @@ namespace HumanResourcesManagementBackend.Services
                 });
 
                 //过滤能审核的
-                var refs = db.UserRoleRefs.Where(r => r.UserId == currentusere.Id).ToList();
-                list = list.Where(l =>
-                {
-                    var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
-                    if (refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
-                    {
-                        return false;
-                    }
+                //var refs = db.UserRoleRefs.Where(r => r.UserId == currentusere.Id).ToList();
+                //list = list.Where(l =>
+                //{
+                //    var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
+                //    if (refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
+                //    {
+                //        return false;
+                //    }
 
-                    return true;
-                }).ToList();
+                //    return true;
+                //}).ToList();
                 return list;
             }
         }
