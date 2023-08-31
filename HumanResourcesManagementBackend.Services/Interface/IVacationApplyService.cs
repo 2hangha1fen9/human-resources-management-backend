@@ -22,6 +22,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <returns></returns>
         List<VacationApplyDto.VacationApply> GetVacationApplyList(VacationApplyDto.Search search);
         /// <summary>
+        /// 查询休假申请记录详情
+        /// </summary>
+        /// <param name="GetVacationById"></param>
+        /// <returns></returns>
+        VacationApplyDto.VacationApply GetVacationById(long id);
+        /// <summary>
         /// 审核员工的休假申请记录
         /// </summary>
         /// <param name="ExamineVacationApply"></param>

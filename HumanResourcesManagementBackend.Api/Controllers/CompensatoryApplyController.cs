@@ -79,6 +79,22 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             };
         }
         /// <summary>
+        /// 查询调休申请记录详情
+        /// </summary>
+        /// <param name="GetBusinessTripById"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public DataResponse<CompensatoryApplyDto.CompensatoryApply> GetCompensatoryById(long id)
+        {
+            var compensatory = _compensatoryApplyService.GetCompensatoryById(id);
+            return new DataResponse<CompensatoryApplyDto.CompensatoryApply>
+            {
+                Data = compensatory,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+            };
+        }
+        /// <summary>
         /// 审核员工的调休申请记录
         /// </summary>
         /// <param name="ExamineCompensatoryApply"></param>

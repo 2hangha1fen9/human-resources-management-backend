@@ -43,7 +43,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public PageResponse<BusinessTripApplyDto.BusinessTripApply> QueryMyBusinessTripListByPage(BusinessTripApplyDto.Search search)
         {
-            search.EmployeeId = 2;
+            search.EmployeeId = CurrentUser.EmployeeId;
             var vacationapply = _businessTripApplyService.QueryMyBusinessTripListByPage(search);
             return new PageResponse<BusinessTripApplyDto.BusinessTripApply>()
             {
@@ -76,6 +76,22 @@ namespace HumanResourcesManagementBackend.Api.Controllers
                     Status = ResponseStatus.NoData,
                     ErrorMessage = ResponseStatus.NoData.Description()
                 }
+            };
+        }
+        /// <summary>
+        /// 查询出差申请记录详情
+        /// </summary>
+        /// <param name="GetBusinessTripById"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public DataResponse<BusinessTripApplyDto.BusinessTripApply> GetBusinessTripById(long id)
+        {
+            var businesstrip = _businessTripApplyService.GetBusinessTripById(id);
+            return new DataResponse<BusinessTripApplyDto.BusinessTripApply>
+            {
+                Data = businesstrip,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
             };
         }
         /// <summary>

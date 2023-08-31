@@ -62,6 +62,11 @@ namespace HumanResourcesManagementBackend.Services
                 {
                     query = query.Where(u => u.EmployeeId == search.EmployeeId);
                 }
+                if (search.CreateTime != DateTime.Parse("0001 / 1 / 1 0:00:00"))
+                {
+                    query = query.Where(u => u.CreateTime.Year == search.CreateTime.Year
+                    && u.CreateTime.Month == search.CreateTime.Month && u.CreateTime.Day == search.CreateTime.Day);
+                }
                 if (search.AuditType > 0)
                 {
                     query = query.Where(u => u.AuditType == search.AuditType);
@@ -76,11 +81,33 @@ namespace HumanResourcesManagementBackend.Services
                 //状态处理
                 list.ForEach(u =>
                 {
+                    u.Duration = DateHelper.GetDateLength(u.BeginDate,u.EndDate);
                     u.StatusStr = u.Status.Description();
                     u.AuditStatusStr = u.AuditStatus.Description();
                     u.AuditTypeStr = u.AuditType.Description();
                 });
                 return list;
+            }
+        }
+        public BusinessTripApplyDto.BusinessTripApply GetBusinessTripById(long id)
+        {
+            using (var db = new HRM())
+            {
+                var businesstripR = db.BusinessTripApplies.FirstOrDefault(u => u.Id == id && u.Status != DataStatus.Deleted);
+                if (businesstripR == null)
+                {
+                    throw new BusinessException
+                    {
+                        Status = ResponseStatus.NoData,
+                        ErrorMessage = ResponseStatus.NoData.Description()
+                    };
+                }
+                var businesstrip = businesstripR.MapTo<BusinessTripApplyDto.BusinessTripApply>();
+                businesstrip.Duration = DateHelper.GetDateLength(businesstrip.BeginDate, businesstrip.EndDate);
+                businesstrip.StatusStr = businesstrip.Status.Description();
+                businesstrip.AuditStatusStr = businesstrip.AuditStatus.Description();
+                businesstrip.AuditTypeStr = businesstrip.AuditType.Description();
+                return businesstrip;
             }
         }
         public void ExamineBusinessTripApply(BusinessTripApplyDto.Examine examine)

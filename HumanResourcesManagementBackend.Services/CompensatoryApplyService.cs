@@ -61,6 +61,11 @@ namespace HumanResourcesManagementBackend.Services
                 {
                     query = query.Where(u => u.EmployeeId == search.EmployeeId);
                 }
+                if (search.CreateTime != DateTime.Parse("0001 / 1 / 1 0:00:00"))
+                {
+                    query = query.Where(u => u.CreateTime.Year == search.CreateTime.Year
+                    && u.CreateTime.Month == search.CreateTime.Month && u.CreateTime.Day == search.CreateTime.Day);
+                }
                 if (search.AuditType > 0)
                 {
                     query = query.Where(u => u.AuditType == search.AuditType);
@@ -82,7 +87,26 @@ namespace HumanResourcesManagementBackend.Services
                 return list;
             }
         }
-
+        public CompensatoryApplyDto.CompensatoryApply GetCompensatoryById(long id)
+        {
+            using (var db = new HRM())
+            {
+                var compensatoryR = db.CompensatoryApplies.FirstOrDefault(u => u.Id == id && u.Status != DataStatus.Deleted);
+                if (compensatoryR == null)
+                {
+                    throw new BusinessException
+                    {
+                        Status = ResponseStatus.NoData,
+                        ErrorMessage = ResponseStatus.NoData.Description()
+                    };
+                }
+                var compensatory = compensatoryR.MapTo<CompensatoryApplyDto.CompensatoryApply>();
+                compensatory.StatusStr = compensatory.Status.Description();
+                compensatory.AuditStatusStr = compensatory.AuditStatus.Description();
+                compensatory.AuditTypeStr = compensatory.AuditType.Description();
+                return compensatory;
+            }
+        }
         public void ExamineCompensatoryApply(CompensatoryApplyDto.Examine examine)
         {
             using (var db = new HRM())

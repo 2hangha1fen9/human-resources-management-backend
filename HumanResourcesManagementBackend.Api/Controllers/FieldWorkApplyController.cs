@@ -80,6 +80,22 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             };
         }
         /// <summary>
+        /// 查询外勤申请记录详情
+        /// </summary>
+        /// <param name="GetFieldWorkById"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public DataResponse<FieldWorkApplyDto.FieldWorkApply> GetFieldWorkById(long id)
+        {
+            var fieldwork = _fieldWorkApplyService.GetFieldWorkById(id);
+            return new DataResponse<FieldWorkApplyDto.FieldWorkApply>
+            {
+                Data = fieldwork,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+            };
+        }
+        /// <summary>
         /// 审核员工的外勤申请记录
         /// </summary>
         /// <param name="ExamineFieldWorkApply"></param>
