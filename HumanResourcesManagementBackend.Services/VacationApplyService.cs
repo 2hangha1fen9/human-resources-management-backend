@@ -138,6 +138,57 @@ namespace HumanResourcesManagementBackend.Services
                 return list;
             }
         }
+
+        public List<VacationApplyDto.VacationApply> GetMyVacationApplyList(VacationApplyDto.Search search)
+        {
+            using (var db = new HRM())
+            {
+                var query = from vacationapply in db.VacationApplies
+                            where vacationapply.Status != DataStatus.Deleted
+                            select vacationapply;
+
+                if (search.EmployeeId > 0)
+                {
+                    query = query.Where(u => u.EmployeeId == search.EmployeeId);
+                }
+                if (search.CreateTime != DateTime.Parse("0001 / 1 / 1 0:00:00"))
+                {
+                    query = query.Where(u => u.CreateTime.Year == search.CreateTime.Year
+                    && u.CreateTime.Month == search.CreateTime.Month && u.CreateTime.Day == search.CreateTime.Day);
+                }
+                if (search.VacationType > 0)
+                {
+                    query = query.Where(u => u.VacationType == search.VacationType);
+                }
+                if (search.AuditType > 0)
+                {
+                    query = query.Where(u => u.AuditType == search.AuditType);
+                }
+                if (search.AuditStatus > 0)
+                {
+                    query = query.Where(u => u.AuditStatus == search.AuditStatus);
+                }
+                //分页并将数据库实体映射为dto对象(OrderBy必须调用)
+                var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<VacationApplyDto.VacationApply>();
+                //状态处理
+                list.ForEach(u =>
+                {
+                    u.Duration = DateHelper.GetDateLength(u.BeginDate, u.EndDate);
+                    u.StatusStr = u.Status.Description();
+                    u.AuditStatusStr = u.AuditStatus.Description();
+                    u.AuditTypeStr = u.AuditType.Description();
+                    u.VacationTypeStr = u.VacationType.Description();
+                    u.AuditNode = u.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>();
+                    u.AuditNode.ForEach(a =>
+                    {
+                        a.AuditStatusStr = a.AuditStatus.Description();
+                    });
+                });
+
+                return list;
+            }
+        }
+
         public VacationApplyDto.VacationApply GetVacationById(long id)
         {
             using (var db = new HRM())
@@ -160,7 +211,7 @@ namespace HumanResourcesManagementBackend.Services
                 return vacation;
             }
         }
-        public void ExamineVacationApply(VacationApplyDto.Examine examine)
+        public void ExamineVacationApply(VacationApplyDto.Examine examine, UserDto.User currentuser)
         {
             using(var db = new HRM())
             {
@@ -184,12 +235,21 @@ namespace HumanResourcesManagementBackend.Services
                 }
                 //获取审核列表
                 var auditNodeList = vacationEx.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>().Where(a => a.AuditStatus == AuditStatus.Pending);
-                var audit = auditNodeList.FirstOrDefault();
                 //开始审核
-                if (audit != null)
+                if (auditNodeList != null)
                 {
+                    var audit = auditNodeList.FirstOrDefault();
+                    if(audit == null)
+                    {
+                        throw new BusinessException
+                        {
+                            ErrorMessage = "审核出现错误,请联系管理员",
+                            Status = ResponseStatus.NoPermission
+                        };
+                    }
+
                     //查询当前用户能不能审核
-                    var canAudit = db.UserRoleRefs.FirstOrDefault(u => u.UserId == currentUser.Id && u.RoleId == audit.RoleId);
+                    var canAudit = db.UserRoleRefs.FirstOrDefault(u => u.UserId == currentuser.Id && u.RoleId == audit.RoleId);
                     if (canAudit == null)
                     {
                         throw new BusinessException
@@ -199,14 +259,14 @@ namespace HumanResourcesManagementBackend.Services
                         };
                     }
                     //填入审核结果
-                    audit.UserId = currentUser.Id;
-                    audit.UserName = currentUser.LoginName;
+                    audit.UserId = currentuser.Id;
+                    audit.UserName = currentuser.LoginName;
                     audit.AuditStatus = examine.AuditStatus;
                     audit.AuditResult = examine.AuditResult;
                     //更新审核节点列表
                     vacationEx.AuditNodeJson = auditNodeList.ToJson();
                     //如果是最后一个节点结束整个流程
-                    if(auditNodeList.LastOrDefault()?.RoleId == audit.RoleId)
+                    if(auditNodeList.LastOrDefault().RoleId == audit.RoleId)
                     {
                         vacationEx.AuditStatus = examine.AuditStatus;
                         vacationEx.AuditResult = examine.AuditResult;

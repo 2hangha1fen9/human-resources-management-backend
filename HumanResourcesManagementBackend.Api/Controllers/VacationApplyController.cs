@@ -47,7 +47,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public PageResponse<VacationApplyDto.VacationApply> QueryMyVacationListByPage(VacationApplyDto.Search search)
         {
             search.EmployeeId = CurrentUser.EmployeeId;
-            var vacationapply = _vacationapplyService.GetVacationApplyList(search);
+            var vacationapply = _vacationapplyService.GetMyVacationApplyList(search);
             return new PageResponse<VacationApplyDto.VacationApply>()
             {
                 RecordCount = search.RecordCount,
@@ -69,7 +69,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public PageResponse<VacationApplyDto.VacationApply> QueryVacationListByPage(VacationApplyDto.Search search)
         {
-            var vacationapply = _vacationapplyService.GetVacationApplyList(search);
+            var vacationapply = _vacationapplyService.GetVacationApplyList(search, CurrentUser);
             return new PageResponse<VacationApplyDto.VacationApply>()
             {
                 RecordCount = search.RecordCount,
@@ -106,7 +106,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPut]
         public Response ExamineVacationApply(VacationApplyDto.Examine examine)
         {
-            _vacationapplyService.ExamineVacationApply(examine);
+            _vacationapplyService.ExamineVacationApply(examine, CurrentUser);
             return new Response
             {
                 Status = ResponseStatus.Success,

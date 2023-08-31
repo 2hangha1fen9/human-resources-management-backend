@@ -20,7 +20,13 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="search"></param>
         /// <returns></returns>
-        List<VacationApplyDto.VacationApply> GetVacationApplyList(VacationApplyDto.Search search);
+        List<VacationApplyDto.VacationApply> GetVacationApplyList(VacationApplyDto.Search search,UserDto.User currentuser);
+        /// <summary>
+        /// 获取休假申请
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        List<VacationApplyDto.VacationApply> GetMyVacationApplyList(VacationApplyDto.Search search);
         /// <summary>
         /// 查询休假申请记录详情
         /// </summary>
@@ -32,6 +38,6 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="ExamineVacationApply"></param>
         /// <returns></returns>
-        void ExamineVacationApply(VacationApplyDto.Examine examine);
+        void ExamineVacationApply(VacationApplyDto.Examine examin, UserDto.User currentusere);
     }
 }
