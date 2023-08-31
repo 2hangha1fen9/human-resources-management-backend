@@ -81,11 +81,6 @@ namespace HumanResourcesManagementBackend.Services
                 {
                     query = query.Where(u => u.EmployeeId == search.EmployeeId);
                 }
-                if (search.CreateTime != DateTime.Parse("0001 / 1 / 1 0:00:00"))
-                {
-                    query = query.Where(u => u.CreateTime.Year == search.CreateTime.Year
-                    && u.CreateTime.Month == search.CreateTime.Month && u.CreateTime.Day == search.CreateTime.Day);
-                }
                 if (search.AuditType > 0)
                 {
                     query = query.Where(u => u.AuditType == search.AuditType);
@@ -135,11 +130,6 @@ namespace HumanResourcesManagementBackend.Services
                 if (search.EmployeeId > 0)
                 {
                     query = query.Where(u => u.EmployeeId == search.EmployeeId);
-                }
-                if (search.CreateTime != DateTime.Parse("0001 / 1 / 1 0:00:00"))
-                {
-                    query = query.Where(u => u.CreateTime.Year == search.CreateTime.Year
-                    && u.CreateTime.Month == search.CreateTime.Month && u.CreateTime.Day == search.CreateTime.Day);
                 }
                 if (search.AuditType > 0)
                 {
