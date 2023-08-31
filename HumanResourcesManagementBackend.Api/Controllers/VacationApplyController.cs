@@ -83,6 +83,22 @@ namespace HumanResourcesManagementBackend.Api.Controllers
             };
         }
         /// <summary>
+        /// 查询休假申请记录详情
+        /// </summary>
+        /// <param name="GetVacationById"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public DataResponse<VacationApplyDto.VacationApply> GetVacationById(long id)
+        {
+            var vacation = _vacationapplyService.GetVacationById(id);
+            return new DataResponse<VacationApplyDto.VacationApply>
+            {
+                Data = vacation,
+                Status = ResponseStatus.Success,
+                Message = ResponseStatus.Success.Description(),
+            };
+        }
+        /// <summary>
         /// 审核员工的休假申请记录
         /// </summary>
         /// <param name="ExamineVacationApply"></param>

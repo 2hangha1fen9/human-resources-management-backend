@@ -63,6 +63,10 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public DateTime EndDate { get; set; }
             /// <summary>
+            /// 合计时长
+            /// </summary>
+            public string Duration { get; set; }
+            /// <summary>
             /// 审核状态 1待审核 2同意 3拒绝
             /// </summary>
             public AuditStatus AuditStatus { get; set; }
@@ -92,6 +96,10 @@ namespace HumanResourcesManagementBackend.Models
             /// 员工ID
             /// </summary>
             public long EmployeeId { get; set; }
+            /// <summary>
+            /// 创建时间
+            /// </summary>
+            public DateTime CreateTime { get; set; }
             /// <summary>
             /// 数据状态 1启用 2禁用 99删除
             /// </summary>

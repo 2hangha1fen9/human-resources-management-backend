@@ -35,6 +35,10 @@ namespace HumanResourcesManagementBackend.Models
             /// </summary>
             public long EmployeeId { get; set; }
             /// <summary>
+            /// 员工姓名
+            /// </summary>
+            public string EmployeeName { get; set; }
+            /// <summary>
             /// 缺勤时间
             /// </summary>
             public DateTime AbsenceDateTime { get; set; }

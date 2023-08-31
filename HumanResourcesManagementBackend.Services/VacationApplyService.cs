@@ -89,6 +89,11 @@ namespace HumanResourcesManagementBackend.Services
                 {
                     query = query.Where(u => u.EmployeeId == search.EmployeeId);
                 }
+                if (search.CreateTime != DateTime.Parse("0001 / 1 / 1 0:00:00"))
+                {
+                    query = query.Where(u => u.CreateTime.Year == search.CreateTime.Year
+                    && u.CreateTime.Month == search.CreateTime.Month && u.CreateTime.Day == search.CreateTime.Day);
+                }
                 if (search.VacationType > 0)
                 {
                     query = query.Where(u => u.VacationType == search.VacationType);
@@ -106,6 +111,7 @@ namespace HumanResourcesManagementBackend.Services
                 //状态处理
                 list.ForEach(u =>
                 {
+                    u.Duration = DateHelper.GetDateLength(u.BeginDate, u.EndDate);
                     u.StatusStr = u.Status.Description();
                     u.AuditStatusStr = u.AuditStatus.Description();
                     u.AuditTypeStr = u.AuditType.Description();
@@ -132,8 +138,29 @@ namespace HumanResourcesManagementBackend.Services
                 return list;
             }
         }
-
-        public void ExamineVacationApply(VacationApplyDto.Examine examine,UserDto.User currentUser)
+        public VacationApplyDto.VacationApply GetVacationById(long id)
+        {
+            using (var db = new HRM())
+            {
+                var vacationR = db.VacationApplies.FirstOrDefault(u => u.Id == id && u.Status != DataStatus.Deleted);
+                if (vacationR == null)
+                {
+                    throw new BusinessException
+                    {
+                        Status = ResponseStatus.NoData,
+                        ErrorMessage = ResponseStatus.NoData.Description()
+                    };
+                }
+                var vacation = vacationR.MapTo<VacationApplyDto.VacationApply>();
+                vacation.Duration = DateHelper.GetDateLength(vacation.BeginDate, vacation.EndDate);
+                vacation.StatusStr = vacation.Status.Description();
+                vacation.AuditStatusStr = vacation.AuditStatus.Description();
+                vacation.AuditTypeStr = vacation.AuditType.Description();
+                vacation.VacationTypeStr = vacation.VacationType.Description();
+                return vacation;
+            }
+        }
+        public void ExamineVacationApply(VacationApplyDto.Examine examine)
         {
             using(var db = new HRM())
             {

@@ -23,6 +23,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <returns></returns>
         List<FieldWorkApplyDto.FieldWorkApply> QueryMyFieldWorkListByPage(FieldWorkApplyDto.Search search);
         /// <summary>
+        /// 查询外勤申请记录详情
+        /// </summary>
+        /// <param name="GetFieldWorkById"></param>
+        /// <returns></returns>
+        FieldWorkApplyDto.FieldWorkApply GetFieldWorkById(long id);
+        /// <summary>
         /// 审核员工的外勤申请记录
         /// </summary>
         /// <param name="ExamineFieldWorkApply"></param>

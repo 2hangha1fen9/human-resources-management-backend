@@ -22,6 +22,12 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <returns></returns>
         List<CompensatoryApplyDto.CompensatoryApply> QueryMyCompensatoryListByPage(CompensatoryApplyDto.Search search);
         /// <summary>
+        /// 查询调休申请记录详情
+        /// </summary>
+        /// <param name="GetBusinessTripById"></param>
+        /// <returns></returns>
+        CompensatoryApplyDto.CompensatoryApply GetCompensatoryById(long id);
+        /// <summary>
         /// 审核员工的调休申请记录
         /// </summary>
         /// <param name="ExamineCompensatoryApply"></param>
