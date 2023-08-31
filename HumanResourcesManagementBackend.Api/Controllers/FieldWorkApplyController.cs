@@ -66,7 +66,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public PageResponse<FieldWorkApplyDto.FieldWorkApply> QueryFieldWorkListByPage(FieldWorkApplyDto.Search search)
         {
-            var fieldwork = _fieldWorkApplyService.QueryMyFieldWorkListByPage(search);
+            var fieldwork = _fieldWorkApplyService.QueryFieldWorkListByPage(search, CurrentUser);
             return new PageResponse<FieldWorkApplyDto.FieldWorkApply>()
             {
                 RecordCount = search.RecordCount,
@@ -103,7 +103,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPut]
         public Response ExamineFieldWorkApply(FieldWorkApplyDto.Examine examine)
         {
-            _fieldWorkApplyService.ExamineFieldWorkApply(examine);
+            _fieldWorkApplyService.ExamineFieldWorkApply(examine,CurrentUser);
             return new Response
             {
                 Status = ResponseStatus.Success,

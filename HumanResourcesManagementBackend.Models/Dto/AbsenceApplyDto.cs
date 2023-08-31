@@ -78,6 +78,14 @@ namespace HumanResourcesManagementBackend.Models
             /// 审核意见
             /// </summary>
             public string AuditResult { get; set; }
+            /// <summary>
+            /// 审核节点列表
+            /// </summary>
+            public string AuditNodeJson { get; set; }
+            /// <summary>
+            /// 审核节点列表
+            /// </summary>
+            public List<Examine> AuditNode { get; set; }
         }
         /// <summary>
         /// 缺勤查询对象
@@ -115,13 +123,33 @@ namespace HumanResourcesManagementBackend.Models
         public class Examine
         {
             /// <summary>
-            /// Id
+            /// 申请Id
             /// </summary>
             public long Id { get; set; }
+            /// <summary>
+            /// 用户Id
+            /// </summary>
+            public long UserId { get; set; }
+            /// <summary>
+            /// 用户ID
+            /// </summary>
+            public string UserName { get; set; }
+            /// <summary>
+            /// 角色ID
+            /// </summary>
+            public long RoleId { get; set; }
+            /// <summary>
+            /// 角色名
+            /// </summary>
+            public string RoleName { get; set; }
             /// <summary>
             /// 审核状态 1待审核 2同意 3拒绝
             /// </summary>
             public AuditStatus AuditStatus { get; set; }
+            /// <summary>
+            /// 审核状态 1待审核 2同意 3拒绝
+            /// </summary>
+            public string AuditStatusStr { get; set; }
             /// <summary>
             /// 审核意见
             /// </summary>

@@ -111,6 +111,10 @@
     <Compile Include="Migrations\202308310307273_addColl.designer.cs">
       <DependentUpon>202308310307273_addColl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308310602054_addColll.cs" />
+    <Compile Include="Migrations\202308310602054_addColll.designer.cs">
+      <DependentUpon>202308310602054_addColll.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -152,6 +156,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308310307273_addColl.resx">
       <DependentUpon>202308310307273_addColl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308310602054_addColll.resx">
+      <DependentUpon>202308310602054_addColll.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

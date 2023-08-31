@@ -56,11 +56,13 @@ namespace HumanResourcesManagementBackend.Services
                     {
                         RoleId = roles.FirstOrDefault(r => r.Name == "部门主管").Id,
                         AuditStatus = AuditStatus.Pending,
+                        RoleName = roles.FirstOrDefault(r => r.Name == "部门主管").Name,
                     },
                     new VacationApplyDto.Examine
                     {
                         RoleId = roles.FirstOrDefault(r => r.Name == "校区主任").Id,
                         AuditStatus = AuditStatus.Pending,
+                        RoleName = roles.FirstOrDefault(r => r.Name == "校区主任").Name,
                     }
                 };
                 vacationapplyR.AuditNodeJson= audioList.ToJson();
@@ -117,7 +119,7 @@ namespace HumanResourcesManagementBackend.Services
                     u.AuditTypeStr = u.AuditType.Description();
                     u.VacationTypeStr = u.VacationType.Description();
                     u.AuditNode = u.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>();
-                    u.AuditNode.ForEach(a =>
+                    u.AuditNode?.ForEach(a =>
                     {
                         a.AuditStatusStr = a.AuditStatus.Description();
                     });
@@ -126,7 +128,7 @@ namespace HumanResourcesManagementBackend.Services
                 var refs = db.UserRoleRefs.Where(r => r.UserId == currentUser.Id).ToList();
                 list = list.Where(l =>
                 {
-                    var firstNode = l.AuditNode.FirstOrDefault();
+                    var firstNode = l.AuditNode.Where(c => c.AuditStatus == AuditStatus.Pending).FirstOrDefault();
                     if(refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
                     {
                         return false;
@@ -179,7 +181,7 @@ namespace HumanResourcesManagementBackend.Services
                     u.AuditTypeStr = u.AuditType.Description();
                     u.VacationTypeStr = u.VacationType.Description();
                     u.AuditNode = u.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>();
-                    u.AuditNode.ForEach(a =>
+                    u.AuditNode?.ForEach(a =>
                     {
                         a.AuditStatusStr = a.AuditStatus.Description();
                     });
@@ -234,7 +236,7 @@ namespace HumanResourcesManagementBackend.Services
                     };
                 }
                 //获取审核列表
-                var auditNodeList = vacationEx.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>().Where(a => a.AuditStatus == AuditStatus.Pending);
+                var auditNodeList = vacationEx.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>().Where(a => a.AuditStatus == AuditStatus.Pending).ToList();
                 //开始审核
                 if (auditNodeList != null)
                 {

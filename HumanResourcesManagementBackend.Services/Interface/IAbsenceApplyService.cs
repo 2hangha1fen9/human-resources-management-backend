@@ -20,7 +20,13 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="SeleAbsenceApply"></param>
         /// <returns></returns>
-        List<AbsenceApplyDto.AbsenceApply> GetAbsenceApplyList(AbsenceApplyDto.Search search);
+        List<AbsenceApplyDto.AbsenceApply> GetAbsenceApplyList(AbsenceApplyDto.Search search,UserDto.User currentUser);
+        /// <summary>
+        /// 查询当前员工的缺勤申请记录
+        /// </summary>
+        /// <param name="SeleAbsenceApply"></param>
+        /// <returns></returns>
+        List<AbsenceApplyDto.AbsenceApply> GetMyAbsenceApplyList(AbsenceApplyDto.Search search);
         /// <summary>
         /// 查询缺勤申请记录详情
         /// </summary>
@@ -32,7 +38,7 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// </summary>
         /// <param name="ExamineAbsenceApply"></param>
         /// <returns></returns>
-        void ExamineAbsenceApply(AbsenceApplyDto.Examine examine);
+        void ExamineAbsenceApply(AbsenceApplyDto.Examine examine, UserDto.User currentusere);
 
     }
 }

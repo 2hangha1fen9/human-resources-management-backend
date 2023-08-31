@@ -65,7 +65,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public PageResponse<CompensatoryApplyDto.CompensatoryApply> QueryCompensatoryListByPage(CompensatoryApplyDto.Search search)
         {
-            var compensatory = _compensatoryApplyService.QueryMyCompensatoryListByPage(search);
+            var compensatory = _compensatoryApplyService.QueryCompensatoryListByPage(search, CurrentUser);
             return new PageResponse<CompensatoryApplyDto.CompensatoryApply>()
             {
                 RecordCount = search.RecordCount,
@@ -102,7 +102,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPut]
         public Response ExamineCompensatoryApply(CompensatoryApplyDto.Examine examine)
         {
-            _compensatoryApplyService.ExamineCompensatoryApply(examine);
+            _compensatoryApplyService.ExamineCompensatoryApply(examine, CurrentUser);
             return new Response
             {
                 Status = ResponseStatus.Success,

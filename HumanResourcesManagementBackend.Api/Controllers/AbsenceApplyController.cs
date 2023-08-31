@@ -46,7 +46,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         public PageResponse<AbsenceApplyDto.AbsenceApply> QueryMyAbsenceListByPage(AbsenceApplyDto.Search search)
         {
             search.EmployeeId = CurrentUser.EmployeeId;
-            var vacationapply = _iabsenceapplyService.GetAbsenceApplyList(search);
+            var vacationapply = _iabsenceapplyService.GetMyAbsenceApplyList(search);
             return new PageResponse<AbsenceApplyDto.AbsenceApply>()
             {
                 RecordCount = search.RecordCount,
@@ -68,7 +68,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPost]
         public PageResponse<AbsenceApplyDto.AbsenceApply> QueryAbsenceListByPage(AbsenceApplyDto.Search search)
         {
-            var vacationapply = _iabsenceapplyService.GetAbsenceApplyList(search);
+            var vacationapply = _iabsenceapplyService.GetAbsenceApplyList(search,CurrentUser);
             return new PageResponse<AbsenceApplyDto.AbsenceApply>()
             {
                 RecordCount = search.RecordCount,
@@ -105,7 +105,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         [HttpPut]
         public Response ExamineAbsenceApply(AbsenceApplyDto.Examine examine)
         {
-            _iabsenceapplyService.ExamineAbsenceApply(examine);
+            _iabsenceapplyService.ExamineAbsenceApply(examine, CurrentUser);
             return new Response
             {
                 Status = ResponseStatus.Success,
