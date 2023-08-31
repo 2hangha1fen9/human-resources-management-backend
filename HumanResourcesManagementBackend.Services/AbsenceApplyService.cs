@@ -62,6 +62,22 @@ namespace HumanResourcesManagementBackend.Services
                 {
                     query = query.Where(u => u.EmployeeId == search.EmployeeId);
                 }
+                if(search.DepartmentId>0)
+                {
+                    query = from absenceapply in db.AbsenceApplies join employees in db.Employees 
+                            on absenceapply.EmployeeId equals employees.Id join department in db.Departmentes
+                            on employees.DepartmentId equals department.Id
+                            where absenceapply.Status != DataStatus.Deleted
+                            select absenceapply;
+                }
+                //if(!string.IsNullOrEmpty(search.EmployeeName))
+                //{
+                //   var employid= db.Employees.Where(p => p.Name.Contains(search.EmployeeName)).ToList();
+                    
+                //    query = from absenceapply in db.AbsenceApplies
+                //            where absenceapply.EmployeeId 
+                //            select absenceapply;
+                //}
                 if(search.CreateTime !=DateTime.Parse("0001 / 1 / 1 0:00:00"))
                 {
                     query = query.Where(u => u.CreateTime.Year == search.CreateTime.Year 
@@ -85,12 +101,15 @@ namespace HumanResourcesManagementBackend.Services
                 //状态处理
                 list.ForEach(u =>
                 {
+                    
                     u.EmployeeName = db.Employees.FirstOrDefault(p => p.Id == u.EmployeeId).Name;
+                    u.DepartmentName = db.Departmentes.FirstOrDefault(p => p.Id == (db.Employees.FirstOrDefault(x => x.Id == u.EmployeeId).DepartmentId)).DepartmentName;
                     u.StatusStr = u.Status.Description();
                     u.AuditStatusStr = u.AuditStatus.Description();
                     u.AuditTypeStr = u.AuditType.Description();
                     u.CheckInTypeStr = u.CheckInType.Description();
                 });
+                
                 return list;
             }
         }
@@ -140,6 +159,7 @@ namespace HumanResourcesManagementBackend.Services
                 }
                 absenceEx.AuditStatus = examine.AuditStatus;
                 absenceEx.AuditResult = examine.AuditResult;
+                absenceEx.UpdateTime=DateTime.Now;
                 if (db.SaveChanges() == 0)
                 {
                     throw new BusinessException
