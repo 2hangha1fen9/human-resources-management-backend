@@ -21,7 +21,7 @@ namespace HumanResourcesManagementBackend.Api.Controllers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet,AllowAnonymous]
         public DataResponse<List<Enumber>> Get(string id)
         {
             var result = new DataResponse<List<Enumber>>();

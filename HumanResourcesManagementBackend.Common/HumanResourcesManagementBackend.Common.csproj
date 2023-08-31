@@ -49,6 +49,9 @@
     <Reference Include="Microsoft.IdentityModel.Tokens, Version=6.32.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Tokens.6.32.1\lib\net472\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>
+    <Reference Include="MiniExcel, Version=1.31.2.0, Culture=neutral, PublicKeyToken=e7310002a53eac39, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiniExcel.1.31.2\lib\net45\MiniExcel.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -60,6 +63,7 @@
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=6.32.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.6.32.1\lib\net472\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -94,6 +98,7 @@
     <Compile Include="DateHelper.cs" />
     <Compile Include="EncryptionHelper.cs" />
     <Compile Include="EnumHelper.cs" />
+    <Compile Include="ExcelHelper.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="JwtHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

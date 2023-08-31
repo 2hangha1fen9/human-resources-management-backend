@@ -11,6 +11,10 @@ using System.Linq;
 using HumanResourcesManagementBackend.Repository.Extensions;
 using static HumanResourcesManagementBackend.Models.UserDto;
 using static HumanResourcesManagementBackend.Models.EmployeeDto;
+using EnumsNET;
+using System.Reflection.Emit;
+using NPOI.SS.Formula.Functions;
+using static HumanResourcesManagementBackend.Models.Dto.RoleDto;
 
 namespace HumanResourcesManagementBackend.Services
 {
@@ -625,115 +629,128 @@ namespace HumanResourcesManagementBackend.Services
                 return birthdaylist;
             }
         }
+        public dynamic BatchSaveEmployee(List<EmployeeDto.Employee> employees,bool createUser)
+        {
+            using(var db = new HRM())
+            {
+                var employeeSuccessCount = 0;
+                var employeeErrorCount = 0;
+                var userSuccessCount = 0;
+                var userErrorCount = 0;
+                var bindSuccessCount = 0;
+                var bindErrorCount = 0;
+                var flag = db.Transaction(() =>
+                {
+                    var employeesEx = db.Employees.ToList();
+                    var positions = db.Positiones.ToList();
+                    var departments = db.Departmentes.ToList();
+                    var workStatus = EnumHelper.ToList<WorkStatus>();
+                    var gender = EnumHelper.ToList<Gender>();
+                    var maritalStatus = EnumHelper.ToList<MaritalStatus>();
+                    var academicDegree = EnumHelper.ToList<AcademicDegree>();
+                    var positionLevel = EnumHelper.ToList<PositionLevel>();
+                    //字段处理
+                    List<R_Employee> employeesR = new List<R_Employee>();
+                    foreach (var employee in employees)
+                    {
+                        employee.Status = DataStatus.Enable;
+                        employee.CreateTime = DateTime.Now;
+                        employee.UpdateTime = DateTime.Now;
+                        employee.WorkStatus = (WorkStatus)(workStatus.FirstOrDefault(e => e.Desction == employee.WorkStatusStr)?.EnumValue ?? 0);
+                        employee.Gender = (Gender)(gender.FirstOrDefault(e => e.Desction == employee.GenderStr)?.EnumValue ?? (int)Gender.None);
+                        employee.MaritalStatus = (MaritalStatus)(maritalStatus.FirstOrDefault(e => e.Desction == employee.MaritalStatusStr)?.EnumValue ?? (int)MaritalStatus.None);
+                        employee.AcademicDegree = (AcademicDegree)(academicDegree.FirstOrDefault(e => e.Desction == employee.AcademicDegreeStr)?.EnumValue ?? (int)AcademicDegree.None);
+                        employee.PositionId = positions.FirstOrDefault(p => p.PositionName == employee.PositionName)?.Id ?? 0L;
+                        employee.DepartmentId = departments.FirstOrDefault(p => p.DepartmentName == employee.DepartmentName)?.Id ?? 0L;
+                        employee.PositionLevel = (PositionLevel)(positionLevel.FirstOrDefault(e => e.Desction == employee.PositionLevelStr)?.EnumValue ?? 0);
 
+                        //查询是否存在
+                        var employeeEx = db.Employees.FirstOrDefault(u => u.WorkNum == employee.WorkNum);
+                        if (employeeEx != null || 
+                        string.IsNullOrEmpty(employee.WorkNum) || 
+                        string.IsNullOrEmpty(employee.Name) ||
+                        string.IsNullOrEmpty(employee.WorkStatusStr) ||
+                        string.IsNullOrEmpty(employee.IdCard) ||
+                        string.IsNullOrEmpty(employee.Phone))
+                        {
+                            employeeErrorCount++;
+                            continue;
+                        }
 
-        //public void ReadExcel(string fileName, string sheetName, bool isFirstRowColumn)
-        //{
-        //    DataTable dt = ExcelToDatatable(fileName, sheetName, isFirstRowColumn);
-        //    //将excel表格数据存入list集合中
-        //    //EachdayTX定义的类，字段值对应excel表中的每一列
-        //    List<EmployeeDto.Employee> employTX = new List<EmployeeDto.Employee>();
-        //    foreach (DataRow dr in dt.Rows)
-        //    {
-        //        EmployeeDto.Employee employ = new EmployeeDto.Employee
-        //        {
-        //            Id = (long)dr[0],
-        //            WorkNum = dr[1].ToString(),
-        //            WorkStatus = (WorkStatus)dr[2],
-        //            Name = dr[3].ToString(),
-        //            Gender = (Gender)dr[4],
-        //            MaritalStatus = (MaritalStatus)dr[5],
-        //            BirthDay = (DateTime)dr[6],
-        //            IdCard = dr[7].ToString(),
-        //            Native = dr[8].ToString(),
-        //            Phone = dr[9].ToString(),
-        //            Email = dr[10].ToString(),
-        //            AcademicDegree = (AcademicDegree)dr[11],
-        //            HireDate= (DateTime)dr[12],
-        //            PositionId = (long)dr[13],
-        //            Status = (DataStatus)dr[1],
-        //            CreateTime = DateTime.Now,
-        //            UpdateTime= DateTime.Now,
+                        employeesR.Add(employee.MapTo<R_Employee>());
+                    }
+                    //保存到数据库
+                    var savedEmployees = db.Employees.AddRange(employeesR);
+                    db.SaveChanges();
+                    employeeSuccessCount = savedEmployees.Count();
+                    if (createUser)
+                    {
+                        //创建默认登录账号
+                        List<R_User> usersR = new List<R_User>();
+                        foreach(var employee in savedEmployees)
+                        {
+                            //查询是否存在
+                            var userEx = db.Users.FirstOrDefault(u => u.LoginName == employee.WorkNum);
+                            if (employee.Id == 0 || userEx != null)
+                            {
+                                userErrorCount++;
+                                continue;
+                            }
+                            usersR.Add(new R_User
+                            {
+                                LoginName = employee.WorkNum,
+                                Password = employee.WorkNum.Encrypt(),
+                                Question = "我的工号是？",
+                                Answer = employee.WorkNum,
+                                CreateTime = DateTime.Now,
+                                UpdateTime = DateTime.Now,
+                                EmployeeId = employee.Id,
+                            });
+                        }
+                        var savedUsers = db.Users.AddRange(usersR);
+                        db.SaveChanges();
+                        userSuccessCount = savedUsers.Count();
+                        //绑定默认角色
+                        var defaultRoles = db.Roles.Where(r => r.IsDefault == YesOrNo.Yes && r.Status == DataStatus.Enable).ToList();
+                        if (defaultRoles != null || defaultRoles.Count > 0)
+                        {
+                            List<R_UserRoleRef> refsR = new List<R_UserRoleRef>();
+                            foreach (var user in savedUsers)
+                            {
+                                if (user.Id == 0)
+                                {
+                                    bindErrorCount++;
+                                    continue;
+                                }
+                                var bindList = defaultRoles.Select(r => new R_UserRoleRef
+                                {
+                                    UserId = user.Id,
+                                    RoleId = r.Id,
+                                    CreateTime = DateTime.Now,
+                                    UpdateTime = DateTime.Now,
+                                }).ToList();
+                                refsR.AddRange(bindList);
+                            }
+                            var savedRefs = db.UserRoleRefs.AddRange(refsR);
+                            db.SaveChanges();
+                            bindSuccessCount = savedRefs.Count();
+                        }         
+                    }
 
+                    return true;
+                });
 
-        //        };
-        //        employTX.Add(employ);
-        //    }
-        //}
-        //public static DataTable ExcelToDatatable(string fileName, string sheetName, bool isFirstRowColumn)
-        //{
-        //    ISheet sheet = null;
-        //    DataTable data = new DataTable();
-        //    int startRow = 0;
-        //    FileStream fs;
-        //    IWorkbook workbook = null;
-        //    int cellCount = 0;//列数
-        //    int rowCount = 0;//行数
-        //    try
-        //    {
-        //        fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-        //        if (fileName.IndexOf(".xlsx") > 0) // 2007版本
-        //        {
-        //            workbook = new XSSFWorkbook(fs);
-        //        }
-        //        else if (fileName.IndexOf(".xls") > 0) // 2003版本
-        //        {
-        //            workbook = new HSSFWorkbook(fs);
-        //        }
-        //        if (sheetName != null)
-        //        {
-        //            sheet = workbook.GetSheet(sheetName);//根据给定的sheet名称获取数据
-        //        }
-        //        else
-        //        {
-        //            //也可以根据sheet编号来获取数据
-        //            sheet = workbook.GetSheetAt(0);//获取第几个sheet表（此处表示如果没有给定sheet名称，默认是第一个sheet表）  
-        //        }
-        //        if (sheet != null)
-        //        {
-        //            IRow firstRow = sheet.GetRow(0);
-        //            cellCount = firstRow.LastCellNum; //第一行最后一个cell的编号 即总的列数
-        //            if (isFirstRowColumn)//如果第一行是标题行
-        //            {
-        //                for (int i = firstRow.FirstCellNum; i < cellCount; ++i)//第一行列数循环
-        //                {
-        //                    DataColumn column = new DataColumn(firstRow.GetCell(i).StringCellValue);//获取标题
-        //                    data.Columns.Add(column);//添加列
-        //                }
-        //                startRow = sheet.FirstRowNum + 1;//1（即第二行，第一行0从开始）
-        //            }
-        //            else
-        //            {
-        //                startRow = sheet.FirstRowNum;//0
-        //            }
-        //            //最后一行的标号
-        //            rowCount = sheet.LastRowNum;
-        //            for (int i = startRow; i <= rowCount; ++i)//循环遍历所有行
-        //            {
-        //                IRow row = sheet.GetRow(i);//第几行
-        //                if (row == null)
-        //                {
-        //                    continue; //没有数据的行默认是null;
-        //                }
-        //                //将excel表每一行的数据添加到datatable的行中
-        //                DataRow dataRow = data.NewRow();
-        //                for (int j = row.FirstCellNum; j < cellCount; ++j)
-        //                {
-        //                    if (row.GetCell(j) != null) //同理，没有数据的单元格都默认是null
-        //                    {
-        //                        dataRow[j] = row.GetCell(j).ToString();
-        //                    }
-        //                }
-        //                data.Rows.Add(dataRow);
-        //            }
-        //        }
-        //        return data;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Exception: " + ex.Message);
-        //        return null;
-        //    }
-        //}
+                return new
+                {
+                    employeeSuccessCount,
+                    employeeErrorCount,
+                    userSuccessCount,
+                    userErrorCount,
+                    bindSuccessCount,
+                    bindErrorCount
+                };
+            }
+        }
+
     }
 }

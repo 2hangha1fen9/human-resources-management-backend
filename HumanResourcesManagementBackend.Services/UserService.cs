@@ -180,6 +180,8 @@ namespace HumanResourcesManagementBackend.Services
                 {
                     userEx.LoginName = user.LoginName;
                 }
+                userEx.LoginName = user.LoginName;
+                userEx.Password = user.Password.Encrypt();
                 userEx.UpdateTime = DateTime.Now;
                 userEx.Question = user.Question;
                 userEx.Answer = user.Answer;
@@ -221,6 +223,14 @@ namespace HumanResourcesManagementBackend.Services
             using (var db = new HRM())
             {
                 var user = db.Users.FirstOrDefault(p=>p.Id == changePwd.Id);
+                if(user == null)
+                {
+                    throw new BusinessException
+                    {
+                        ErrorMessage = "参数错误",
+                        Status = ResponseStatus.ParameterError
+                    };
+                }
                 user.Password=user.Password.Decrypt();
                 if(user.Password!=changePwd.Password)
                 {
@@ -296,6 +306,7 @@ namespace HumanResourcesManagementBackend.Services
         {
             using (var db=new HRM())
             {
+                changeQuestion.Password = changeQuestion.Password.Encrypt();
                 var user = db.Users.FirstOrDefault(p=>p.LoginName== changeQuestion.LoginName && p.Password== changeQuestion.Password);
                 if(user==null)
                 {

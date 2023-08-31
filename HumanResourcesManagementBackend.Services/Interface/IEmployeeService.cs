@@ -22,6 +22,11 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <returns></returns>
         EmployeeDto.Employee GetEmployseeById(long id);
         /// <summary>
+        /// 批量保存员工信息
+        /// </summary>
+        /// <param name="employees"></param>
+        dynamic BatchSaveEmployee(List<EmployeeDto.Employee> employees, bool createUser);
+        /// <summary>
         /// 添加员工
         /// </summary>
         void AddEmploysee(EmployeeDto.Employee employee);
@@ -91,14 +96,5 @@ namespace HumanResourcesManagementBackend.Services.Interface
         /// <param name="GetBirthdaySummary"></param>
         /// <returns></returns>
         List<EmployeeDto.BirthdaySummary> GetBirthdaySummary();
-
-        ///// <summary>
-        ///// 读取excel数据
-        ///// </summary>
-        ///// <param name="fileName">文件路径</param>
-        ///// <param name="sheetName">excel工作薄sheet的名称</param>
-        ///// <param name="isFirstRowColumn">第一行是否是DataTable的列名，true是</param>
-        ///// <returns>返回的DataTable</returns>
-        //void ReadExcel(string fileName, string sheetName, bool isFirstRowColumn);
     }
 }
