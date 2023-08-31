@@ -58,6 +58,12 @@ namespace HumanResourcesManagementBackend.Services
                         AuditStatus = AuditStatus.Pending,
                         RoleName = roles.FirstOrDefault(r => r.Name == "部门主管").Name,
                     },
+                    new VacationApplyDto.Examine
+                    {
+                        RoleId = roles.FirstOrDefault(r => r.Name == "校区人事专员").Id,
+                        AuditStatus = AuditStatus.Pending,
+                        RoleName = roles.FirstOrDefault(r => r.Name == "校区人事专员").Name,
+                    },
                 };
                 vacationapplyR.AuditNodeJson= audioList.ToJson();
 

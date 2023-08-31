@@ -53,6 +53,12 @@ namespace HumanResourcesManagementBackend.Services
                     },
                     new FieldWorkApplyDto.Examine
                     {
+                        RoleId = roles.FirstOrDefault(r => r.Name == "校区人事专员").Id,
+                        AuditStatus = AuditStatus.Pending,
+                        RoleName = roles.FirstOrDefault(r => r.Name == "校区人事专员").Name,
+                    },
+                    new FieldWorkApplyDto.Examine
+                    {
                         RoleId = roles.FirstOrDefault(r => r.Name == "校区主任").Id,
                         AuditStatus = AuditStatus.Pending,
                         RoleName = roles.FirstOrDefault(r => r.Name == "校区主任").Name,
