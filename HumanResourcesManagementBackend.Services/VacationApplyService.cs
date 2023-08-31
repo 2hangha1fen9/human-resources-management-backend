@@ -13,6 +13,7 @@ namespace HumanResourcesManagementBackend.Services
 {
     public class VacationApplyService : IVacationApplyService
     {
+
         public void VacationApply(VacationApplyDto.VacationApply vacationApply)
         {
             using (var db = new HRM())
@@ -46,7 +47,24 @@ namespace HumanResourcesManagementBackend.Services
                 vacationapplyR.UpdateTime = DateTime.Now;
                 vacationapplyR.Status = DataStatus.Enable;
                 vacationapplyR.AuditStatus=AuditStatus.Pending;
-                vacationapplyR.AuditType = AuditType.DepartmentManager;
+                vacationapplyR.AuditType = AuditType.GeneralManager;
+                //填充审核列表
+                var roles = db.Roles.ToList();
+                var audioList = new List<VacationApplyDto.Examine>
+                {
+                    new VacationApplyDto.Examine
+                    {
+                        RoleId = roles.FirstOrDefault(r => r.Name == "部门主管").Id,
+                        AuditStatus = AuditStatus.Pending,
+                    },
+                    new VacationApplyDto.Examine
+                    {
+                        RoleId = roles.FirstOrDefault(r => r.Name == "校区主任").Id,
+                        AuditStatus = AuditStatus.Pending,
+                    }
+                };
+                vacationapplyR.AuditNodeJson= audioList.ToJson();
+
                 db.VacationApplies.Add(vacationapplyR);
                 if (db.SaveChanges() == 0)
                 {
@@ -59,7 +77,7 @@ namespace HumanResourcesManagementBackend.Services
             }
         }
 
-        public List<VacationApplyDto.VacationApply> GetVacationApplyList(VacationApplyDto.Search search)
+        public List<VacationApplyDto.VacationApply> GetVacationApplyList(VacationApplyDto.Search search, UserDto.User currentUser)
         {
             using(var db = new HRM())
             {
@@ -83,7 +101,6 @@ namespace HumanResourcesManagementBackend.Services
                 {
                     query = query.Where(u => u.AuditStatus == search.AuditStatus);
                 }
-
                 //分页并将数据库实体映射为dto对象(OrderBy必须调用)
                 var list = query.OrderBy(q => q.Status).Pageing(search).MapToList<VacationApplyDto.VacationApply>();
                 //状态处理
@@ -93,12 +110,30 @@ namespace HumanResourcesManagementBackend.Services
                     u.AuditStatusStr = u.AuditStatus.Description();
                     u.AuditTypeStr = u.AuditType.Description();
                     u.VacationTypeStr = u.VacationType.Description();
+                    u.AuditNode = u.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>();
+                    u.AuditNode.ForEach(a =>
+                    {
+                        a.AuditStatusStr = a.AuditStatus.Description();
+                    });
                 });
+                //过滤能审核的
+                var refs = db.UserRoleRefs.Where(r => r.UserId == currentUser.Id).ToList();
+                list = list.Where(l =>
+                {
+                    var firstNode = l.AuditNode.FirstOrDefault();
+                    if(refs.FirstOrDefault(r => r.RoleId == firstNode.RoleId) == null)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }).ToList();
+
                 return list;
             }
         }
 
-        public void ExamineVacationApply(VacationApplyDto.Examine examine)
+        public void ExamineVacationApply(VacationApplyDto.Examine examine,UserDto.User currentUser)
         {
             using(var db = new HRM())
             {
@@ -120,14 +155,50 @@ namespace HumanResourcesManagementBackend.Services
                         Status = ResponseStatus.ParameterError
                     };
                 }
-                vacationEx.AuditStatus=examine.AuditStatus;
-                vacationEx.AuditResult = examine.AuditResult;
+                //获取审核列表
+                var auditNodeList = vacationEx.AuditNodeJson.ToObject<List<VacationApplyDto.Examine>>().Where(a => a.AuditStatus == AuditStatus.Pending);
+                var audit = auditNodeList.FirstOrDefault();
+                //开始审核
+                if (audit != null)
+                {
+                    //查询当前用户能不能审核
+                    var canAudit = db.UserRoleRefs.FirstOrDefault(u => u.UserId == currentUser.Id && u.RoleId == audit.RoleId);
+                    if (canAudit == null)
+                    {
+                        throw new BusinessException
+                        {
+                            ErrorMessage = "当前用户不能审核",
+                            Status = ResponseStatus.NoPermission
+                        };
+                    }
+                    //填入审核结果
+                    audit.UserId = currentUser.Id;
+                    audit.UserName = currentUser.LoginName;
+                    audit.AuditStatus = examine.AuditStatus;
+                    audit.AuditResult = examine.AuditResult;
+                    //更新审核节点列表
+                    vacationEx.AuditNodeJson = auditNodeList.ToJson();
+                    //如果是最后一个节点结束整个流程
+                    if(auditNodeList.LastOrDefault()?.RoleId == audit.RoleId)
+                    {
+                        vacationEx.AuditStatus = examine.AuditStatus;
+                        vacationEx.AuditResult = examine.AuditResult;
+                    }
+                }
+                else
+                {
+                    //流程为空直接通过
+                    vacationEx.AuditStatus = examine.AuditStatus;
+                    vacationEx.AuditResult = examine.AuditResult;
+                }
+
+                vacationEx.UpdateTime = DateTime.Now;
                 if (db.SaveChanges() == 0)
                 {
                     throw new BusinessException
                     {
                         ErrorMessage = "审核出现错误,请联系管理员",
-                        Status = ResponseStatus.AddError
+                        Status = ResponseStatus.UpdateError
                     };
                 }
             }

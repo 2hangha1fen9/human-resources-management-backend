@@ -13,14 +13,14 @@ namespace HumanResourcesManagementBackend.Models
     public enum AuditType
     {
         /// <summary>
-        /// 部门主管审批
+        /// 部门主管
         /// </summary>
-        [Description("部门主管审批")]
+        [Description("部门主管")]
         DepartmentManager = 1,
         /// <summary>
-        /// 校区主任审批
+        /// 校区主任
         /// </summary>
-        [Description("校区主任审批")]
-        GeneralManager = 2
+        [Description("校区主任")]
+        GeneralManager = 2,
     }
 }
